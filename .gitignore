@@ -1,0 +1,9 @@
+tags
+_*
+build.ninja
+.ninja*
+
+*.pc
+build
+gmon.out
+
