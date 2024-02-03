@@ -123,12 +123,12 @@ CFLAGS_OPENCL="$(pkg-config --cflags OpenCL) -DCL_TARGET_OPENCL_VERSION=300"
 CFLAGS_COMMON="$CFLAGS_OPENCL \
 ${FEATURE_DEFAULT_INTEGER_64:+"-DPORT_FEATURE_DEFAULT_INTEGER_64"} \
 ${FEATURE_DEFAULT_FLOAT_64:+"-DPORT_FEATURE_DEFAULT_FLOAT_64"}"
-LFLAGS_COMMON="$LFLAGS_OPENCL -lm"
+LFLAGS_COMMON="$LFLAGS_OPENCL"
 
 case "${BUILD_TYPE:-}" in
     "debug") CFLAGS_BUILD_TYPE="-O0 -g3 -ggdb" ;; # -Og causes <optimized out> errors in gdb
-    "profiling") CFLAGS_BUILD_TYPE="-O2 -flto -fno-math-errno -fno-trapping-math -g0 -DNDEBUG -pg" ;;
-    "optimized") CFLAGS_BUILD_TYPE="-O2 -flto -fno-math-errno -fno-trapping-math -g0 -DNDEBUG" ;;
+    "profiling") CFLAGS_BUILD_TYPE="-O2 -flto -g0 -DNDEBUG -pg" ;;
+    "optimized") CFLAGS_BUILD_TYPE="-O2 -flto -g0 -DNDEBUG" ;;
     *) echo "Unknown build type"; exit 1
 esac
 
@@ -147,6 +147,7 @@ ${OUTPUT_LIBRARY_SHARED:+"-fPIC"}"
 CFLAGS_TESTS="-march=native -pipe -std=c17 -Wall -Wextra -pedantic-errors -Wno-overflow -Wno-shift-count-overflow -Wno-psabi -O0 -g3 -ggdb \
 -I${PROJECT_DIR}/${IDIR} -I${PROJECT_DIR}/${ODIR}/${TDIR} \
 $CFLAGS_COMMON"
+LFLAGS_TESTS="-lm"
 
 LFLAGS="$LFLAGS_COMMON"
 
@@ -176,6 +177,7 @@ cat <<  _EOF_ > "${PROJECT_DIR}/${NINJA}"
 cflags = $CFLAGS ${CFLAGS_DIAGNOSTICS:-}
 cflags_tests = $CFLAGS_TESTS
 lflags = $LFLAGS
+lflags_tests = $LFLAGS_TESTS
 
 
 rule cc
@@ -311,6 +313,7 @@ cat <<  _EOF_ >> "${PROJECT_DIR}/${NINJA}"
 
 build ${ODIR}/${OUT_TEST_APPLICATION}: link $OBJECTS
     cflags_custom = \$cflags_tests
+    lflags_custom = \$lflags_tests
 
 build tests: phony ${ODIR}/${OUT_TEST_APPLICATION}
 _EOF_

@@ -2,68 +2,8 @@
 
 #include <port/cdev/float.fun.h>
 #include <port/cdev/constants.def.h>
-#include <port/cdev/types.def.h>
 
 #include <tgmath.h>
-
-TEST(port_float_almost_equal_to_0)
-{
-    ASSERT_TRUE(port_float_almost_equal_to_0(PORT_FLOAT(0.0)));
-    ASSERT_TRUE(port_float_almost_equal_to_0(-15*PORT_FLOAT_EPS));
-    ASSERT_TRUE(port_float_almost_equal_to_0(+15*PORT_FLOAT_EPS));
-    ASSERT_FALSE(port_float_almost_equal_to_0(-16*PORT_FLOAT_EPS));
-    ASSERT_FALSE(port_float_almost_equal_to_0(+16*PORT_FLOAT_EPS));
-    ASSERT_FALSE(port_float_almost_equal_to_0(PORT_M_NAN));
-    ASSERT_FALSE(port_float_almost_equal_to_0(PORT_M_INFINITY));
-    ASSERT_FALSE(port_float_almost_equal_to_0(-PORT_M_INFINITY));
-}
-
-TEST(port_float_almost_equal_to_1)
-{
-    ASSERT_TRUE(port_float_almost_equal_to_1(PORT_FLOAT(1.0)));
-    ASSERT_TRUE(port_float_almost_equal_to_1(PORT_FLOAT(1.0)+15*PORT_FLOAT_EPS));
-    ASSERT_TRUE(port_float_almost_equal_to_1(PORT_FLOAT(1.0)-15*PORT_FLOAT_EPS));
-    ASSERT_FALSE(port_float_almost_equal_to_1(PORT_FLOAT(1.0)+16*PORT_FLOAT_EPS));
-    ASSERT_FALSE(port_float_almost_equal_to_1(PORT_FLOAT(1.0)-16*PORT_FLOAT_EPS));
-    ASSERT_FALSE(port_float_almost_equal_to_1(PORT_M_NAN));
-    ASSERT_FALSE(port_float_almost_equal_to_1(PORT_M_INFINITY));
-    ASSERT_FALSE(port_float_almost_equal_to_1(-PORT_M_INFINITY));
-}
-
-TEST(port_float_almost_equal)
-{
-    ASSERT_TRUE(port_float_almost_equal(PORT_FLOAT(768.0), PORT_FLOAT(768.0)));
-    ASSERT_TRUE(port_float_almost_equal(PORT_FLOAT(768.0), PORT_FLOAT(768.0) + 512*15*PORT_FLOAT_EPS));
-    ASSERT_TRUE(port_float_almost_equal(PORT_FLOAT(768.0), PORT_FLOAT(768.0) - 512*15*PORT_FLOAT_EPS));
-    ASSERT_FALSE(port_float_almost_equal(PORT_FLOAT(768.0), PORT_FLOAT(768.0) + 512*16*PORT_FLOAT_EPS));
-    ASSERT_FALSE(port_float_almost_equal(PORT_FLOAT(768.0), PORT_FLOAT(768.0) - 512*16*PORT_FLOAT_EPS));
-    ASSERT_FALSE(port_float_almost_equal(PORT_FLOAT(768.0), PORT_M_NAN));
-    ASSERT_FALSE(port_float_almost_equal(PORT_FLOAT(768.0), PORT_M_INFINITY));
-    ASSERT_FALSE(port_float_almost_equal(PORT_M_NAN, PORT_M_NAN));
-    ASSERT_TRUE(port_float_almost_equal(PORT_M_INFINITY, PORT_M_INFINITY));
-    ASSERT_FALSE(port_float_almost_equal(-PORT_M_INFINITY, PORT_M_INFINITY));
-    ASSERT_FALSE(port_float_almost_equal(PORT_M_NAN, PORT_M_INFINITY));
-}
-
-TEST(port_float_clamp)
-{
-    ASSERT_EQ(port_float_clamp(PORT_FLOAT(0.5), PORT_FLOAT(0.0), PORT_FLOAT(1.0)),
-            PORT_FLOAT(0.5), port_float_t, "%g");
-    ASSERT_EQ(port_float_clamp(PORT_FLOAT(-0.5), PORT_FLOAT(0.0), PORT_FLOAT(1.0)),
-            PORT_FLOAT(0.0), port_float_t, "%g");
-    ASSERT_EQ(port_float_clamp(PORT_FLOAT(1.5), PORT_FLOAT(0.0), PORT_FLOAT(1.0)),
-            PORT_FLOAT(1.0), port_float_t, "%g");
-    ASSERT_EQ(port_float_clamp(PORT_M_INFINITY, PORT_FLOAT(0.0), PORT_FLOAT(1.0)),
-            PORT_FLOAT(1.0), port_float_t, "%g");
-    ASSERT_EQ(port_float_clamp(PORT_FLOAT(-1.0), PORT_FLOAT(0.0), PORT_M_INFINITY),
-            PORT_FLOAT(0.0), port_float_t, "%g");
-    ASSERT_EQ(port_float_clamp(PORT_FLOAT(1.0), PORT_FLOAT(0.0), PORT_M_INFINITY),
-            PORT_FLOAT(1.0), port_float_t, "%g");
-    ASSERT_EQ(port_float_clamp(PORT_M_INFINITY, PORT_FLOAT(0.0), PORT_M_INFINITY),
-            PORT_M_INFINITY, port_float_t, "%g");
-    ASSERT_EQ(port_float_clamp(-PORT_M_INFINITY, PORT_FLOAT(0.0), PORT_M_INFINITY),
-            PORT_FLOAT(0.0), port_float_t, "%g");
-}
 
 TEST(port_convert_float16_to_float32)
 {
