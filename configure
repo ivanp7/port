@@ -7,7 +7,7 @@ PROJECT_DIR="$(realpath -- "$(dirname -- "$0")")"
 ###############################################################################
 
 : ${PROJECT_NAME:="port"}
-: ${PROJECT_DESCRIPTION:="A library to aid writing code portable between CPU and OpenCL."}
+: ${PROJECT_DESCRIPTION:="A library to aid writing code that is portable between CPU and OpenCL."}
 : ${PROJECT_VERSION:="1.0"}
 
 IDIR="include"
@@ -24,8 +24,8 @@ ODIR="build"
 BUILD_TOOLS_DIR="tools"
 
 EMBEDDED_CDEV_VAR_PREFIX="${PROJECT_NAME}_embedded_cdev"
-EMBEDDED_CDEV_VAR_GENERATOR="embed_cdev.sh"
-EMBEDDED_CDEV_VAR_FILE="embedded_cdev.var.c"
+EMBEDDED_CDEV_VAR_GENERATOR="${BUILD_TOOLS_DIR}/embed_cdev_code.sh"
+EMBEDDED_CDEV_VAR_FILE="${SDIR}/${HOST_SUBDIR}/${HOST_OPENCL_SUBDIR}/embedded_cdev.var.c"
 
 TEST_CODE_URL="https://gist.githubusercontent.com/ivanp7/506fe8dc053952fd4a960666814cfd9a/raw"
 
@@ -196,7 +196,7 @@ rule link
 
 rule embed
     description = generate \$out
-    command = ${BUILD_TOOLS_DIR}/${EMBEDDED_CDEV_VAR_GENERATOR} \$out "${PROJECT_DIR}" "${IDIR}" "${SDIR}" "${CDEV_SUBDIR}" "${EMBEDDED_CDEV_VAR_PREFIX}" "${PROJECT_NAME}"
+    command = IDIR="${IDIR}" SDIR="${SDIR}" CDEV_SUBDIR="${CDEV_SUBDIR}" VAR_PREFIX="${EMBEDDED_CDEV_VAR_PREFIX}" ${EMBEDDED_CDEV_VAR_GENERATOR} \$out "${PROJECT_NAME}" "${PROJECT_DIR}"
 
 rule download
     description = download \$out
@@ -237,7 +237,8 @@ _EOF_
 
 if [ "${FEATURE_EMBED_CDEV:-}" ]
 then
-    OBJECTS="$OBJECTS ${ODIR}/${EMBEDDED_CDEV_VAR_FILE}.o"
+    obj="${EMBEDDED_CDEV_VAR_FILE%.c}.o"
+    OBJECTS="$OBJECTS ${ODIR}/$obj"
 
     cat <<  _EOF_ >> "${PROJECT_DIR}/${NINJA}"
 
@@ -245,7 +246,8 @@ build ${ODIR}/${EMBEDDED_CDEV_VAR_FILE}: embed | $(cd -- "${PROJECT_DIR}"; find 
 "${IDIR}/${PROJECT_NAME}/${CDEV_SUBDIR}" -type f -name "*.h" -printf ' %p') $(cd -- "${PROJECT_DIR}"; find \
 "${SDIR}/${CDEV_SUBDIR}" -type f -name "*.c" -printf ' %p')
 
-build ${ODIR}/${EMBEDDED_CDEV_VAR_FILE}.o: cc ${ODIR}/${EMBEDDED_CDEV_VAR_FILE}
+build ${ODIR}/$obj: cc ${ODIR}/${EMBEDDED_CDEV_VAR_FILE}
+
 _EOF_
 fi
 

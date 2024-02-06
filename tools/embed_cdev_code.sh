@@ -14,24 +14,23 @@ command -v "xxd" > /dev/null || { echo "'xxd' program is not available!"; exit 1
 # Set variables
 ###############################################################################
 
+: ${IDIR:="include"}
+: ${SDIR:="src"}
+: ${CDEV_SUBDIR:="cdev"}
+
+: ${VAR_PREFIX:="embedded_cdev"}
+
 GENERATED_SOURCE="$1"
-ROOT_DIR="$2"
-shift 2
-
-INCLUDE_DIR="${1:-"include"}"
-SRC_DIR="${2:-"src"}"
-CDEV_SUBDIR="${3:-"cdev"}"
-
-VAR_PREFIX="${4:-"embedded_cdev"}"
-
-PROJECT_NAME="${5:-}"
+PROJECT_NAME="$2"
+ROOT_DIR="$3"
+shift 3
 
 ###############################################################################
 # Prepare list of the headers and sources
 ###############################################################################
 
-CDEV_HEADERS=$(cd -- "$ROOT_DIR"; find "$INCLUDE_DIR/$PROJECT_NAME/$CDEV_SUBDIR" -type f -name "*.h" | sort)
-CDEV_SOURCES=$(cd -- "$ROOT_DIR"; find "$SRC_DIR/$CDEV_SUBDIR" -type f -name "*.c" | sort)
+CDEV_HEADERS=$(cd -- "$ROOT_DIR"; find "$IDIR/$PROJECT_NAME/$CDEV_SUBDIR" -type f -name "*.h" | sort)
+CDEV_SOURCES=$(cd -- "$ROOT_DIR"; find "$SDIR/$CDEV_SUBDIR" -type f -name "*.c" | sort)
 
 ###############################################################################
 # Generate the source file with embedded code
@@ -56,9 +55,8 @@ CDEV_FILES=$(printf "%s\n%s" "$CDEV_HEADERS" "$CDEV_SOURCES")
 for file in ${CDEV_FILES}
 do
     echo "    embedding '$file'"
-    "$TOOL_DIR/preprocess_code.sh" "$file" "$ROOT_DIR" |
-        "$TOOL_DIR/file_to_c_array.sh" "$file" |
-        "$TOOL_DIR/postprocess_code.sh" >> "$GENERATED_SOURCE"
+    "$TOOL_DIR/preprocess_cdev_file.sh" "$file" "$ROOT_DIR" |
+        "$TOOL_DIR/file_to_c_array.sh" "$file" >> "$GENERATED_SOURCE"
     echo >> "$GENERATED_SOURCE"
 done
 
@@ -77,7 +75,7 @@ _EOF_
 for file in $CDEV_HEADERS
 do
     cat <<  _EOF_ >> "$GENERATED_SOURCE"
-    "$(echo "$file" | sed "s@^$INCLUDE_DIR/@@")",
+    "$(echo "$file" | sed "s@^$IDIR/@@")",
 _EOF_
 done
 
@@ -139,7 +137,7 @@ _EOF_
 for file in $CDEV_SOURCES
 do
     cat <<  _EOF_ >> "$GENERATED_SOURCE"
-    "$(echo "$file" | sed "s@^$INCLUDE_DIR/@@")",
+    "$(echo "$file" | sed "s@^$SDIR/@@")",
 _EOF_
 done
 
