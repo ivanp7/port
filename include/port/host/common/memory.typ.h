@@ -73,57 +73,71 @@ typedef port_bool_t (*port_memory_unmap_func_t)(
 );
 
 ///////////////////////////////////////////////////////////////////////////////
-// Memory storage
+// Data storage
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Memory storage section.
- */
-typedef struct port_memory_storage_section {
-    const char *name; ///< Section name (allocated).
-
-    port_void_ptr_t storage; ///< Implementation-specific handle of storage the section is associated with.
-
-    port_memory_ptr_t contents; ///< Section contents.
-    port_size_t size; ///< Size of section contents in units.
-
-    port_void_ptr_t data; ///< Custom application data.
-
-    struct port_memory_storage_section *next; ///< Next section in the list.
-} port_memory_storage_section_t;
-
-/**
- * @brief Memory storage symbol.
- */
-typedef struct port_memory_storage_symbol {
-    const char *name; ///< Symbol name (allocated).
-
-    port_memory_storage_section_t *section; ///< Section the symbol is relative to.
-    port_size_t offset; ///< Offset of the symbol in units.
-
-    port_void_ptr_t data; ///< Custom application data.
-
-    struct port_memory_storage_symbol *next; ///< Next symbol in the list.
-} port_memory_storage_symbol_t;
-
-/**
- * @brief Memory storage section filter function.
+ * @brief Data storage header.
  *
- * @return True if section passes the filter, otherwise false.
+ * Because and due to symbols don't have contents,
+ * symbol_table.contents_offset field have no ordinary meaning and
+ * is to be ignored or interpreted specially.
  */
-typedef port_bool_t (*port_memory_storage_section_filter_func_t)(
-        const char *section_name ///< [in] Section name.
-);
+typedef struct port_data_storage_header {
+    port_uint_single_t magic; ///< File format identification constant.
+    port_uint_quarter_t header_size; ///< Header size in bytes.
+
+    port_uint_quarter_t format[7]; ///< File format properties.
+    port_uint_single_t full_size; ///< Full size of the data storage in memory units (including the header).
+
+    struct {
+        port_uint_single_t num_entries;     ///< Number of entries in a table.
+        port_uint_single_t entries_offset;  ///< Offset of table entries in memory units.
+        port_uint_single_t contents_offset; ///< Offset of contents of table entries in memory units.
+    } string_table,         ///< Strings.
+        section_table,      ///< Data sections.
+        symbol_table,       ///< Symbols (references into sections).
+        symbol_array_table; ///< Symbol arrays.
+} port_data_storage_header_t;
 
 /**
- * @brief Memory storage symbol filter function.
- *
- * @return True if symbol passes the filter, otherwise false.
+ * @brief Entry of data storage string table.
  */
-typedef port_bool_t (*port_memory_storage_symbol_filter_func_t)(
-        const char *symbol_name, ///< [in] Symbol name.
-        const char *section_name ///< [in] Section name.
-);
+typedef struct port_data_storage_string_table_entry {
+    port_uint_single_t length; ///< String length in bytes.
+    port_uint_single_t offset; ///< String offset in memory units.
+} port_data_storage_string_table_entry_t;
+
+/**
+ * @brief Entry of data storage section table.
+ */
+typedef struct port_data_storage_section_table_entry {
+    port_uint_single_t name_str_idx; ///< String table index of section name string.
+    port_uint_single_t size;         ///< Section size in memory units.
+    port_uint_single_t offset;       ///< Section offset in memory units.
+} port_data_storage_section_table_entry_t;
+
+/**
+ * @brief Entry of data storage symbol table.
+ *
+ * Symbols have no contents.
+ */
+typedef struct port_data_storage_symbol_table_entry {
+    port_uint_single_t name_str_idx; ///< String table index of symbol name string.
+    port_uint_single_t section_idx;  ///< Index of section the symbol is relative to.
+    port_uint_single_t value;        ///< Symbol offset in memory units relative to the section beginning.
+} port_data_storage_symbol_table_entry_t;
+
+/**
+ * @brief Entry of data storage symbol array table.
+ *
+ * Array contents are table indices of symbols.
+ */
+typedef struct port_data_storage_symbol_array_table_entry {
+    port_uint_single_t name_str_idx; ///< String table index of symbol array name string.
+    port_uint_single_t num_elements; ///< Number of symbols in the array.
+    port_uint_single_t offset;       ///< Array offset in memory units.
+} port_data_storage_symbol_array_table_entry_t;
 
 #endif // _PORT_HOST_COMMON_MEMORY_TYP_H_
 
