@@ -26,7 +26,7 @@
 
 #include <stdlib.h>
 
-port_void_ptr_t
+port_memory_ptr_t
 port_memory_cpu_alloc(
         port_size_t num_bytes,
         port_size_t alignment,
@@ -45,7 +45,7 @@ port_memory_cpu_alloc(
 
 void
 port_memory_cpu_free(
-        port_void_ptr_t memory,
+        port_memory_ptr_t memory,
         port_void_ptr_t properties)
 {
     (void) properties;
@@ -55,7 +55,7 @@ port_memory_cpu_free(
 
 port_bool_t
 port_memory_cpu_map(
-        port_void_ptr_t memory,
+        port_memory_ptr_t memory,
         port_size_t num_bytes,
         port_void_ptr_t properties)
 {
@@ -68,7 +68,7 @@ port_memory_cpu_map(
 
 port_bool_t
 port_memory_cpu_unmap(
-        port_void_ptr_t memory,
+        port_memory_ptr_t memory,
         port_void_ptr_t properties)
 {
     (void) memory;
