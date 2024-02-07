@@ -47,20 +47,27 @@ typedef port_sint_single_t port_memory_ref_t;          ///< Memory reference.
 typedef union port_memory_unit {
     // As unsigned integer
     port_uint_single_t as_uint_single;
+
     port_uint_half_t as_uint_half[2];
     port_uint_half_v2_t as_uint_half_v2;
+
     port_uint_quarter_t as_uint_quarter[4];
+    port_uint_quarter_v2_t as_uint_quarter_v2[2];
     port_uint_quarter_v4_t as_uint_quarter_v4;
 
     // As signed integer
     port_sint_single_t as_sint_single;
+
     port_sint_half_t as_sint_half[2];
     port_sint_half_v2_t as_sint_half_v2;
+
     port_sint_quarter_t as_sint_quarter[4];
+    port_sint_quarter_v2_t as_sint_quarter_v2[2];
     port_sint_quarter_v4_t as_sint_quarter_v4;
 
     // As floating-point number
     port_float_single_t as_float_single;
+
     port_uint_half_t as_float_half[2];    // no native float16 type
     port_uint_half_v2_t as_float_half_v2; // use integers instead
 
