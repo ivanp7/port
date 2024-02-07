@@ -80,6 +80,7 @@ typedef port_bool_t (*port_memory_unmap_func_t)(
  * @brief Data storage header.
  */
 typedef struct port_data_storage_header {
+    port_uint_single_t format;    ///< Description of the data storage format.
     port_uint_single_t full_size; ///< Full size of the data storage in memory units (including the header).
 
     struct {
@@ -91,10 +92,11 @@ typedef struct port_data_storage_header {
         symbol_array_table; ///< Symbol arrays.
 
     struct {
-        port_uint_single_t strings;       ///< String bytes.
-        port_uint_single_t sections;      ///< Memory units of data.
-        port_uint_single_t symbol_arrays; ///< Indices of symbols.
-    } contents_offset; ///< Offset of contents of table entries in memory units.
+        port_uint_single_t contents_size;   ///< Size of contents in memory units.
+        port_uint_single_t contents_offset; ///< Offset to contents in memory units.
+    } strings,         ///< Strings.
+        sections,      ///< Data sections.
+        symbol_arrays; ///< Symbol arrays.
 } port_data_storage_header_t;
 
 /**
