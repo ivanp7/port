@@ -18,11 +18,15 @@ This library provides:
 
 The code is split into two domains, `cdev` and `host`.
 
-`cdev` is for code that is portable between CPU and OpenCL, i.e.
+`cdev` (from 'compute device') is for code that is portable between CPU and OpenCL, i.e.
 it can be compiled using conventional compilers like gcc/clang and executed on CPU, but
 it can also be fed to OpenCL program building functions and executed on other types of devices such as GPU.
+The compute device code requires some amount of care from a programmer not to break the portability.
+One must rely on the limited set of features that is available in both C and OpenCL C.
+As C23 introduces a lot of changes, the latest C standard OpenCL C is somewhat compatible with is C17.
 
 `host` is for the host (CPU) only, it contains code for initialization and other meta purposes.
+There is no restrictions imposed on the host code.
 
 ## Memory model
 
