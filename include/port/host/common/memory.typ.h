@@ -78,26 +78,23 @@ typedef port_bool_t (*port_memory_unmap_func_t)(
 
 /**
  * @brief Data storage header.
- *
- * Because and due to symbols don't have contents,
- * symbol_table.contents_offset field have no ordinary meaning and
- * is to be ignored or interpreted specially.
  */
 typedef struct port_data_storage_header {
-    port_uint_single_t magic; ///< File format identification constant.
-    port_uint_quarter_t header_size; ///< Header size in bytes.
-
-    port_uint_quarter_t format[7]; ///< File format properties.
     port_uint_single_t full_size; ///< Full size of the data storage in memory units (including the header).
 
     struct {
-        port_uint_single_t num_entries;     ///< Number of entries in a table.
-        port_uint_single_t entries_offset;  ///< Offset of table entries in memory units.
-        port_uint_single_t contents_offset; ///< Offset of contents of table entries in memory units.
+        port_uint_single_t num_entries;    ///< Number of entries in a table.
+        port_uint_single_t entries_offset; ///< Offset of table entries in memory units.
     } string_table,         ///< Strings.
         section_table,      ///< Data sections.
         symbol_table,       ///< Symbols (references into sections).
         symbol_array_table; ///< Symbol arrays.
+
+    struct {
+        port_uint_single_t strings;       ///< String bytes.
+        port_uint_single_t sections;      ///< Memory units of data.
+        port_uint_single_t symbol_arrays; ///< Indices of symbols.
+    } contents_offset; ///< Offset of contents of table entries in memory units.
 } port_data_storage_header_t;
 
 /**
