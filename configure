@@ -33,7 +33,7 @@ TEST_CODE_URL="https://gist.githubusercontent.com/ivanp7/506fe8dc053952fd4a96066
 
 OUT_LIBRARY_STATIC="lib${LIBRARY_NAME}.a"
 OUT_LIBRARY_SHARED="lib${LIBRARY_NAME}.so"
-OUT_TEST_APPLICATION="port-tests"
+OUT_TEST_APPLICATION="${PROJECT_NAME}-tests"
 
 PKG_CONF="${LIBRARY_NAME}.pc"
 NINJA="build.ninja"
