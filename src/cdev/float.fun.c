@@ -55,8 +55,8 @@ port_convert_float16_to_float32(
         port_float32_t as_float;
     } u = {.as_uint = (value & PORT_BIT32(F16_SGN_BITP)) << (F32_SGN_BITP - F16_SGN_BITP)}; // sign bit
 
-    port_uint8_t value_exp = (value >> F16_MNT_NBITS) & PORT_MASK16(F16_EXP_NBITS); // exponent
-    value &= PORT_MASK16(F16_MNT_NBITS); // mantissa
+    port_uint8_t value_exp = (value >> F16_MNT_NBITS) & PORT_NZMASK16(F16_EXP_NBITS); // exponent
+    value &= PORT_NZMASK16(F16_MNT_NBITS); // mantissa
 
     if (value_exp == F16_EXP_INF) // infinity or NaN
         value_exp = F32_EXP_INF;
@@ -68,7 +68,7 @@ port_convert_float16_to_float32(
         port_uint16_t shift = PORT_CLZ16(value) - (16 - F16_MNT_NBITS);
 
         // Normalize the number
-        value = (value << (shift + 1)) & PORT_MASK16(F16_MNT_NBITS); // drop the explicit leading 1
+        value = (value << (shift + 1)) & PORT_NZMASK16(F16_MNT_NBITS); // drop the explicit leading 1
         value_exp = (F32_EXP_BIAS - F16_EXP_BIAS) - shift;
     }
 
@@ -162,8 +162,8 @@ port_convert_float32_to_float16(
     } u = {.as_float = value};
     result = (u.as_uint & PORT_BIT32(F32_SGN_BITP)) >> (F32_SGN_BITP - F16_SGN_BITP); // sign bit
 
-    port_uint8_t value_exp = (u.as_uint >> F32_MNT_NBITS) & PORT_MASK32(F32_EXP_NBITS); // exponent
-    u.as_uint &= PORT_MASK32(F32_MNT_NBITS); // mantissa
+    port_uint8_t value_exp = (u.as_uint >> F32_MNT_NBITS) & PORT_NZMASK32(F32_EXP_NBITS); // exponent
+    u.as_uint &= PORT_NZMASK32(F32_MNT_NBITS); // mantissa
 
     if (value_exp == F32_EXP_INF) // infinity or NaN
     {
@@ -171,7 +171,7 @@ port_convert_float32_to_float16(
 
         if (u.as_uint != 0) // NaN
         {
-            if ((u.as_uint & PORT_MASK32(F32_MNT_NBITS - F16_MNT_NBITS)) == 0) // NaN mantissa is representable
+            if ((u.as_uint & PORT_NZMASK32(F32_MNT_NBITS - F16_MNT_NBITS)) == 0) // NaN mantissa is representable
                 u.as_uint >>= F32_MNT_NBITS - F16_MNT_NBITS;
             else // NaN mantissa is not representable, replace it
                 u.as_uint = F16_DEFAULT_NAN_MANTISSA;
@@ -191,7 +191,7 @@ port_convert_float32_to_float16(
         u.as_uint = (u.as_uint >> 1) + (u.as_uint & 1);
 
         value_exp += (u.as_uint & PORT_BIT32(F16_MNT_NBITS)) >> F16_MNT_NBITS; // overflow bit adds to exponent
-        u.as_uint &= PORT_MASK32(F16_MNT_NBITS);
+        u.as_uint &= PORT_NZMASK32(F16_MNT_NBITS);
     }
     else if (value_exp > (F32_EXP_BIAS - F16_EXP_BIAS) - F16_MNT_NBITS) // subnormal numbers
     {
@@ -205,7 +205,7 @@ port_convert_float32_to_float16(
         u.as_uint = (u.as_uint >> 1) + (u.as_uint & 1);
 
         value_exp = (u.as_uint & PORT_BIT32(F16_MNT_NBITS)) >> F16_MNT_NBITS; // overflow bit is exponent
-        u.as_uint &= PORT_MASK32(F16_MNT_NBITS);
+        u.as_uint &= PORT_NZMASK32(F16_MNT_NBITS);
     }
     else // underflow to zero
     {

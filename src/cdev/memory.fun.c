@@ -46,15 +46,18 @@ port_memory_reference(
 {
 #ifndef __OPENCL_C_VERSION__
     if (ref >= 0)
+    {
+        assert(num_idx_bits < PORT_NUM_BITS(port_memory_ref_t));
         assert(((port_size_t)(ref >> num_idx_bits) << offset_shift) >> offset_shift ==
                 (port_size_t)(ref >> num_idx_bits));
+    }
     assert(memory_table != NULL);
 #endif
 
     if (ref < 0) // near reference
         return (base_ptr ? base_ptr : memory_table[0]) - ref;
     else // far reference
-        return memory_table[ref & PORT_SINGLE_MASK(num_idx_bits)] +
+        return memory_table[ref & PORT_SINGLE_ZMASK(num_idx_bits)] +
             ((port_size_t)(ref >> num_idx_bits) << offset_shift);
 }
 

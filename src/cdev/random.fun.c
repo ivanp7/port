@@ -141,7 +141,7 @@ port_random_set_bit_quarter_precision(
 #  endif
 #endif
 
-        rnd_local &= PORT_MASK32(PORT_NUM_BITS(threshold));
+        rnd_local &= PORT_NZMASK32(PORT_NUM_BITS(threshold));
 
         // Iterate unless random number is less than threshold
         for (port_uint8_t i = 0; i < num_bits-1; i++)
@@ -204,7 +204,7 @@ port_random_set_bit_half_precision(
 #  endif
 #endif
 
-        rnd_local &= PORT_MASK32(PORT_NUM_BITS(threshold));
+        rnd_local &= PORT_NZMASK32(PORT_NUM_BITS(threshold));
 
         // Iterate unless random number is less than threshold
         for (port_uint8_t i = 0; i < num_bits-1; i++)

@@ -75,21 +75,17 @@ TEST(PORT_BIT)
     ASSERT_EQ(PORT_BIT8(1), 0x2, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT8(2), 0x4, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT8(7), 0x80, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_BIT8(8), 0, port_uint64_t, "%lX");
 
     ASSERT_EQ(PORT_BIT16(0), 0x1, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT16(1), 0x2, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT16(2), 0x4, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT16(15), 0x8000, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_BIT16(16), 0, port_uint64_t, "%lX");
 
     ASSERT_EQ(PORT_BIT32(0), 0x1, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT32(1), 0x2, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT32(2), 0x4, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT32(16), 0x00010000, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT32(31), 0x80000000, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_BIT32(32), 0, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_BIT32(33), 0, port_uint64_t, "%lX");
 
     ASSERT_EQ(PORT_BIT64(0), 0x1, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT64(1), 0x2, port_uint64_t, "%lX");
@@ -97,44 +93,62 @@ TEST(PORT_BIT)
     ASSERT_EQ(PORT_BIT64(16), 0x00010000, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT64(31), 0x80000000, port_uint64_t, "%lX");
     ASSERT_EQ(PORT_BIT64(63), 0x8000000000000000ull, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_BIT64(64), 0, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_BIT64(65), 0, port_uint64_t, "%lX");
 }
 
-TEST(PORT_MASK)
+TEST(PORT_ZMASK)
 {
-    ASSERT_EQ(PORT_MASK8(0), 0, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK8(1), 0x1, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK8(2), 0x3, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK8(7), 0x7F, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK8(8), 0xFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK8(9), 0xFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK8(0), 0, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK8(1), 0x1, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK8(2), 0x3, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK8(7), 0x7F, port_uint64_t, "%lX");
 
-    ASSERT_EQ(PORT_MASK16(0), 0, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK16(1), 0x1, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK16(2), 0x3, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK16(15), 0x7FFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK16(16), 0xFFFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK16(17), 0xFFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK16(0), 0, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK16(1), 0x1, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK16(2), 0x3, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK16(15), 0x7FFF, port_uint64_t, "%lX");
 
-    ASSERT_EQ(PORT_MASK32(0), 0, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK32(1), 0x1, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK32(2), 0x3, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK32(16), 0x0000FFFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK32(31), 0x7FFFFFFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK32(32), 0xFFFFFFFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK32(33), 0xFFFFFFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK32(0), 0, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK32(1), 0x1, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK32(2), 0x3, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK32(16), 0x0000FFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK32(31), 0x7FFFFFFF, port_uint64_t, "%lX");
 
-    ASSERT_EQ(PORT_MASK64(0), 0, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK64(1), 0x1, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK64(2), 0x3, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK64(16), 0x0000FFFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK64(31), 0x7FFFFFFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK64(32), 0xFFFFFFFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK64(33), 0x1FFFFFFFF, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK64(63), 0x7FFFFFFFFFFFFFFFull, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK64(64), 0xFFFFFFFFFFFFFFFFull, port_uint64_t, "%lX");
-    ASSERT_EQ(PORT_MASK64(65), 0xFFFFFFFFFFFFFFFFull, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK64(0), 0, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK64(1), 0x1, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK64(2), 0x3, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK64(16), 0x0000FFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK64(31), 0x7FFFFFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK64(32), 0xFFFFFFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK64(33), 0x1FFFFFFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_ZMASK64(63), 0x7FFFFFFFFFFFFFFFull, port_uint64_t, "%lX");
+}
+
+TEST(PORT_NZMASK)
+{
+    ASSERT_EQ(PORT_NZMASK8(1), 0x1, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK8(2), 0x3, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK8(7), 0x7F, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK8(8), 0xFF, port_uint64_t, "%lX");
+
+    ASSERT_EQ(PORT_NZMASK16(1), 0x1, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK16(2), 0x3, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK16(15), 0x7FFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK16(16), 0xFFFF, port_uint64_t, "%lX");
+
+    ASSERT_EQ(PORT_NZMASK32(1), 0x1, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK32(2), 0x3, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK32(16), 0x0000FFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK32(31), 0x7FFFFFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK32(32), 0xFFFFFFFF, port_uint64_t, "%lX");
+
+    ASSERT_EQ(PORT_NZMASK64(1), 0x1, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK64(2), 0x3, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK64(16), 0x0000FFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK64(31), 0x7FFFFFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK64(32), 0xFFFFFFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK64(33), 0x1FFFFFFFF, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK64(63), 0x7FFFFFFFFFFFFFFFull, port_uint64_t, "%lX");
+    ASSERT_EQ(PORT_NZMASK64(64), 0xFFFFFFFFFFFFFFFFull, port_uint64_t, "%lX");
 }
 
 TEST(PORT_UPSAMPLE)

@@ -94,41 +94,65 @@
 #define PORT_BIT64(n) ((port_uint64_t)((port_uint64_t)1 << (n)))
 
 /**
- * @brief 8-bit mask with n lower bits set.
+ * @brief 8-bit mask with n<8 lower bits set.
  */
-#define PORT_MASK8(n) ((port_uint8_t)(PORT_BIT8(n) - 1))
+#define PORT_ZMASK8(n) ((port_uint8_t)PORT_BIT8(n) - 1)
 /**
- * @brief 16-bit mask with n lower bits set.
+ * @brief 16-bit mask with n<16 lower bits set.
  */
-#define PORT_MASK16(n) ((port_uint16_t)(PORT_BIT16(n) - 1))
+#define PORT_ZMASK16(n) ((port_uint16_t)PORT_BIT16(n) - 1)
 /**
- * @brief 32-bit mask with n lower bits set.
+ * @brief 32-bit mask with n<32 lower bits set.
  */
-#define PORT_MASK32(n) ((port_uint32_t)(PORT_BIT32(n) - 1))
+#define PORT_ZMASK32(n) ((port_uint32_t)PORT_BIT32(n) - 1)
 /**
- * @brief 64-bit mask with n lower bits set.
+ * @brief 64-bit mask with n<64 lower bits set.
  */
-#define PORT_MASK64(n) ((port_uint64_t)(PORT_BIT64(n) - 1))
+#define PORT_ZMASK64(n) ((port_uint64_t)PORT_BIT64(n) - 1)
+
+/**
+ * @brief 8-bit mask with n>0 lower bits set.
+ */
+#define PORT_NZMASK8(n) ((port_uint8_t)-1 >> (8 - (n)))
+/**
+ * @brief 16-bit mask with n>0 lower bits set.
+ */
+#define PORT_NZMASK16(n) ((port_uint16_t)-1 >> (16 - (n)))
+/**
+ * @brief 32-bit mask with n>0 lower bits set.
+ */
+#define PORT_NZMASK32(n) ((port_uint32_t)-1 >> (32 - (n)))
+/**
+ * @brief 64-bit mask with n>0 lower bits set.
+ */
+#define PORT_NZMASK64(n) ((port_uint64_t)-1 >> (64 - (n)))
 
 #define PORT_QUARTER_BIT(n) PORT_BIT8(n) ///< Quarter size mask with nth bit set.
 #define PORT_HALF_BIT(n) PORT_BIT16(n)   ///< Half size mask with nth bit set.
 #define PORT_SINGLE_BIT(n) PORT_BIT32(n) ///< Single size mask with nth bit set.
 #define PORT_DOUBLE_BIT(n) PORT_BIT64(n) ///< Double size mask with nth bit set.
 
-#define PORT_QUARTER_MASK(n) PORT_MASK8(n) ///< Quarter size mask with n lower bits set.
-#define PORT_HALF_MASK(n) PORT_MASK16(n)   ///< Half size mask with n lower bits set.
-#define PORT_SINGLE_MASK(n) PORT_MASK32(n) ///< Single size mask with n lower bits set.
-#define PORT_DOUBLE_MASK(n) PORT_MASK64(n) ///< Double size mask with n lower bits set.
+#define PORT_QUARTER_ZMASK(n) PORT_ZMASK8(n) ///< Quarter size mask with n<8 lower bits set.
+#define PORT_HALF_ZMASK(n) PORT_ZMASK16(n)   ///< Half size mask with n<16 lower bits set.
+#define PORT_SINGLE_ZMASK(n) PORT_ZMASK32(n) ///< Single size mask with n<32 lower bits set.
+#define PORT_DOUBLE_ZMASK(n) PORT_ZMASK64(n) ///< Double size mask with n<64 lower bits set.
+
+#define PORT_QUARTER_NZMASK(n) PORT_NZMASK8(n) ///< Quarter size mask with n>0 lower bits set.
+#define PORT_HALF_NZMASK(n) PORT_NZMASK16(n)   ///< Half size mask with n>0 lower bits set.
+#define PORT_SINGLE_NZMASK(n) PORT_NZMASK32(n) ///< Single size mask with n>0 lower bits set.
+#define PORT_DOUBLE_NZMASK(n) PORT_NZMASK64(n) ///< Double size mask with n>0 lower bits set.
 
 #ifndef PORT_FEATURE_DEFAULT_INTEGER_64
 
 #define PORT_INT_BIT(n) PORT_BIT32(n)   ///< Default size mask with nth bit set.
-#define PORT_INT_MASK(n) PORT_MASK32(n) ///< Default size mask with n lower bits set.
+#define PORT_INT_ZMASK(n) PORT_ZMASK32(n) ///< Default size mask with n<32 lower bits set.
+#define PORT_INT_NZMASK(n) PORT_NZMASK32(n) ///< Default size mask with n>0 lower bits set.
 
 #else
 
 #define PORT_INT_BIT(n) PORT_BIT64(n)   ///< Default size mask with nth bit set.
-#define PORT_INT_MASK(n) PORT_MASK64(n) ///< Default size mask with n lower bits set.
+#define PORT_INT_ZMASK(n) PORT_ZMASK64(n) ///< Default size mask with n<64 lower bits set.
+#define PORT_INT_NZMASK(n) PORT_NZMASK64(n) ///< Default size mask with n>0 lower bits set.
 
 #endif
 
