@@ -93,7 +93,7 @@ Several least significant bits of a reference is a table index, the other bits i
 ```c
 index_mask = (1 << num_index_bits) - 1;
 index = reference & index_mask;
-offset = (reference >> num_idx_bits) << offset_shift;
+offset = (reference >> num_index_bits) << offset_shift;
 target_ptr = memory_table[index] + offset;
 ```
 
