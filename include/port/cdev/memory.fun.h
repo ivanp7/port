@@ -67,7 +67,7 @@ port_memory_reference(
  * @brief Copy memory units from global memory to private memory.
  */
 void
-port_memcpy_global_to_private(
+port_memcopy_global_to_private(
         port_private_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_global_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -77,7 +77,7 @@ port_memcpy_global_to_private(
  * @brief Copy memory units from constant memory to private memory.
  */
 void
-port_memcpy_constant_to_private(
+port_memcopy_constant_to_private(
         port_private_memory_ptr_t restrict dest, ///< [out] Destination.
         port_constant_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -87,7 +87,7 @@ port_memcpy_constant_to_private(
  * @brief Copy memory units from local memory to private memory.
  */
 void
-port_memcpy_local_to_private(
+port_memcopy_local_to_private(
         port_private_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_local_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -97,7 +97,7 @@ port_memcpy_local_to_private(
  * @brief Copy memory units from private memory to private memory.
  */
 void
-port_memcpy_private_to_private(
+port_memcopy_private_to_private(
         port_private_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_private_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -107,7 +107,7 @@ port_memcpy_private_to_private(
  * @brief Copy memory units from global memory to local memory.
  */
 void
-port_memcpy_global_to_local(
+port_memcopy_global_to_local(
         port_local_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_global_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -117,7 +117,7 @@ port_memcpy_global_to_local(
  * @brief Copy memory units from constant memory to local memory.
  */
 void
-port_memcpy_constant_to_local(
+port_memcopy_constant_to_local(
         port_local_memory_ptr_t restrict dest, ///< [out] Destination.
         port_constant_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -127,7 +127,7 @@ port_memcpy_constant_to_local(
  * @brief Copy memory units from local memory to local memory.
  */
 void
-port_memcpy_local_to_local(
+port_memcopy_local_to_local(
         port_local_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_local_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -137,7 +137,7 @@ port_memcpy_local_to_local(
  * @brief Copy memory units from private memory to local memory.
  */
 void
-port_memcpy_private_to_local(
+port_memcopy_private_to_local(
         port_local_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_private_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -147,7 +147,7 @@ port_memcpy_private_to_local(
  * @brief Copy memory units from global memory to global memory.
  */
 void
-port_memcpy_global_to_global(
+port_memcopy_global_to_global(
         port_global_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_global_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -157,7 +157,7 @@ port_memcpy_global_to_global(
  * @brief Copy memory units from local memory to global memory.
  */
 void
-port_memcpy_local_to_global(
+port_memcopy_local_to_global(
         port_global_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_local_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -167,7 +167,7 @@ port_memcpy_local_to_global(
  * @brief Copy memory units from constant memory to global memory.
  */
 void
-port_memcpy_constant_to_global(
+port_memcopy_constant_to_global(
         port_global_memory_ptr_t restrict dest, ///< [out] Destination.
         port_constant_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -177,7 +177,7 @@ port_memcpy_constant_to_global(
  * @brief Copy memory units from private memory to global memory.
  */
 void
-port_memcpy_private_to_global(
+port_memcopy_private_to_global(
         port_global_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_private_memory_ptr_t restrict src, ///< [in] Source.
         port_size_t num_units ///< [in] Number of units to copy.
@@ -188,41 +188,41 @@ port_memcpy_private_to_global(
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Read 64-bit unsigned integer from memory.
+ * @brief Read double size unsigned integer from memory.
  *
  * @return Value read from memory.
  */
-port_uint64_t
-port_memread_uint64(
+port_uint_double_t
+port_memread_uint_double(
         port_const_memory_ptr_t memory ///< [in] Memory to read from.
 );
 
 /**
- * @brief Read 64-bit signed integer from memory.
+ * @brief Read double size signed integer from memory.
  *
  * @return Value read from memory.
  */
-port_sint64_t
-port_memread_sint64(
+port_sint_double_t
+port_memread_sint_double(
         port_const_memory_ptr_t memory ///< [in] Memory to read from.
 );
 
 /**
- * @brief Write 64-bit unsigned integer to memory.
+ * @brief Write double size unsigned integer to memory.
  */
 void
-port_memwrite_uint64(
+port_memwrite_uint_double(
         port_memory_ptr_t memory, ///< [out] Memory to write to.
-        port_uint64_t value ///< [in] Value to write.
+        port_uint_double_t value ///< [in] Value to write.
 );
 
 /**
- * @brief Write 64-bit signed integer to memory.
+ * @brief Write double size signed integer to memory.
  */
 void
-port_memwrite_sint64(
+port_memwrite_sint_double(
         port_memory_ptr_t memory, ///< [out] Memory to write to.
-        port_sint64_t value ///< [in] Value to write.
+        port_sint_double_t value ///< [in] Value to write.
 );
 
 /**
@@ -268,22 +268,22 @@ port_memwrite_sint(
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Read 64-bit floating-point number from memory.
+ * @brief Read double size floating-point number from memory.
  *
  * @return Value read from memory.
  */
-port_float64_t
-port_memread_float64(
+port_float_double_t
+port_memread_float_double(
         port_const_memory_ptr_t memory ///< [in] Memory to read from.
 );
 
 /**
- * @brief Write 64-bit floating-point number to memory.
+ * @brief Write double size floating-point number to memory.
  */
 void
-port_memwrite_float64(
+port_memwrite_float_double(
         port_memory_ptr_t memory, ///< [out] Memory to write to.
-        port_float64_t value ///< [in] Value to write.
+        port_float_double_t value ///< [in] Value to write.
 );
 
 /**

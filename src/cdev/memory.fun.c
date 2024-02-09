@@ -80,7 +80,7 @@ port_memory_reference(
 #endif
 
 void
-port_memcpy_global_to_private(
+port_memcopy_global_to_private(
         port_private_memory_ptr_t restrict dest,
         port_const_global_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -89,7 +89,7 @@ port_memcpy_global_to_private(
 }
 
 void
-port_memcpy_constant_to_private(
+port_memcopy_constant_to_private(
         port_private_memory_ptr_t restrict dest,
         port_constant_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -98,7 +98,7 @@ port_memcpy_constant_to_private(
 }
 
 void
-port_memcpy_local_to_private(
+port_memcopy_local_to_private(
         port_private_memory_ptr_t restrict dest,
         port_const_local_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -107,7 +107,7 @@ port_memcpy_local_to_private(
 }
 
 void
-port_memcpy_private_to_private(
+port_memcopy_private_to_private(
         port_private_memory_ptr_t restrict dest,
         port_const_private_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -116,7 +116,7 @@ port_memcpy_private_to_private(
 }
 
 void
-port_memcpy_global_to_local(
+port_memcopy_global_to_local(
         port_local_memory_ptr_t restrict dest,
         port_const_global_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -125,7 +125,7 @@ port_memcpy_global_to_local(
 }
 
 void
-port_memcpy_constant_to_local(
+port_memcopy_constant_to_local(
         port_local_memory_ptr_t restrict dest,
         port_constant_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -134,7 +134,7 @@ port_memcpy_constant_to_local(
 }
 
 void
-port_memcpy_local_to_local(
+port_memcopy_local_to_local(
         port_local_memory_ptr_t restrict dest,
         port_const_local_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -143,7 +143,7 @@ port_memcpy_local_to_local(
 }
 
 void
-port_memcpy_private_to_local(
+port_memcopy_private_to_local(
         port_local_memory_ptr_t restrict dest,
         port_const_private_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -152,7 +152,7 @@ port_memcpy_private_to_local(
 }
 
 void
-port_memcpy_global_to_global(
+port_memcopy_global_to_global(
         port_global_memory_ptr_t restrict dest,
         port_const_global_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -161,7 +161,7 @@ port_memcpy_global_to_global(
 }
 
 void
-port_memcpy_local_to_global(
+port_memcopy_local_to_global(
         port_global_memory_ptr_t restrict dest,
         port_const_local_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -170,7 +170,7 @@ port_memcpy_local_to_global(
 }
 
 void
-port_memcpy_constant_to_global(
+port_memcopy_constant_to_global(
         port_global_memory_ptr_t restrict dest,
         port_constant_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -179,7 +179,7 @@ port_memcpy_constant_to_global(
 }
 
 void
-port_memcpy_private_to_global(
+port_memcopy_private_to_global(
         port_global_memory_ptr_t restrict dest,
         port_const_private_memory_ptr_t restrict src,
         port_size_t num_units)
@@ -193,8 +193,8 @@ port_memcpy_private_to_global(
 // Reading/writing of integers
 ///////////////////////////////////////////////////////////////////////////////
 
-port_uint64_t
-port_memread_uint64(
+port_uint_double_t
+port_memread_uint_double(
         port_const_memory_ptr_t memory)
 {
 #ifndef __OPENCL_C_VERSION__
@@ -205,8 +205,8 @@ port_memread_uint64(
     return u.as_uint_double;
 }
 
-port_sint64_t
-port_memread_sint64(
+port_sint_double_t
+port_memread_sint_double(
         port_const_memory_ptr_t memory)
 {
 #ifndef __OPENCL_C_VERSION__
@@ -218,9 +218,9 @@ port_memread_sint64(
 }
 
 void
-port_memwrite_uint64(
+port_memwrite_uint_double(
         port_memory_ptr_t memory,
-        port_uint64_t value)
+        port_uint_double_t value)
 {
 #ifndef __OPENCL_C_VERSION__
     assert(memory != NULL);
@@ -232,9 +232,9 @@ port_memwrite_uint64(
 }
 
 void
-port_memwrite_sint64(
+port_memwrite_sint_double(
         port_memory_ptr_t memory,
-        port_sint64_t value)
+        port_sint_double_t value)
 {
 #ifndef __OPENCL_C_VERSION__
     assert(memory != NULL);
@@ -256,7 +256,7 @@ port_memread_uint(
 #ifndef PORT_FEATURE_DEFAULT_INTEGER_64
     return memory->as_uint_single;
 #else
-    return port_memread_uint64(memory);
+    return port_memread_uint_double(memory);
 #endif
 }
 
@@ -271,7 +271,7 @@ port_memread_sint(
 #ifndef PORT_FEATURE_DEFAULT_INTEGER_64
     return memory->as_sint_single;
 #else
-    return port_memread_sint64(memory);
+    return port_memread_sint_double(memory);
 #endif
 }
 
@@ -287,7 +287,7 @@ port_memwrite_uint(
 #ifndef PORT_FEATURE_DEFAULT_INTEGER_64
     memory->as_uint_single = value;
 #else
-    port_memwrite_uint64(memory, value);
+    port_memwrite_uint_double(memory, value);
 #endif
 }
 
@@ -303,7 +303,7 @@ port_memwrite_sint(
 #ifndef PORT_FEATURE_DEFAULT_INTEGER_64
     memory->as_sint_single = value;
 #else
-    port_memwrite_sint64(memory, value);
+    port_memwrite_sint_double(memory, value);
 #endif
 }
 
@@ -311,8 +311,8 @@ port_memwrite_sint(
 // Reading/writing of floating-point numbers
 ///////////////////////////////////////////////////////////////////////////////
 
-port_float64_t
-port_memread_float64(
+port_float_double_t
+port_memread_float_double(
         port_const_memory_ptr_t memory)
 {
 #ifndef __OPENCL_C_VERSION__
@@ -324,9 +324,9 @@ port_memread_float64(
 }
 
 void
-port_memwrite_float64(
+port_memwrite_float_double(
         port_memory_ptr_t memory,
-        port_float64_t value)
+        port_float_double_t value)
 {
 #ifndef __OPENCL_C_VERSION__
     assert(memory != NULL);
@@ -348,7 +348,7 @@ port_memread_float(
 #ifndef PORT_FEATURE_DEFAULT_FLOAT_64
     return memory->as_float_single;
 #else
-    return port_memread_float64(memory);
+    return port_memread_float_double(memory);
 #endif
 }
 
@@ -364,7 +364,7 @@ port_memwrite_float(
 #ifndef PORT_FEATURE_DEFAULT_FLOAT_64
     memory->as_float_single = value;
 #else
-    port_memwrite_float64(memory, value);
+    port_memwrite_float_double(memory, value);
 #endif
 }
 

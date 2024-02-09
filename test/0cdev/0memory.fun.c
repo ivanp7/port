@@ -80,104 +80,104 @@ TEST(port_memory_reference)
     ASSERT_EQ(ptr - &unit2, 5 << offset_shift, port_ptrdiff_t, "%ti");
 }
 
-TEST(port_memcpy_global_to_private)
+TEST(port_memcopy_global_to_private)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_global_to_private));
+    ASSERT_TRUE(test_memcpy(port_memcopy_global_to_private));
 }
 
-TEST(port_memcpy_constant_to_private)
+TEST(port_memcopy_constant_to_private)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_constant_to_private));
+    ASSERT_TRUE(test_memcpy(port_memcopy_constant_to_private));
 }
 
-TEST(port_memcpy_local_to_private)
+TEST(port_memcopy_local_to_private)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_local_to_private));
+    ASSERT_TRUE(test_memcpy(port_memcopy_local_to_private));
 }
 
-TEST(port_memcpy_private_to_private)
+TEST(port_memcopy_private_to_private)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_private_to_private));
+    ASSERT_TRUE(test_memcpy(port_memcopy_private_to_private));
 }
 
-TEST(port_memcpy_global_to_local)
+TEST(port_memcopy_global_to_local)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_global_to_local));
+    ASSERT_TRUE(test_memcpy(port_memcopy_global_to_local));
 }
 
-TEST(port_memcpy_constant_to_local)
+TEST(port_memcopy_constant_to_local)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_constant_to_local));
+    ASSERT_TRUE(test_memcpy(port_memcopy_constant_to_local));
 }
 
-TEST(port_memcpy_local_to_local)
+TEST(port_memcopy_local_to_local)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_local_to_local));
+    ASSERT_TRUE(test_memcpy(port_memcopy_local_to_local));
 }
 
-TEST(port_memcpy_private_to_local)
+TEST(port_memcopy_private_to_local)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_private_to_local));
+    ASSERT_TRUE(test_memcpy(port_memcopy_private_to_local));
 }
 
-TEST(port_memcpy_global_to_global)
+TEST(port_memcopy_global_to_global)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_global_to_global));
+    ASSERT_TRUE(test_memcpy(port_memcopy_global_to_global));
 }
 
-TEST(port_memcpy_local_to_global)
+TEST(port_memcopy_local_to_global)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_local_to_global));
+    ASSERT_TRUE(test_memcpy(port_memcopy_local_to_global));
 }
 
-TEST(port_memcpy_constant_to_global)
+TEST(port_memcopy_constant_to_global)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_constant_to_global));
+    ASSERT_TRUE(test_memcpy(port_memcopy_constant_to_global));
 }
 
-TEST(port_memcpy_private_to_global)
+TEST(port_memcopy_private_to_global)
 {
-    ASSERT_TRUE(test_memcpy(port_memcpy_private_to_global));
+    ASSERT_TRUE(test_memcpy(port_memcopy_private_to_global));
 }
 
-TEST(port_memread_uint64)
+TEST(port_memread_uint_double)
 {
-    port_uint64_t value = 0x11223344AABBCCDDull;
+    port_uint_double_t value = 0x11223344AABBCCDDull;
     port_memory_unit_double_t units = {.as_uint_double = value};
 
-    port_uint64_t result = port_memread_uint64(units.as_units);
+    port_uint_double_t result = port_memread_uint_double(units.as_units);
 
-    ASSERT_EQ(result, value, port_uint64_t, "%lX");
+    ASSERT_EQ(result, value, port_uint_double_t, "%lX");
 }
 
-TEST(port_memread_sint64)
+TEST(port_memread_sint_double)
 {
-    port_sint64_t value = -0x11223344AABBCCDDll;
+    port_sint_double_t value = -0x11223344AABBCCDDll;
     port_memory_unit_double_t units = {.as_sint_double = value};
 
-    port_sint64_t result = port_memread_sint64(units.as_units);
+    port_sint_double_t result = port_memread_sint_double(units.as_units);
 
-    ASSERT_EQ(result, value, port_sint64_t, "%lX");
+    ASSERT_EQ(result, value, port_sint_double_t, "%lX");
 }
 
-TEST(port_memwrite_uint64)
+TEST(port_memwrite_uint_double)
 {
-    port_uint64_t value = 0x11223344AABBCCDDull;
+    port_uint_double_t value = 0x11223344AABBCCDDull;
     port_memory_unit_double_t units = {.as_uint_double = 0};
 
-    port_memwrite_uint64(units.as_units, value);
+    port_memwrite_uint_double(units.as_units, value);
 
-    ASSERT_EQ(units.as_uint_double, value, port_uint64_t, "%lX");
+    ASSERT_EQ(units.as_uint_double, value, port_uint_double_t, "%lX");
 }
 
-TEST(port_memwrite_sint64)
+TEST(port_memwrite_sint_double)
 {
-    port_sint64_t value = -0x11223344AABBCCDDull;
+    port_sint_double_t value = -0x11223344AABBCCDDull;
     port_memory_unit_double_t units = {.as_sint_double = 0};
 
-    port_memwrite_sint64(units.as_units, value);
+    port_memwrite_sint_double(units.as_units, value);
 
-    ASSERT_EQ(units.as_sint_double, value, port_sint64_t, "%lX");
+    ASSERT_EQ(units.as_sint_double, value, port_sint_double_t, "%lX");
 }
 
 TEST(port_memread_uint)
@@ -280,24 +280,24 @@ TEST(port_memwrite_sint)
 #endif
 }
 
-TEST(port_memread_float64)
+TEST(port_memread_float_double)
 {
-    port_float64_t value = 12.34e5;
+    port_float_double_t value = 12.34e5;
     port_memory_unit_double_t units = {.as_float_double = value};
 
-    port_float64_t result = port_memread_float64(units.as_units);
+    port_float_double_t result = port_memread_float_double(units.as_units);
 
-    ASSERT_EQ(result, value, port_float64_t, "%g");
+    ASSERT_EQ(result, value, port_float_double_t, "%g");
 }
 
-TEST(port_memwrite_float64)
+TEST(port_memwrite_float_double)
 {
-    port_float64_t value = 12.34e5;
+    port_float_double_t value = 12.34e5;
     port_memory_unit_double_t units = {.as_float_double = 0.0};
 
-    port_memwrite_float64(units.as_units, value);
+    port_memwrite_float_double(units.as_units, value);
 
-    ASSERT_EQ(units.as_float_double, value, port_float64_t, "%g");
+    ASSERT_EQ(units.as_float_double, value, port_float_double_t, "%g");
 }
 
 TEST(port_memread_float)
