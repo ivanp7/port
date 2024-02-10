@@ -50,207 +50,207 @@
 /**
  * @brief Convert value to 2-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V2(r, value) do { (r) = convert_uchar2(value); } while(0)
+#define PORT_CONVERT_TO_UINT8_V2(r, value) do { (r).xy = convert_uchar2((value).xy); } while(0)
 /**
  * @brief Convert value to 2-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V2(r, value) do { (r) = convert_char2(value); } while(0)
+#define PORT_CONVERT_TO_SINT8_V2(r, value) do { (r).xy = convert_char2((value).xy); } while(0)
 /**
  * @brief Convert value to 2-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V2(r, value) do { (r) = convert_ushort2(value); } while(0)
+#define PORT_CONVERT_TO_UINT16_V2(r, value) do { (r).xy = convert_ushort2((value).xy); } while(0)
 /**
  * @brief Convert value to 2-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V2(r, value) do { (r) = convert_short2(value); } while(0)
+#define PORT_CONVERT_TO_SINT16_V2(r, value) do { (r).xy = convert_short2((value).xy); } while(0)
 /**
  * @brief Convert value to 2-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V2(r, value) do { (r) = convert_uint2(value); } while(0)
+#define PORT_CONVERT_TO_UINT32_V2(r, value) do { (r).xy = convert_uint2((value).xy); } while(0)
 /**
  * @brief Convert value to 2-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V2(r, value) do { (r) = convert_int2(value); } while(0)
+#define PORT_CONVERT_TO_SINT32_V2(r, value) do { (r).xy = convert_int2((value).xy); } while(0)
 /**
  * @brief Convert value to 2-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V2(r, value) do { (r) = convert_ulong2(value); } while(0)
+#define PORT_CONVERT_TO_UINT64_V2(r, value) do { (r).xy = convert_ulong2((value).xy); } while(0)
 /**
  * @brief Convert value to 2-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V2(r, value) do { (r) = convert_long2(value); } while(0)
+#define PORT_CONVERT_TO_SINT64_V2(r, value) do { (r).xy = convert_long2((value).xy); } while(0)
 /**
  * @brief Convert value to 2-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V2(r, value) do { (r) = convert_float2(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT32_V2(r, value) do { (r).xy = convert_float2((value).xy); } while(0)
 /**
  * @brief Convert value to 2-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V2(r, value) do { (r) = convert_double2(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT64_V2(r, value) do { (r).xy = convert_double2((value).xy); } while(0)
 
 /**
  * @brief Convert value to 3-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V3(r, value) do { (r) = convert_uchar3(value); } while(0)
+#define PORT_CONVERT_TO_UINT8_V3(r, value) do { (r).xyz = convert_uchar3((value).xyz); } while(0)
 /**
  * @brief Convert value to 3-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V3(r, value) do { (r) = convert_char3(value); } while(0)
+#define PORT_CONVERT_TO_SINT8_V3(r, value) do { (r).xyz = convert_char3((value).xyz); } while(0)
 /**
  * @brief Convert value to 3-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V3(r, value) do { (r) = convert_ushort3(value); } while(0)
+#define PORT_CONVERT_TO_UINT16_V3(r, value) do { (r).xyz = convert_ushort3((value).xyz); } while(0)
 /**
  * @brief Convert value to 3-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V3(r, value) do { (r) = convert_short3(value); } while(0)
+#define PORT_CONVERT_TO_SINT16_V3(r, value) do { (r).xyz = convert_short3((value).xyz); } while(0)
 /**
  * @brief Convert value to 3-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V3(r, value) do { (r) = convert_uint3(value); } while(0)
+#define PORT_CONVERT_TO_UINT32_V3(r, value) do { (r).xyz = convert_uint3((value).xyz); } while(0)
 /**
  * @brief Convert value to 3-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V3(r, value) do { (r) = convert_int3(value); } while(0)
+#define PORT_CONVERT_TO_SINT32_V3(r, value) do { (r).xyz = convert_int3((value).xyz); } while(0)
 /**
  * @brief Convert value to 3-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V3(r, value) do { (r) = convert_ulong3(value); } while(0)
+#define PORT_CONVERT_TO_UINT64_V3(r, value) do { (r).xyz = convert_ulong3((value).xyz); } while(0)
 /**
  * @brief Convert value to 3-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V3(r, value) do { (r) = convert_long3(value); } while(0)
+#define PORT_CONVERT_TO_SINT64_V3(r, value) do { (r).xyz = convert_long3((value).xyz); } while(0)
 /**
  * @brief Convert value to 3-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V3(r, value) do { (r) = convert_float3(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT32_V3(r, value) do { (r).xyz = convert_float3((value).xyz); } while(0)
 /**
  * @brief Convert value to 3-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V3(r, value) do { (r) = convert_double3(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT64_V3(r, value) do { (r).xyz = convert_double3((value).xyz); } while(0)
 
 /**
  * @brief Convert value to 4-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V4(r, value) do { (r) = convert_uchar4(value); } while(0)
+#define PORT_CONVERT_TO_UINT8_V4(r, value) do { (r).xyzw = convert_uchar4((value).xyzw); } while(0)
 /**
  * @brief Convert value to 4-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V4(r, value) do { (r) = convert_char4(value); } while(0)
+#define PORT_CONVERT_TO_SINT8_V4(r, value) do { (r).xyzw = convert_char4((value).xyzw); } while(0)
 /**
  * @brief Convert value to 4-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V4(r, value) do { (r) = convert_ushort4(value); } while(0)
+#define PORT_CONVERT_TO_UINT16_V4(r, value) do { (r).xyzw = convert_ushort4((value).xyzw); } while(0)
 /**
  * @brief Convert value to 4-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V4(r, value) do { (r) = convert_short4(value); } while(0)
+#define PORT_CONVERT_TO_SINT16_V4(r, value) do { (r).xyzw = convert_short4((value).xyzw); } while(0)
 /**
  * @brief Convert value to 4-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V4(r, value) do { (r) = convert_uint4(value); } while(0)
+#define PORT_CONVERT_TO_UINT32_V4(r, value) do { (r).xyzw = convert_uint4((value).xyzw); } while(0)
 /**
  * @brief Convert value to 4-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V4(r, value) do { (r) = convert_int4(value); } while(0)
+#define PORT_CONVERT_TO_SINT32_V4(r, value) do { (r).xyzw = convert_int4((value).xyzw); } while(0)
 /**
  * @brief Convert value to 4-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V4(r, value) do { (r) = convert_ulong4(value); } while(0)
+#define PORT_CONVERT_TO_UINT64_V4(r, value) do { (r).xyzw = convert_ulong4((value).xyzw); } while(0)
 /**
  * @brief Convert value to 4-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V4(r, value) do { (r) = convert_long4(value); } while(0)
+#define PORT_CONVERT_TO_SINT64_V4(r, value) do { (r).xyzw = convert_long4((value).xyzw); } while(0)
 /**
  * @brief Convert value to 4-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V4(r, value) do { (r) = convert_float4(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT32_V4(r, value) do { (r).xyzw = convert_float4((value).xyzw); } while(0)
 /**
  * @brief Convert value to 4-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V4(r, value) do { (r) = convert_double4(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT64_V4(r, value) do { (r).xyzw = convert_double4((value).xyzw); } while(0)
 
 /**
  * @brief Convert value to 8-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V8(r, value) do { (r) = convert_uchar8(value); } while(0)
+#define PORT_CONVERT_TO_UINT8_V8(r, value) do { (r).s01234567 = convert_uchar8((value).s01234567); } while(0)
 /**
  * @brief Convert value to 8-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V8(r, value) do { (r) = convert_char8(value); } while(0)
+#define PORT_CONVERT_TO_SINT8_V8(r, value) do { (r).s01234567 = convert_char8((value).s01234567); } while(0)
 /**
  * @brief Convert value to 8-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V8(r, value) do { (r) = convert_ushort8(value); } while(0)
+#define PORT_CONVERT_TO_UINT16_V8(r, value) do { (r).s01234567 = convert_ushort8((value).s01234567); } while(0)
 /**
  * @brief Convert value to 8-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V8(r, value) do { (r) = convert_short8(value); } while(0)
+#define PORT_CONVERT_TO_SINT16_V8(r, value) do { (r).s01234567 = convert_short8((value).s01234567); } while(0)
 /**
  * @brief Convert value to 8-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V8(r, value) do { (r) = convert_uint8(value); } while(0)
+#define PORT_CONVERT_TO_UINT32_V8(r, value) do { (r).s01234567 = convert_uint8((value).s01234567); } while(0)
 /**
  * @brief Convert value to 8-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V8(r, value) do { (r) = convert_int8(value); } while(0)
+#define PORT_CONVERT_TO_SINT32_V8(r, value) do { (r).s01234567 = convert_int8((value).s01234567); } while(0)
 /**
  * @brief Convert value to 8-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V8(r, value) do { (r) = convert_ulong8(value); } while(0)
+#define PORT_CONVERT_TO_UINT64_V8(r, value) do { (r).s01234567 = convert_ulong8((value).s01234567); } while(0)
 /**
  * @brief Convert value to 8-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V8(r, value) do { (r) = convert_long8(value); } while(0)
+#define PORT_CONVERT_TO_SINT64_V8(r, value) do { (r).s01234567 = convert_long8((value).s01234567); } while(0)
 /**
  * @brief Convert value to 8-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V8(r, value) do { (r) = convert_float8(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT32_V8(r, value) do { (r).s01234567 = convert_float8((value).s01234567); } while(0)
 /**
  * @brief Convert value to 8-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V8(r, value) do { (r) = convert_double8(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT64_V8(r, value) do { (r).s01234567 = convert_double8((value).s01234567); } while(0)
 
 /**
  * @brief Convert value to 16-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V16(r, value) do { (r) = convert_uchar16(value); } while(0)
+#define PORT_CONVERT_TO_UINT8_V16(r, value) do { (r).s0123456789ABCDEF = convert_uchar16((value).s0123456789ABCDEF); } while(0)
 /**
  * @brief Convert value to 16-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V16(r, value) do { (r) = convert_char16(value); } while(0)
+#define PORT_CONVERT_TO_SINT8_V16(r, value) do { (r).s0123456789ABCDEF = convert_char16((value).s0123456789ABCDEF); } while(0)
 /**
  * @brief Convert value to 16-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V16(r, value) do { (r) = convert_ushort16(value); } while(0)
+#define PORT_CONVERT_TO_UINT16_V16(r, value) do { (r).s0123456789ABCDEF = convert_ushort16((value).s0123456789ABCDEF); } while(0)
 /**
  * @brief Convert value to 16-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V16(r, value) do { (r) = convert_short16(value); } while(0)
+#define PORT_CONVERT_TO_SINT16_V16(r, value) do { (r).s0123456789ABCDEF = convert_short16((value).s0123456789ABCDEF); } while(0)
 /**
  * @brief Convert value to 16-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V16(r, value) do { (r) = convert_uint16(value); } while(0)
+#define PORT_CONVERT_TO_UINT32_V16(r, value) do { (r).s0123456789ABCDEF = convert_uint16((value).s0123456789ABCDEF); } while(0)
 /**
  * @brief Convert value to 16-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V16(r, value) do { (r) = convert_int16(value); } while(0)
+#define PORT_CONVERT_TO_SINT32_V16(r, value) do { (r).s0123456789ABCDEF = convert_int16((value).s0123456789ABCDEF); } while(0)
 /**
  * @brief Convert value to 16-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V16(r, value) do { (r) = convert_ulong16(value); } while(0)
+#define PORT_CONVERT_TO_UINT64_V16(r, value) do { (r).s0123456789ABCDEF = convert_ulong16((value).s0123456789ABCDEF); } while(0)
 /**
  * @brief Convert value to 16-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V16(r, value) do { (r) = convert_long16(value); } while(0)
+#define PORT_CONVERT_TO_SINT64_V16(r, value) do { (r).s0123456789ABCDEF = convert_long16((value).s0123456789ABCDEF); } while(0)
 /**
  * @brief Convert value to 16-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V16(r, value) do { (r) = convert_float16(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT32_V16(r, value) do { (r).s0123456789ABCDEF = convert_float16((value).s0123456789ABCDEF); } while(0)
 /**
  * @brief Convert value to 16-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V16(r, value) do { (r) = convert_double16(value); } while(0)
+#define PORT_CONVERT_TO_FLOAT64_V16(r, value) do { (r).s0123456789ABCDEF = convert_double16((value).s0123456789ABCDEF); } while(0)
 
 #else // __OPENCL_C_VERSION__
 
