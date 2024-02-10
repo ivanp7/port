@@ -300,7 +300,7 @@ OBJECTS="${ODIR}/${TDIR}/test.o"
     build_directory "${SDIR}/${CDEV_SUBDIR}" "" no_output ||
     build_directory "${SDIR}/${CDEV_SUBDIR}"
 
-for src in $(cd -- "${PROJECT_DIR}"; find "${TDIR}" -type f -name "*.c")
+for src in $(cd -- "${PROJECT_DIR}"; find "${TDIR}" -type f -name "*.c" | sort)
 do
     obj="${src%.c}.o"
     OBJECTS="$OBJECTS ${ODIR}/$obj"
