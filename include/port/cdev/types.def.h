@@ -48,9 +48,15 @@
 #define PORT_SINT32_MAX INT_MAX  ///< Maximum value of signed 32-bit integer (+2147483647).
 #define PORT_SINT32_MIN INT_MIN  ///< Minimum value of signed 32-bit integer (-2147483648).
 
+#define PORT_UINT32(literal) literal##u ///< Literal of unsigned 32-bit integer.
+#define PORT_SINT32(literal) literal    ///< Literal of signed 32-bit integer.
+
 #define PORT_UINT64_MAX ULONG_MAX ///< Maximum value of unsigned 64-bit integer (18446744073709551615).
 #define PORT_SINT64_MAX LONG_MAX  ///< Maximum value of signed 64-bit integer (+9223372036854775807).
 #define PORT_SINT64_MIN LONG_MIN  ///< Minimum value of signed 64-bit integer (-9223372036854775808).
+
+#define PORT_UINT64(literal) literal##ul ///< Literal of unsigned 64-bit integer.
+#define PORT_SINT64(literal) literal##l  ///< Literal of signed 64-bit integer.
 
 #define PORT_FLOAT32_MAX FLT_MAX ///< Maximum finite value of 32-bit floating-point number (0x1.fffffp127f).
 #define PORT_FLOAT32_MIN FLT_MIN ///< Minimum positive value of 32-bit floating-point number (0x1.0p-126f).
@@ -63,6 +69,8 @@
 #define PORT_FLOAT32_MAX_EXP10 FLT_MAX_10_EXP ///< Maximum decimal exponent of 32-bit floating-point number (+38).
 #define PORT_FLOAT32_MIN_EXP10 FLT_MIN_10_EXP ///< Minimum decimal exponent of 32-bit floating-point number (-37).
 
+#define PORT_FLOAT32(literal) literal##f ///< Literal of 32-bit floating-point number.
+
 #define PORT_FLOAT64_MAX DBL_MAX ///< Maximum finite value of 64-bit floating-point number (0x1.fffffffffffffp1023).
 #define PORT_FLOAT64_MIN DBL_MIN ///< Minimum positive value of 64-bit floating-point number (0x1.0p-1022).
 #define PORT_FLOAT64_EPS DBL_EPSILON ///< Minimum value of 64-bit floating-point number greater than 1 minus 1 (0x1.0p-52).
@@ -73,6 +81,8 @@
 #define PORT_FLOAT64_DIG DBL_DIG ///< Number of significant decimal digits in 64-bit floating-point number (15).
 #define PORT_FLOAT64_MAX_EXP10 DBL_MAX_10_EXP ///< Maximum decimal exponent of 64-bit floating-point number (+308).
 #define PORT_FLOAT64_MIN_EXP10 DBL_MIN_10_EXP ///< Minimum decimal exponent of 64-bit floating-point number (-307).
+
+#define PORT_FLOAT64(literal) literal ///< Literal of 64-bit floating-point number.
 
 #else // __OPENCL_C_VERSION__
 
@@ -88,9 +98,15 @@
 #define PORT_SINT32_MAX CL_INT_MAX  ///< Maximum value of signed 32-bit integer (+2147483647).
 #define PORT_SINT32_MIN CL_INT_MIN  ///< Minimum value of signed 32-bit integer (-2147483648).
 
+#define PORT_UINT32(literal) literal##u ///< Literal of unsigned 32-bit integer.
+#define PORT_SINT32(literal) literal    ///< Literal of signed 32-bit integer.
+
 #define PORT_UINT64_MAX CL_ULONG_MAX ///< Maximum value of unsigned 64-bit integer (18446744073709551615).
 #define PORT_SINT64_MAX CL_LONG_MAX  ///< Maximum value of signed 64-bit integer (+9223372036854775807).
 #define PORT_SINT64_MIN CL_LONG_MIN  ///< Minimum value of signed 64-bit integer (-9223372036854775808).
+
+#define PORT_UINT64(literal) literal##ull ///< Literal of unsigned 64-bit integer.
+#define PORT_SINT64(literal) literal##ll  ///< Literal of signed 64-bit integer.
 
 #define PORT_FLOAT32_MAX CL_FLT_MAX ///< Maximum finite value of 32-bit floating-point number (0x1.fffffp127f).
 #define PORT_FLOAT32_MIN CL_FLT_MIN ///< Minimum positive value of 32-bit floating-point number (0x1.0p-126f).
@@ -103,6 +119,8 @@
 #define PORT_FLOAT32_MAX_EXP10 CL_FLT_MAX_10_EXP ///< Maximum decimal exponent of 32-bit floating-point number (+38).
 #define PORT_FLOAT32_MIN_EXP10 CL_FLT_MIN_10_EXP ///< Minimum decimal exponent of 32-bit floating-point number (-37).
 
+#define PORT_FLOAT32(literal) literal##f ///< Literal of 32-bit floating-point number.
+
 #define PORT_FLOAT64_MAX CL_DBL_MAX ///< Maximum finite value of 64-bit floating-point number (0x1.fffffffffffffp1023).
 #define PORT_FLOAT64_MIN CL_DBL_MIN ///< Minimum positive value of 64-bit floating-point number (0x1.0p-1022).
 #define PORT_FLOAT64_EPS CL_DBL_EPSILON ///< Minimum value of 64-bit floating-point number greater than 1 minus 1 (0x1.0p-52).
@@ -113,6 +131,8 @@
 #define PORT_FLOAT64_DIG CL_DBL_DIG ///< Number of significant decimal digits in 64-bit floating-point number (15).
 #define PORT_FLOAT64_MAX_EXP10 CL_DBL_MAX_10_EXP ///< Maximum decimal exponent of 64-bit floating-point number (+308).
 #define PORT_FLOAT64_MIN_EXP10 CL_DBL_MIN_10_EXP ///< Minimum decimal exponent of 64-bit floating-point number (-307).
+
+#define PORT_FLOAT64(literal) literal ///< Literal of 64-bit floating-point number.
 
 #endif // __OPENCL_C_VERSION__
 
@@ -132,9 +152,15 @@
 #define PORT_SINT_SINGLE_MAX PORT_SINT32_MAX ///< Maximum value of signed integer (single size).
 #define PORT_SINT_SINGLE_MIN PORT_SINT32_MIN ///< Minimum value of signed integer (single size).
 
+#define PORT_UINT_SINGLE(literal) PORT_UINT32(literal) ///< Literal of unsigned integer (single size).
+#define PORT_SINT_SINGLE(literal) PORT_SINT32(literal) ///< Literal of signed integer (single size).
+
 #define PORT_UINT_DOUBLE_MAX PORT_UINT64_MAX ///< Maximum value of unsigned integer (double size).
 #define PORT_SINT_DOUBLE_MAX PORT_SINT64_MAX ///< Maximum value of signed integer (double size).
 #define PORT_SINT_DOUBLE_MIN PORT_SINT64_MIN ///< Minimum value of signed integer (double size).
+
+#define PORT_UINT_DOUBLE(literal) PORT_UINT64(literal) ///< Literal of unsigned integer (double size).
+#define PORT_SINT_DOUBLE(literal) PORT_SINT64(literal) ///< Literal of signed integer (double size).
 
 #define PORT_FLOAT_SINGLE_MAX PORT_FLOAT32_MAX ///< Maximum finite value of floating-point number (single size).
 #define PORT_FLOAT_SINGLE_MIN PORT_FLOAT32_MIN ///< Minimum positive value of floating-point number (single size).
@@ -147,6 +173,8 @@
 #define PORT_FLOAT_SINGLE_MAX_EXP10 PORT_FLOAT32_MAX_EXP10 ///< Maximum decimal exponent of floating-point number (single size).
 #define PORT_FLOAT_SINGLE_MIN_EXP10 PORT_FLOAT32_MIN_EXP10 ///< Minimum decimal exponent of floating-point number (single size).
 
+#define PORT_FLOAT_SINGLE(literal) PORT_FLOAT32(literal) ///< Literal of floating-point number (single size).
+
 #define PORT_FLOAT_DOUBLE_MAX PORT_FLOAT64_MAX ///< Maximum finite value of floating-point number (double size).
 #define PORT_FLOAT_DOUBLE_MIN PORT_FLOAT64_MIN ///< Minimum positive value of floating-point number (double size).
 #define PORT_FLOAT_DOUBLE_EPS PORT_FLOAT64_EPS ///< Minimum value of floating-point number (double size) greater than 1 minus 1.
@@ -158,6 +186,8 @@
 #define PORT_FLOAT_DOUBLE_MAX_EXP10 PORT_FLOAT64_MAX_EXP10 ///< Maximum decimal exponent of floating-point number (double size).
 #define PORT_FLOAT_DOUBLE_MIN_EXP10 PORT_FLOAT64_MIN_EXP10 ///< Minimum decimal exponent of floating-point number (double size).
 
+#define PORT_FLOAT_DOUBLE(literal) PORT_FLOAT64(literal) ///< Literal of floating-point number (double size).
+
 ///////////////////////////////////////////////////////////////////////////////
 // Default types
 ///////////////////////////////////////////////////////////////////////////////
@@ -168,11 +198,17 @@
 #define PORT_SINT_MAX PORT_SINT32_MAX ///< Maximum value of default signed integer.
 #define PORT_SINT_MIN PORT_SINT32_MIN ///< Minimum value of default signed integer.
 
+#define PORT_UINT(literal) PORT_UINT32(literal) ///< Literal of default unsigned integer.
+#define PORT_SINT(literal) PORT_SINT32(literal) ///< Literal of default signed integer.
+
 #else // PORT_FEATURE_DEFAULT_INTEGER_64
 
 #define PORT_UINT_MAX PORT_UINT64_MAX ///< Maximum value of default unsigned integer.
 #define PORT_SINT_MAX PORT_SINT64_MAX ///< Maximum value of default signed integer.
 #define PORT_SINT_MIN PORT_SINT64_MIN ///< Minimum value of default signed integer.
+
+#define PORT_UINT(literal) PORT_UINT64(literal) ///< Literal of default unsigned integer.
+#define PORT_SINT(literal) PORT_SINT64(literal) ///< Literal of default signed integer.
 
 #endif // PORT_FEATURE_DEFAULT_INTEGER_64
 
@@ -191,7 +227,7 @@
 #define PORT_FLOAT_MAX_EXP10 PORT_FLOAT32_MAX_EXP10 ///< Maximum decimal exponent of default floating-point number.
 #define PORT_FLOAT_MIN_EXP10 PORT_FLOAT32_MIN_EXP10 ///< Minimum decimal exponent of default floating-point number.
 
-#define PORT_FLOAT(literal) literal##f ///< Literal of default floating-point number.
+#define PORT_FLOAT(literal) PORT_FLOAT32(literal) ///< Literal of default floating-point number.
 
 #else // PORT_FEATURE_DEFAULT_FLOAT_64
 
@@ -206,7 +242,7 @@
 #define PORT_FLOAT_MAX_EXP10 PORT_FLOAT64_MAX_EXP10 ///< Maximum decimal exponent of default floating-point number.
 #define PORT_FLOAT_MIN_EXP10 PORT_FLOAT64_MIN_EXP10 ///< Minimum decimal exponent of default floating-point number.
 
-#define PORT_FLOAT(literal) literal ///< Literal of default floating-point number.
+#define PORT_FLOAT(literal) PORT_FLOAT64(literal) ///< Literal of default floating-point number.
 
 #endif // PORT_FEATURE_DEFAULT_FLOAT_64
 
