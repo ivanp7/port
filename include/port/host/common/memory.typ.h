@@ -37,7 +37,7 @@
  *
  * @return Newly allocated memory or NULL.
  */
-typedef port_memory_ptr_t (*port_memory_alloc_func_t)(
+typedef port_void_ptr_t (*port_memory_alloc_func_t)(
         port_size_t num_bytes, ///< [in] Number of bytes to allocate.
         port_size_t alignment, ///< [in] Memory alignment.
         port_void_ptr_t properties ///< [in] Memory allocator properties.
@@ -47,7 +47,7 @@ typedef port_memory_ptr_t (*port_memory_alloc_func_t)(
  * @brief Memory deallocator function.
  */
 typedef void (*port_memory_free_func_t)(
-        port_memory_ptr_t memory, ///< [in] Memory to deallocate.
+        port_void_ptr_t memory, ///< [in] Memory to deallocate.
         port_void_ptr_t properties ///< [in] Memory deallocator properties.
 );
 
@@ -57,7 +57,7 @@ typedef void (*port_memory_free_func_t)(
  * @return True if succeed, otherwise false.
  */
 typedef port_bool_t (*port_memory_map_func_t)(
-        port_memory_ptr_t memory, ///< [in] Memory to map.
+        port_void_ptr_t memory, ///< [in] Memory to map.
         port_size_t num_bytes, ///< [in] Number of bytes to allocate.
         port_void_ptr_t properties ///< [in] Memory mapping properties.
 );
@@ -68,7 +68,7 @@ typedef port_bool_t (*port_memory_map_func_t)(
  * @return True if succeed, otherwise false.
  */
 typedef port_bool_t (*port_memory_unmap_func_t)(
-        port_memory_ptr_t memory, ///< [in] Memory to unmap.
+        port_void_ptr_t memory, ///< [in] Memory to unmap.
         port_void_ptr_t properties ///< [in] Memory unmapping properties.
 );
 

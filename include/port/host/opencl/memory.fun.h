@@ -35,7 +35,7 @@
  *
  * @return Newly allocated memory or NULL.
  */
-port_memory_ptr_t
+port_void_ptr_t
 port_memory_opencl_alloc(
         port_size_t num_bytes, ///< [in] Number of bytes to allocate.
         port_size_t alignment, ///< [in] Memory alignment.
@@ -49,7 +49,7 @@ port_memory_opencl_alloc(
  */
 void
 port_memory_opencl_free(
-        port_memory_ptr_t memory, ///< [in] Memory to deallocate.
+        port_void_ptr_t memory, ///< [in] Memory to deallocate.
         port_void_ptr_t properties ///< [in] Memory deallocator properties.
 );
 
@@ -62,7 +62,7 @@ port_memory_opencl_free(
  */
 port_bool_t
 port_memory_opencl_map(
-        port_memory_ptr_t memory, ///< [in] Memory to map.
+        port_void_ptr_t memory, ///< [in] Memory to map.
         port_size_t num_bytes, ///< [in] Number of bytes to allocate.
         port_void_ptr_t properties ///< [in] Memory mapping properties.
 );
@@ -76,7 +76,7 @@ port_memory_opencl_map(
  */
 port_bool_t
 port_memory_opencl_unmap(
-        port_memory_ptr_t memory, ///< [in] Memory to unmap.
+        port_void_ptr_t memory, ///< [in] Memory to unmap.
         port_void_ptr_t properties ///< [in] Memory unmapping properties.
 );
 

@@ -27,7 +27,7 @@
 
 #include <CL/cl.h>
 
-port_memory_ptr_t
+port_void_ptr_t
 port_memory_opencl_alloc(
         port_size_t num_bytes,
         port_size_t alignment,
@@ -42,7 +42,7 @@ port_memory_opencl_alloc(
 
 void
 port_memory_opencl_free(
-        port_memory_ptr_t memory,
+        port_void_ptr_t memory,
         port_void_ptr_t properties)
 {
     port_memory_opencl_alloc_properties_t *p = properties;
@@ -54,7 +54,7 @@ port_memory_opencl_free(
 
 port_bool_t
 port_memory_opencl_map(
-        port_memory_ptr_t memory,
+        port_void_ptr_t memory,
         port_size_t num_bytes,
         port_void_ptr_t properties)
 {
@@ -68,7 +68,7 @@ port_memory_opencl_map(
 
 port_bool_t
 port_memory_opencl_unmap(
-        port_memory_ptr_t memory,
+        port_void_ptr_t memory,
         port_void_ptr_t properties)
 {
     port_memory_opencl_map_properties_t *p = properties;
