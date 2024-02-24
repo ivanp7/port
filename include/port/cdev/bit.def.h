@@ -47,7 +47,12 @@
 /**
  * @brief Get minumum number of (1 << num_bits) units the number fits in.
  */
-#define PORT_NUM_UNITS(type, v, num_bits) ((type)(((v) + ((type)1 << (num_bits)) - 1) >> (num_bits)))
+#define PORT_NUM_UNITS(type, v, num_bits) (((type)(v) + ((type)1 << (num_bits)) - (type)1) >> (num_bits))
+/**
+ * @brief Round number up to (1 << num_bits) unit border.
+ */
+#define PORT_FULL_UNITS(type, v, num_bits) (((type)(v) + ((type)1 << (num_bits)) - (type)1) & \
+        ~(((type)1 << (num_bits)) - (type)1))
 
 /**
  * @brief Construct a byte from separate bits.
