@@ -55,6 +55,11 @@
     PORT_CONCAT_BITS(ref_type, offset, num_idx_bits, idx)
 
 /**
+ * @brief Check if memory reference is far.
+ */
+#define PORT_MEMORY_REF_IS_FAR(ref) ((ref) >= 0)
+
+/**
  * @brief Parse far memory reference.
  */
 #define PORT_MEMORY_REF_FAR_PARSE(ref, ref_type, num_idx_bits, idx_ptr, offset_ptr) do {   \
