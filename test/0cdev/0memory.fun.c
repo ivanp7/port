@@ -41,7 +41,7 @@ TEST(PORT_MEMORY_REF_FAR)
 TEST(PORT_MEMORY_REF_FAR_PARSE)
 {
     port_uint_single_t idx = 0, offset = 0;
-    PORT_MEMORY_REF_FAR_PARSE(0xA73CA3, port_memory_ref_t, 13, &idx, &offset);
+    PORT_MEMORY_REF_FAR_PARSE(0xA73CA3, port_uint_single_t, 13, &idx, &offset);
     ASSERT_EQ(idx, 7331, port_uint_single_t, "%u");
     ASSERT_EQ(offset, 1337, port_uint_single_t, "%u");
 }

@@ -62,9 +62,10 @@
 /**
  * @brief Parse far memory reference.
  */
-#define PORT_MEMORY_REF_FAR_PARSE(ref, ref_type, num_idx_bits, idx_ptr, offset_ptr) do {   \
-    if ((idx_ptr) != NULL) *(idx_ptr) = PORT_EXTRACT_BITS(ref_type, ref, 0, num_idx_bits); \
-    if ((offset_ptr) != NULL) *(offset_ptr) = (ref) >> (num_idx_bits); } while (0)
+#define PORT_MEMORY_REF_FAR_PARSE(ref, ref_type, num_idx_bits, idx_ptr, offset_ptr) do { \
+    PORT_EXTRACT_LSBITS_TO((idx_ptr), ref_type, (ref), (num_idx_bits));                  \
+    PORT_EXTRACT_MSBITS_TO((offset_ptr), ref_type, (ref), (num_idx_bits));               \
+} while (0)
 
 #endif // _PORT_CDEV_MEMORY_DEF_H_
 

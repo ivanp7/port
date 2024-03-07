@@ -72,10 +72,39 @@
     (((type)(msval) << (shift)) | (type)(lsval))
 
 /**
+ * @brief Extract most significant bits.
+ */
+#define PORT_EXTRACT_MSBITS(type, value, shift) \
+    ((type)((value) >> (shift)))
+/**
+ * @brief Extract least significant bits.
+ */
+#define PORT_EXTRACT_LSBITS(type, value, length) \
+    ((type)(value) & (((type)1 << (length)) - (type)1))
+/**
  * @brief Extract bits.
  */
 #define PORT_EXTRACT_BITS(type, value, shift, length) \
-    ((type)(((value) >> (shift)) & (((type)1 << (length)) - 1)))
+    PORT_EXTRACT_LSBITS(type, PORT_EXTRACT_MSBITS(type, (value), (shift)), (length))
+
+/**
+ * @brief Extract most significant bits to nullable storage.
+ */
+#define PORT_EXTRACT_MSBITS_TO(ptr, type, value, shift) do {                 \
+    if ((ptr) != NULL) *(ptr) = PORT_EXTRACT_MSBITS(type, (value), (shift)); \
+} while (0)
+/**
+ * @brief Extract least significant bits to nullable storage.
+ */
+#define PORT_EXTRACT_LSBITS_TO(ptr, type, value, length) do {                 \
+    if ((ptr) != NULL) *(ptr) = PORT_EXTRACT_LSBITS(type, (value), (length)); \
+} while (0)
+/**
+ * @brief Extract bits to nullable storage.
+ */
+#define PORT_EXTRACT_BITS_TO(ptr, type, value, shift, length) do {                   \
+    if ((ptr) != NULL) *(ptr) = PORT_EXTRACT_BITS(type, (value), (shift), (length)); \
+} while (0)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Masks
