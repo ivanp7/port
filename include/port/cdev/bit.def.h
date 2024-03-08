@@ -56,12 +56,12 @@
 
 /**
  * @brief Construct a byte from separate bits.
- *
- * @warning Every argument must be either 0 or 1.
  */
-#define PORT_BYTE(msb, b6, b5, b4, b3, b2, b1, lsb)                     \
-    ((port_uint8_t)((lsb) | ((b1) << 1) | ((b2) << 2) | ((b3) << 3) |   \
-            ((b4) << 4) | ((b5) << 5) | ((b6) << 6) | ((msb) << 7)))
+#define PORT_BYTE(msb, b6, b5, b4, b3, b2, b1, lsb)                 \
+    ((port_uint8_t)((port_bool_t)(lsb) | ((port_bool_t)(b1) << 1) | \
+        ((port_bool_t)(b2) << 2) | ((port_bool_t)(b3) << 3) |       \
+        ((port_bool_t)(b4) << 4) | ((port_bool_t)(b5) << 5) |       \
+        ((port_bool_t)(b6) << 6) | ((port_bool_t)(msb) << 7)))
 
 /**
  * @brief Concatenate bits.
