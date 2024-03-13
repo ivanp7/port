@@ -199,7 +199,7 @@ log_operation(
         size_t length;
 
         error = clGetProgramBuildInfo(program, device_list[i],
-                CL_PROGRAM_BUILD_STATUS, sizeof(status), &status, (size_t*)NULL);
+                CL_PROGRAM_BUILD_STATUS, sizeof(status), &status, NULL);
         if (error != CL_SUCCESS)
         {
             fprintf(stream, "\\n[device #%u] couldn't obtain build status\\n", i);
@@ -214,7 +214,7 @@ log_operation(
             fprintf(stream, "code %i\\n", status);
 
         error = clGetProgramBuildInfo(program, device_list[i],
-                CL_PROGRAM_BUILD_LOG, 0, (void*)NULL, &length);
+                CL_PROGRAM_BUILD_LOG, 0, NULL, &length);
         if (error != CL_SUCCESS)
         {
             fprintf(stream, "Error: couldn't obtain build log length.");
@@ -237,7 +237,7 @@ log_operation(
             continue;
 
         error = clGetProgramBuildInfo(program, device_list[i],
-                CL_PROGRAM_BUILD_LOG, length, build_log, (size_t*)NULL);
+                CL_PROGRAM_BUILD_LOG, length, build_log, NULL);
         if (error == CL_SUCCESS)
             fprintf(stream, "%s", build_log);
         else
@@ -387,7 +387,7 @@ port_opencl_build_program(
 
             if (stream != NULL)
                 log_operation("clCreateProgramWithSource", header_include_names[i],
-                        err, false, stream, (cl_program)NULL, 0, (const cl_device_id*)NULL);
+                        err, false, stream, NULL, 0, NULL);
 
             if (err != CL_SUCCESS)
                 goto finish;
@@ -418,7 +418,7 @@ port_opencl_build_program(
 
             if (stream != NULL)
                 log_operation("clCreateProgramWithSource", source_names[i],
-                        err, false, stream, (cl_program)NULL, 0, (const cl_device_id*)NULL);
+                        err, false, stream, NULL, 0, NULL);
 
             if (err != CL_SUCCESS)
                 goto finish;
@@ -429,7 +429,7 @@ port_opencl_build_program(
     for (cl_uint i = 0; i < num_sources; i++)
     {
         err = clCompileProgram(program_sources[i], num_devices, device_list, cflags,
-                num_headers, program_headers, header_include_names, NULL, (void*)NULL);
+                num_headers, program_headers, header_include_names, NULL, NULL);
 
         if (stream != NULL)
             log_operation("clCompileProgram", source_names[i],
@@ -441,7 +441,7 @@ port_opencl_build_program(
 
     // Link program
     program = clLinkProgram(context, num_devices, device_list, lflags,
-            num_sources + num_libraries, program_sources, NULL, (void*)NULL, &err);
+            num_sources + num_libraries, program_sources, NULL, NULL, &err);
 
     if (stream != NULL)
         log_operation("clLinkProgram", NULL, err, true, stream, program, num_devices, device_list);

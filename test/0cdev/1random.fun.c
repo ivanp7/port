@@ -113,7 +113,7 @@ TEST(port_random_set_bit_quarter_precision)
         for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
         {
             port_uint8_t bitn = port_random_set_bit_quarter_precision(
-                    0x55555555, (port_const_memory_ptr_t)NULL, &rnd);
+                    0x55555555, NULL, &rnd);
             bins[bitn / 2]++;
         }
 
@@ -182,7 +182,7 @@ TEST(port_random_set_bit_half_precision)
         for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
         {
             port_uint8_t bitn = port_random_set_bit_half_precision(
-                    0x55555555, (port_const_memory_ptr_t)NULL, &rnd);
+                    0x55555555, NULL, &rnd);
             bins[bitn / 2]++;
         }
 
