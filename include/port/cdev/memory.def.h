@@ -33,6 +33,19 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @brief Memory unit alignment requirement as bit shift argument.
+ *
+ * alignof(port_memory_unit_t) is (1 << PORT_MEMORY_UNIT_ALIGNMENT).
+ */
+#define PORT_MEMORY_UNIT_ALIGNMENT 2
+
+/**
+ * @brief Number of units needed to store the specified number of bytes.
+ */
+#define PORT_NUM_MEMORY_UNITS_FROM_BYTES(type, v) \
+    (PORT_FULL_UNITS(type, (v), PORT_MEMORY_UNIT_ALIGNMENT) >> PORT_MEMORY_UNIT_ALIGNMENT)
+
+/**
  * @brief Number of bits enough to store any valid memory table index length --
  * number of index bits in far memory references.
  *
