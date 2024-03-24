@@ -137,6 +137,17 @@
 #endif // __OPENCL_C_VERSION__
 
 ///////////////////////////////////////////////////////////////////////////////
+// Sizes of relative types
+///////////////////////////////////////////////////////////////////////////////
+
+#define PORT_TYPE_SIZE_QUARTER 0 ///< Log2(size) of quarter type.
+#define PORT_TYPE_SIZE_HALF 1    ///< Log2(size) of half type.
+#define PORT_TYPE_SIZE_SINGLE 2  ///< Log2(size) of single type.
+#define PORT_TYPE_SIZE_DOUBLE 3  ///< Log2(size) of double type.
+
+#define PORT_TYPE_SIZE_NUM_BITS 2 ///< Number of bits required to store log2(size) of a type.
+
+///////////////////////////////////////////////////////////////////////////////
 // Relative types
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -201,6 +212,8 @@
 #define PORT_UINT(literal) PORT_UINT32(literal) ///< Literal of default unsigned integer.
 #define PORT_SINT(literal) PORT_SINT32(literal) ///< Literal of default signed integer.
 
+#define PORT_INT_SIZE PORT_TYPE_SIZE_SINGLE ///< Log2(size) of default integer.
+
 #else // PORT_FEATURE_DEFAULT_INTEGER_64
 
 #define PORT_UINT_MAX PORT_UINT64_MAX ///< Maximum value of default unsigned integer.
@@ -210,9 +223,9 @@
 #define PORT_UINT(literal) PORT_UINT64(literal) ///< Literal of default unsigned integer.
 #define PORT_SINT(literal) PORT_SINT64(literal) ///< Literal of default signed integer.
 
-#endif // PORT_FEATURE_DEFAULT_INTEGER_64
+#define PORT_INT_SIZE PORT_TYPE_SIZE_DOUBLE ///< Log2(size) of default integer.
 
-#define PORT_INT_RELSIZE (sizeof(port_uint_t) / sizeof(port_uint_single_t)) ///< Relative size of default integer.
+#endif // PORT_FEATURE_DEFAULT_INTEGER_64
 
 #ifndef PORT_FEATURE_DEFAULT_FLOAT_64
 
@@ -229,6 +242,8 @@
 
 #define PORT_FLOAT(literal) PORT_FLOAT32(literal) ///< Literal of default floating-point number.
 
+#define PORT_FLOAT_SIZE PORT_TYPE_SIZE_SINGLE ///< Log2(size) of default floating-point number.
+
 #else // PORT_FEATURE_DEFAULT_FLOAT_64
 
 #define PORT_FLOAT_MAX PORT_FLOAT64_MAX ///< Maximum finite value of default floating-point number.
@@ -244,9 +259,14 @@
 
 #define PORT_FLOAT(literal) PORT_FLOAT64(literal) ///< Literal of default floating-point number.
 
+#define PORT_FLOAT_SIZE PORT_TYPE_SIZE_DOUBLE ///< Log2(size) of default floating-point number.
+
 #endif // PORT_FEATURE_DEFAULT_FLOAT_64
 
-#define PORT_FLOAT_RELSIZE (sizeof(port_float_t) / sizeof(port_float_single_t)) ///< Relative size of default floating-point number.
+/**
+ * @brief Invalid value of a floating-point number log2(size).
+ */
+#define PORT_FLOAT_SIZE_INVALID PORT_TYPE_SIZE_QUARTER
 
 #endif // _PORT_CDEV_TYPES_DEF_H_
 

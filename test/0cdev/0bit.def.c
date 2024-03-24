@@ -56,32 +56,32 @@ TEST(PORT_NUM_UNITS)
     ASSERT_EQ(PORT_NUM_UNITS(port_uint32_t, 9, 2), 3, port_uint32_t, "%u");
 }
 
-TEST(PORT_FULL_UNITS)
+TEST(PORT_ROUND_UP)
 {
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 0, 0), 0, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 1, 0), 1, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 2, 0), 2, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 3, 0), 3, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 4, 0), 4, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 0, 1), 0, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 1, 1), 2, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 2, 1), 2, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 3, 1), 4, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 4, 1), 4, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 5, 1), 6, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 6, 1), 6, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 7, 1), 8, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 8, 1), 8, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 0, 2), 0, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 1, 2), 4, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 2, 2), 4, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 3, 2), 4, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 4, 2), 4, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 5, 2), 8, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 6, 2), 8, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 7, 2), 8, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 8, 2), 8, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_FULL_UNITS(port_uint32_t, 9, 2), 12, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 0, 0), 0, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 1, 0), 1, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 2, 0), 2, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 3, 0), 3, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 4, 0), 4, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 0, 1), 0, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 1, 1), 2, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 2, 1), 2, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 3, 1), 4, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 4, 1), 4, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 5, 1), 6, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 6, 1), 6, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 7, 1), 8, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 8, 1), 8, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 0, 2), 0, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 1, 2), 4, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 2, 2), 4, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 3, 2), 4, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 4, 2), 4, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 5, 2), 8, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 6, 2), 8, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 7, 2), 8, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 8, 2), 8, port_uint32_t, "%u");
+    ASSERT_EQ(PORT_ROUND_UP(port_uint32_t, 9, 2), 12, port_uint32_t, "%u");
 }
 
 TEST(PORT_BYTE)

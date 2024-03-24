@@ -45,14 +45,14 @@
 #define PORT_NUM_BITS(type) (sizeof(type) * PORT_CHAR_BIT)
 
 /**
- * @brief Get minumum number of (1 << num_bits) units the number fits in.
+ * @brief Get minumum number of (1 << unit) units the number fits in.
  */
-#define PORT_NUM_UNITS(type, v, num_bits) (((type)(v) + ((type)1 << (num_bits)) - (type)1) >> (num_bits))
+#define PORT_NUM_UNITS(type, v, unit) (((type)(v) + ((type)1 << (unit)) - (type)1) >> (unit))
 /**
- * @brief Round number up to (1 << num_bits) unit border.
+ * @brief Round number up to (1 << unit) unit border.
  */
-#define PORT_FULL_UNITS(type, v, num_bits) (((type)(v) + ((type)1 << (num_bits)) - (type)1) & \
-        ~(((type)1 << (num_bits)) - (type)1))
+#define PORT_ROUND_UP(type, v, unit) (((type)(v) + ((type)1 << (unit)) - (type)1) & \
+        ~(((type)1 << (unit)) - (type)1))
 
 /**
  * @brief Construct a byte from separate bits.

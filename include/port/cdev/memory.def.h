@@ -33,19 +33,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Memory unit alignment requirement as bit shift argument.
- *
- * alignof(port_memory_unit_t) is (1 << PORT_MEMORY_UNIT_ALIGNMENT).
- */
-#define PORT_MEMORY_UNIT_ALIGNMENT 2
-
-/**
- * @brief Number of units needed to store the specified number of bytes.
- */
-#define PORT_NUM_MEMORY_UNITS_FROM_BYTES(type, v) \
-    (PORT_FULL_UNITS(type, (v), PORT_MEMORY_UNIT_ALIGNMENT) >> PORT_MEMORY_UNIT_ALIGNMENT)
-
-/**
  * @brief Number of bits enough to store any valid memory table index length --
  * number of index bits in far memory references.
  *
@@ -78,6 +65,19 @@
 #define PORT_MEMORY_REF_FAR_PARSE(ref, ref_type, num_idx_bits, idx_ptr, offset_ptr) do { \
     PORT_EXTRACT_LSBITS_TO((idx_ptr), ref_type, (ref), (num_idx_bits));                  \
     PORT_EXTRACT_MSBITS_TO((offset_ptr), ref_type, (ref), (num_idx_bits));               \
+} while (0)
+
+/**
+ * @brief Invalid value of a memory reference log2(size).
+ */
+#define PORT_MEMORY_REF_SIZE_INVALID PORT_TYPE_SIZE_DOUBLE
+
+/**
+ * @brief Normalize unit-byte pair of indices.
+ */
+#define PORT_MEMORY_IDX_NORMALIZE(unit_idx, subunit_idx, subunit_size) do {  \
+    (unit_idx) += (subunit_idx) >> (PORT_TYPE_SIZE_SINGLE - (subunit_size)); \
+    (subunit_idx) &= (1 << (PORT_TYPE_SIZE_SINGLE - (subunit_size))) - 1;    \
 } while (0)
 
 #endif // _PORT_CDEV_MEMORY_DEF_H_
