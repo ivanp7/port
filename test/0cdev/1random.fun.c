@@ -104,7 +104,7 @@ TEST(port_random_float64)
     }
 }
 
-TEST(port_random_set_bit_quarter_precision)
+TEST(port_random_set_bit_quarter)
 {
     {
         port_uint32_t bins[NUM_BINS/2] = {0};
@@ -112,7 +112,7 @@ TEST(port_random_set_bit_quarter_precision)
         port_uint32_t rnd = 777;
         for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
         {
-            port_uint8_t bitn = port_random_set_bit_quarter_precision(
+            port_uint8_t bitn = port_random_set_bit_quarter(
                     0x55555555, NULL, &rnd);
             bins[bitn / 2]++;
         }
@@ -144,7 +144,7 @@ TEST(port_random_set_bit_quarter_precision)
         port_uint32_t rnd = 8888;
         for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
         {
-            port_uint8_t bitn = port_random_set_bit_quarter_precision(0x55555555, thresholds, &rnd);
+            port_uint8_t bitn = port_random_set_bit_quarter(0x55555555, thresholds, &rnd);
             bins[bitn / 2]++;
         }
 
@@ -173,7 +173,7 @@ TEST(port_random_set_bit_quarter_precision)
     }
 }
 
-TEST(port_random_set_bit_half_precision)
+TEST(port_random_set_bit_half)
 {
     {
         port_uint32_t bins[NUM_BINS/2] = {0};
@@ -181,7 +181,7 @@ TEST(port_random_set_bit_half_precision)
         port_uint32_t rnd = 777;
         for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
         {
-            port_uint8_t bitn = port_random_set_bit_half_precision(
+            port_uint8_t bitn = port_random_set_bit_half(
                     0x55555555, NULL, &rnd);
             bins[bitn / 2]++;
         }
@@ -214,7 +214,7 @@ TEST(port_random_set_bit_half_precision)
         port_uint32_t rnd = 777;
         for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
         {
-            port_uint8_t bitn = port_random_set_bit_half_precision(0x55555555, thresholds, &rnd);
+            port_uint8_t bitn = port_random_set_bit_half(0x55555555, thresholds, &rnd);
             bins[bitn / 2]++;
         }
 

@@ -113,7 +113,7 @@ port_random_float64(
 }
 
 port_uint8_t
-port_random_set_bit_quarter_precision(
+port_random_set_bit_quarter(
         port_uint_single_t mask,
         port_const_memory_ptr_t thresholds,
 
@@ -176,7 +176,7 @@ port_random_set_bit_quarter_precision(
 }
 
 port_uint8_t
-port_random_set_bit_half_precision(
+port_random_set_bit_half(
         port_uint_single_t mask,
         port_const_memory_ptr_t thresholds,
 
