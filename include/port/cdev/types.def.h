@@ -149,6 +149,11 @@
 
 #define PORT_TYPE_SIZE_NUM_BITS 2 ///< Number of bits required to store log2(size) of a type.
 
+/**
+ * @brief Number of bits in a type.
+ */
+#define PORT_TYPE_NUM_BITS(size) ((size_t)1 << (PORT_NUM_BYTE_BITS_LOG2 + (size)))
+
 ///////////////////////////////////////////////////////////////////////////////
 // Relative types
 ///////////////////////////////////////////////////////////////////////////////
