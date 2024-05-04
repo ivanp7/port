@@ -140,10 +140,12 @@
 // Sizes of relative types
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PORT_TYPE_SIZE_QUARTER 0 ///< Log2(size) of quarter type.
-#define PORT_TYPE_SIZE_HALF 1    ///< Log2(size) of half type.
-#define PORT_TYPE_SIZE_SINGLE 2  ///< Log2(size) of single type.
-#define PORT_TYPE_SIZE_DOUBLE 3  ///< Log2(size) of double type.
+#define PORT_NUM_BYTE_BITS_LOG2 3 ///< Log2(bits per byte)
+
+#define PORT_TYPE_SIZE_QUARTER 0 ///< Log2(size)-3 of quarter type.
+#define PORT_TYPE_SIZE_HALF 1    ///< Log2(size)-3 of half type.
+#define PORT_TYPE_SIZE_SINGLE 2  ///< Log2(size)-3 of single type.
+#define PORT_TYPE_SIZE_DOUBLE 3  ///< Log2(size)-3 of double type.
 
 #define PORT_TYPE_SIZE_NUM_BITS 2 ///< Number of bits required to store log2(size) of a type.
 

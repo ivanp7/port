@@ -27,6 +27,7 @@
 #define _PORT_CDEV_MEMORY_DEF_H_
 
 #include <port/cdev/bit.def.h>
+#include <port/cdev/types.def.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Memory reference
@@ -40,7 +41,8 @@
  * For 16-bit memory references, the value is 4 (2^4 = 16).
  * For  8-bit memory references, the value is 3 (2^3 = 8).
  */
-#define PORT_MEMORY_REF_NUM_IDXLEN_BITS(ref_type) (sizeof(ref_type) / 2 + 3)
+#define PORT_MEMORY_REF_NUM_IDXLEN_BITS(ref_type) \
+    (sizeof(ref_type) / 2 + PORT_NUM_BYTE_BITS_LOG2)
 
 /**
  * @brief Construct far memory reference.
