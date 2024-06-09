@@ -232,7 +232,7 @@ value_type name(port_const_##addrspace##_memory_ptr_t memory, port_uint8_t offse
 port_float32_t name(port_const_##addrspace##_memory_ptr_t memory, port_uint8_t offset) {    \
     memory += offset >> 1;                                                                  \
     offset &= 1;                                                                            \
-    return vload_half(offset, (const half*)memory); }
+    return vload_half(offset, (const __##addrspace half*)memory); }
 
 #else // __OPENCL_C_VERSION__
 
@@ -321,7 +321,7 @@ vector_type name(port_const_##addrspace##_memory_ptr_t memory, port_uint8_t offs
 
 #  define PORT_DEFINE_MEMORY_READ_FUNCTION_VECTOR_SINGLE(name, vector_type, element_type, vector_length, \
         addrspace, unit_field) \
-    PORT_DEFINE_MEMORY_READ_FUNCTION_VECTOR_SUB(name, vector_type, element_type, vector_length, addrspace, unit_field)
+    PORT_DEFINE_MEMORY_READ_FUNCTION_VECTOR_SUB(name, vector_type, element_type, vector_length, addrspace, 0, unit_field)
 
 #  define PORT_DEFINE_MEMORY_READ_FUNCTION_VECTOR_DOUBLE(name, vector_type, element_type, vector_length, \
         addrspace, unit_field) \
@@ -335,7 +335,7 @@ vector_type name(port_const_##addrspace##_memory_ptr_t memory, port_uint8_t offs
         for (port_uint8_t i = 0; i < vector_length; i++) {                          \
             port_memory_unit_double_t u = {.as_units = {memory[0], memory[1]}};     \
             memory += 2;                                                            \
-            PORT_V16_SET_ELT(vector, i, u.unit_field); }                            \
+            PORT_V##vector_length##_SET_ELT(vector, i, u.unit_field); }             \
         return vector; } }
 
 #  define PORT_DEFINE_MEMORY_READ_FUNCTION_VECTOR_FLOAT16(name, vector_length, addrspace) \
@@ -541,7 +541,7 @@ void name(port_##addrspace##_memory_ptr_t memory, value_type value, port_uint8_t
 void name(port_##addrspace##_memory_ptr_t memory, port_float32_t value, port_uint8_t offset) { \
     memory += offset >> 1;                                                  \
     offset &= 1;                                                            \
-    vstore_half(value, offset, (half*)memory); }
+    vstore_half(value, offset, (__##addrspace half*)memory); }
 
 #else // __OPENCL_C_VERSION__
 
@@ -623,7 +623,7 @@ void name(port_##addrspace##_memory_ptr_t memory, vector_type value, port_uint8_
 
 #  define PORT_DEFINE_MEMORY_WRITE_FUNCTION_VECTOR_SINGLE(name, vector_type, element_type, vector_length, \
         addrspace, unit_field) \
-    PORT_DEFINE_MEMORY_WRITE_FUNCTION_VECTOR_SUB(name, vector_type, element_type, vector_length, addrspace, unit_field)
+    PORT_DEFINE_MEMORY_WRITE_FUNCTION_VECTOR_SUB(name, vector_type, element_type, vector_length, addrspace, 0, unit_field)
 
 #  define PORT_DEFINE_MEMORY_WRITE_FUNCTION_VECTOR_DOUBLE(name, vector_type, element_type, vector_length, \
         addrspace, unit_field) \
@@ -634,7 +634,7 @@ void name(port_##addrspace##_memory_ptr_t memory, vector_type value, port_uint8_
         vstore##vector_length(value, 0, (__##addrspace element_type*)memory);       \
     else {                                                                          \
         for (port_uint8_t i = 0; i < vector_length; i++) {                          \
-            port_memory_unit_double_t u = {.unit_field = PORT_V16_ELT(value, i)};   \
+            port_memory_unit_double_t u = {.unit_field = PORT_V##vector_length##_ELT(value, i)};   \
             memory[0] = u.as_units[0];                                              \
             memory[1] = u.as_units[1];                                              \
             memory += 2; } } }                                                      \
