@@ -19,51 +19,29 @@
 
 /**
  * @file
- * @brief OpenCL program builder.
+ * @brief Types for OpenCL program builder.
  */
 
 #pragma once
-#ifndef _PORT_HOST_OPENCL_PROGRAM_FUN_H_
-#define _PORT_HOST_OPENCL_PROGRAM_FUN_H_
+#ifndef _PORT_HOST_OPENCL_PROGRAM_TYP_H_
+#define _PORT_HOST_OPENCL_PROGRAM_TYP_H_
 
 #include <CL/cl.h>
-#include <stdio.h>
-
-struct port_opencl_program_sources;
 
 /**
- * @brief Allocate and concatenate string of compiler/linker flags.
- *
- * @return Allocated string of OpenCL compiler/linker flags.
+ * @brief Logically indivisible set of sources for OpenCL program builder.
  */
-const char*
-port_opencl_concat_flags(
-        const char *flags[] ///< [in] Strings to concatenate.
-);
+typedef struct port_opencl_program_sources {
+    cl_uint num_headers;  ///< Number of header files.
+    const char **header_include_names; ///< #include names of header files.
+    const char **headers; ///< Header files.
+    size_t *header_sizes; ///< Sizes of header files.
 
-/**
- * @brief Create, compile and link OpenCL program.
- *
- * @return OpenCL program object.
- */
-cl_program
-port_opencl_build_program(
-        cl_context context,  ///< [in] Valid OpenCL context.
-        cl_uint num_devices, ///< [in] Number of devices listed in the device list.
-        const cl_device_id *device_list, ///< [in] List of devices to build the program for.
+    cl_uint num_sources;  ///< Number of source files.
+    const char **source_names; ///< Names of source files.
+    const char **sources; ///< Source files.
+    size_t *source_sizes; ///< Sizes of source files.
+} port_opencl_program_sources_t;
 
-        cl_uint num_inputs, ///< [in] Number of input sets of sources.
-        const struct port_opencl_program_sources *inputs, ///< [in] Input sets of sources.
-
-        cl_uint num_libraries,        ///< [in] Number of linked libraries.
-        const cl_program libraries[], ///< [in] Libraries to link.
-
-        const char *cflags, ///< [in] Compiler flags.
-        const char *lflags, ///< [in] Linker flags.
-
-        FILE *stream, ///< [out] Stream to log program build process into, or NULL.
-        cl_int *error ///< [out] Address to put error code into, or NULL.
-);
-
-#endif // _PORT_HOST_OPENCL_PROGRAM_FUN_H_
+#endif // _PORT_HOST_OPENCL_PROGRAM_TYP_H_
 

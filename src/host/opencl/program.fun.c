@@ -23,6 +23,7 @@
  */
 
 #include <port/host/opencl/program.fun.h>
+#include <port/host/opencl/program.typ.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -171,7 +172,7 @@ log_operation(
     const char *code_str;
 
     if (add_build_log)
-        fprintf(stream, SEPARATOR "\\n");
+        fprintf(stream, SEPARATOR "\n");
 
     if (file != NULL)
         fprintf(stream, "%s(\"%s\"): ", op, file);
@@ -186,7 +187,7 @@ log_operation(
 
     if (!add_build_log)
     {
-        fprintf(stream, "\\n");
+        fprintf(stream, "\n");
         return;
     }
 
@@ -202,16 +203,16 @@ log_operation(
                 CL_PROGRAM_BUILD_STATUS, sizeof(status), &status, NULL);
         if (error != CL_SUCCESS)
         {
-            fprintf(stream, "\\n[device #%u] couldn't obtain build status\\n", i);
+            fprintf(stream, "\n[device #%u] couldn't obtain build status\n", i);
             continue;
         }
 
-        fprintf(stream, "\\n[device #%u] build status: ", i);
+        fprintf(stream, "\n[device #%u] build status: ", i);
         code_str = opencl_build_status_string(status);
         if (code_str != NULL)
-            fprintf(stream, "%s\\n", code_str);
+            fprintf(stream, "%s\n", code_str);
         else
-            fprintf(stream, "code %i\\n", status);
+            fprintf(stream, "code %i\n", status);
 
         error = clGetProgramBuildInfo(program, device_list[i],
                 CL_PROGRAM_BUILD_LOG, 0, NULL, &length);
@@ -253,15 +254,8 @@ port_opencl_build_program(
         cl_uint num_devices,
         const cl_device_id *device_list,
 
-        cl_uint num_headers,
-        const char *header_include_names[],
-        const char *headers[],
-        const size_t header_sizes[],
-
-        cl_uint num_sources,
-        const char *source_names[],
-        const char *sources[],
-        const size_t source_sizes[],
+        cl_uint num_inputs,
+        const port_opencl_program_sources_t *inputs,
 
         cl_uint num_libraries,
         const cl_program libraries[],
@@ -289,62 +283,18 @@ port_opencl_build_program(
         return NULL;
     }
 
-    if (num_headers > 0)
-    {
-        if (header_include_names == NULL)
-        {
-            if (stream != NULL)
-                fprintf(stream, "Error: array of header include names is NULL.\n");
-            if (error != NULL)
-                *error = CL_INVALID_VALUE;
-            return NULL;
-        }
-        else if (headers == NULL)
-        {
-            if (stream != NULL)
-                fprintf(stream, "Error: array of headers is NULL.\n");
-            if (error != NULL)
-                *error = CL_INVALID_VALUE;
-            return NULL;
-        }
-        else if (header_sizes == NULL)
-        {
-            if (stream != NULL)
-                fprintf(stream, "Error: array of header sizes is NULL.\n");
-            if (error != NULL)
-                *error = CL_INVALID_VALUE;
-            return NULL;
-        }
-    }
-
-    if (num_sources == 0)
+    if (num_inputs == 0)
     {
         if (stream != NULL)
-            fprintf(stream, "Error: number of sources is zero.\n");
+            fprintf(stream, "Error: number of input sets of sources is zero.\n");
         if (error != NULL)
             *error = CL_INVALID_VALUE;
         return NULL;
     }
-    else if (source_names == NULL)
+    else if (inputs == NULL)
     {
         if (stream != NULL)
-            fprintf(stream, "Error: array of source names is NULL.\n");
-        if (error != NULL)
-            *error = CL_INVALID_VALUE;
-        return NULL;
-    }
-    else if (sources == NULL)
-    {
-        if (stream != NULL)
-            fprintf(stream, "Error: array of sources is NULL.\n");
-        if (error != NULL)
-            *error = CL_INVALID_VALUE;
-        return NULL;
-    }
-    else if (source_sizes == NULL)
-    {
-        if (stream != NULL)
-            fprintf(stream, "Error: array of source sizes is NULL.\n");
+            fprintf(stream, "Error: array of input sets of sources is NULL.\n");
         if (error != NULL)
             *error = CL_INVALID_VALUE;
         return NULL;
@@ -359,8 +309,78 @@ port_opencl_build_program(
         return NULL;
     }
 
+    cl_uint num_headers = 0, num_sources = 0;
+
+    for (cl_uint i = 0; i < num_inputs; i++)
+    {
+        num_headers += inputs[i].num_headers;
+        num_sources += inputs[i].num_sources;
+
+        if (inputs[i].num_headers > 0)
+        {
+            if (inputs[i].header_include_names == NULL)
+            {
+                if (stream != NULL)
+                    fprintf(stream, "Error: array of header include names is NULL (set #%u).\n", i);
+                if (error != NULL)
+                    *error = CL_INVALID_VALUE;
+                return NULL;
+            }
+            else if (inputs[i].headers == NULL)
+            {
+                if (stream != NULL)
+                    fprintf(stream, "Error: array of headers is NULL (set #%u).\n", i);
+                if (error != NULL)
+                    *error = CL_INVALID_VALUE;
+                return NULL;
+            }
+            else if (inputs[i].header_sizes == NULL)
+            {
+                if (stream != NULL)
+                    fprintf(stream, "Error: array of header sizes is NULL (set #%u).\n", i);
+                if (error != NULL)
+                    *error = CL_INVALID_VALUE;
+                return NULL;
+            }
+        }
+
+        if (inputs[i].num_sources == 0)
+        {
+            if (stream != NULL)
+                fprintf(stream, "Error: number of sources is zero (set #%u).\n", i);
+            if (error != NULL)
+                *error = CL_INVALID_VALUE;
+            return NULL;
+        }
+        else if (inputs[i].source_names == NULL)
+        {
+            if (stream != NULL)
+                fprintf(stream, "Error: array of source names is NULL (set #%u).\n", i);
+            if (error != NULL)
+                *error = CL_INVALID_VALUE;
+            return NULL;
+        }
+        else if (inputs[i].sources == NULL)
+        {
+            if (stream != NULL)
+                fprintf(stream, "Error: array of sources is NULL (set #%u).\n", i);
+            if (error != NULL)
+                *error = CL_INVALID_VALUE;
+            return NULL;
+        }
+        else if (inputs[i].source_sizes == NULL)
+        {
+            if (stream != NULL)
+                fprintf(stream, "Error: array of source sizes is NULL (set #%u).\n", i);
+            if (error != NULL)
+                *error = CL_INVALID_VALUE;
+            return NULL;
+        }
+    }
+
     cl_int err;
 
+    const char **header_include_names = NULL;
     cl_program *program_headers = NULL;
     cl_program *program_sources = NULL;
     cl_program program = NULL;
@@ -368,6 +388,15 @@ port_opencl_build_program(
     // Create header programs
     if (num_headers > 0)
     {
+        header_include_names = malloc(sizeof(*header_include_names) * num_headers);
+        if (header_include_names == NULL)
+        {
+            if (stream != NULL)
+                fprintf(stream, "Error: malloc() returned NULL\n");
+            err = CL_OUT_OF_HOST_MEMORY;
+            goto finish;
+        }
+
         program_headers = malloc(sizeof(*program_headers) * num_headers);
         if (program_headers == NULL)
         {
@@ -377,20 +406,25 @@ port_opencl_build_program(
             goto finish;
         }
 
-        for (cl_uint i = 0; i < num_headers; i++)
-            program_headers[i] = NULL;
+        for (cl_uint idx = 0; idx < num_headers; idx++)
+            program_headers[idx] = NULL;
 
-        for (cl_uint i = 0; i < num_headers; i++)
+        cl_uint idx = 0;
+        for (cl_uint i = 0; i < num_inputs; i++)
         {
-            program_headers[i] = clCreateProgramWithSource(context,
-                    1, &headers[i], &header_sizes[i], &err);
+            for (cl_uint j = 0; j < inputs[i].num_headers; j++)
+            {
+                header_include_names[idx] = inputs[i].header_include_names[j];
+                program_headers[idx++] = clCreateProgramWithSource(context,
+                        1, (const char**)&inputs[i].headers[j], &inputs[i].header_sizes[j], &err);
 
-            if (stream != NULL)
-                log_operation("clCreateProgramWithSource", header_include_names[i],
-                        err, false, stream, NULL, 0, NULL);
+                if (stream != NULL)
+                    log_operation("clCreateProgramWithSource", inputs[i].header_include_names[j],
+                            err, false, stream, NULL, 0, NULL);
 
-            if (err != CL_SUCCESS)
-                goto finish;
+                if (err != CL_SUCCESS)
+                    goto finish;
+            }
         }
     }
 
@@ -405,38 +439,50 @@ port_opencl_build_program(
             goto finish;
         }
 
-        for (cl_uint i = 0; i < num_sources; i++)
-            program_sources[i] = NULL;
+        for (cl_uint idx = 0; idx < num_sources; idx++)
+            program_sources[idx] = NULL;
 
-        for (cl_uint i = 0; i < num_libraries; i++)
-            program_sources[num_sources + i] = libraries[i];
+        for (cl_uint idx = 0; idx < num_libraries; idx++)
+            program_sources[num_sources + idx] = libraries[idx];
 
-        for (cl_uint i = 0; i < num_sources; i++)
+        cl_uint idx = 0;
+        for (cl_uint i = 0; i < num_inputs; i++)
         {
-            program_sources[i] = clCreateProgramWithSource(context,
-                    1, &sources[i], &source_sizes[i], &err);
+            for (cl_uint j = 0; j < inputs[i].num_sources; j++)
+            {
+                program_sources[idx++] = clCreateProgramWithSource(context,
+                        1, (const char**)&inputs[i].sources[j], &inputs[i].source_sizes[j], &err);
 
-            if (stream != NULL)
-                log_operation("clCreateProgramWithSource", source_names[i],
-                        err, false, stream, NULL, 0, NULL);
+                if (stream != NULL)
+                    log_operation("clCreateProgramWithSource", inputs[i].source_names[j],
+                            err, false, stream, NULL, 0, NULL);
 
-            if (err != CL_SUCCESS)
-                goto finish;
+                if (err != CL_SUCCESS)
+                    goto finish;
+            }
         }
     }
 
     // Compile programs
-    for (cl_uint i = 0; i < num_sources; i++)
     {
-        err = clCompileProgram(program_sources[i], num_devices, device_list, cflags,
-                num_headers, program_headers, header_include_names, NULL, NULL);
+        cl_uint idx = 0;
+        for (cl_uint i = 0; i < num_inputs; i++)
+        {
+            for (cl_uint j = 0; j < inputs[i].num_sources; j++)
+            {
+                err = clCompileProgram(program_sources[idx], num_devices, device_list, cflags,
+                        num_headers, program_headers, header_include_names, NULL, NULL);
 
-        if (stream != NULL)
-            log_operation("clCompileProgram", source_names[i],
-                    err, true, stream, program_sources[i], num_devices, device_list);
+                if (stream != NULL)
+                    log_operation("clCompileProgram", inputs[i].source_names[j],
+                            err, true, stream, program_sources[idx], num_devices, device_list);
 
-        if (err != CL_SUCCESS)
-            goto finish;
+                if (err != CL_SUCCESS)
+                    goto finish;
+
+                idx++;
+            }
+        }
     }
 
     // Link program
@@ -447,6 +493,9 @@ port_opencl_build_program(
         log_operation("clLinkProgram", NULL, err, true, stream, program, num_devices, device_list);
 
 finish:
+    if (header_include_names != NULL)
+        free(header_include_names);
+
     if (program_headers != NULL)
     {
         for (cl_uint i = 0; i < num_headers; i++)
