@@ -23,8 +23,8 @@
  */
 
 #pragma once
-#ifndef _PORT_HOST_COMMON_MEMORY_TYP_H_
-#define _PORT_HOST_COMMON_MEMORY_TYP_H_
+#ifndef _PORT_HOST_BASE_MEMORY_TYP_H_
+#define _PORT_HOST_BASE_MEMORY_TYP_H_
 
 #include <port/cdev/memory.typ.h>
 
@@ -138,5 +138,5 @@ typedef struct port_data_storage_symbol_array_table_entry {
     port_uint_single_t offset;       ///< Array offset in memory units.
 } port_data_storage_symbol_array_table_entry_t;
 
-#endif // _PORT_HOST_COMMON_MEMORY_TYP_H_
+#endif // _PORT_HOST_BASE_MEMORY_TYP_H_
 
