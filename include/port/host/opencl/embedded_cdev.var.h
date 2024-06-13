@@ -28,15 +28,15 @@
 
 #include <stddef.h>
 
-extern const unsigned int port_embedded_cdev_num_headers;           ///< [in] Number of header files.
-extern const char *const port_embedded_cdev_header_include_names[]; ///< [in] #include names of header files.
-extern const char *const port_embedded_cdev_headers[];              ///< [in] Header files.
-extern const size_t port_embedded_cdev_header_sizes[];              ///< [in] Sizes of header files.
+extern const unsigned int port_embedded_cdev_num_headers;           ///< Number of header files.
+extern const char *const port_embedded_cdev_header_include_names[]; ///< #include names of header files.
+extern const char *const port_embedded_cdev_headers[];              ///< Header files.
+extern const size_t port_embedded_cdev_header_sizes[];              ///< Sizes of header files.
 
-extern const unsigned int port_embedded_cdev_num_sources;   ///< [in] Number of source files.
-extern const char *const port_embedded_cdev_source_names[]; ///< [in] Names of source files.
-extern const char *const port_embedded_cdev_sources[];      ///< [in] Source files.
-extern const size_t port_embedded_cdev_source_sizes[];      ///< [in] Sizes of source files.
+extern const unsigned int port_embedded_cdev_num_sources;   ///< Number of source files.
+extern const char *const port_embedded_cdev_source_names[]; ///< Names of source files.
+extern const char *const port_embedded_cdev_sources[];      ///< Source files.
+extern const size_t port_embedded_cdev_source_sizes[];      ///< Sizes of source files.
 
 #endif // _PORT_HOST_OPENCL_EMBEDDED_CDEV_VAR_H_
 
