@@ -369,6 +369,14 @@ typedef port_float64_v4_t port_float_v4_t; ///< 4-vector of default floating-poi
 typedef port_float64_v8_t port_float_v8_t; ///< 8-vector of default floating-point numbers.
 typedef port_float64_v16_t port_float_v16_t; ///< 16-vector of default floating-point numbers.
 
+///////////////////////////////////////////////////////////////////////////////
+// Largest types
+///////////////////////////////////////////////////////////////////////////////
+
+typedef port_uint64_t port_uint_largest_t; ///< Largest unsigned integer.
+typedef port_sint64_t port_sint_largest_t; ///< Largest signed integer.
+typedef port_float64_t port_float_largest_t; ///< Largest floating-point number.
+
 #endif // PORT_FEATURE_DEFAULT_FLOAT_64
 
 #endif // _PORT_CDEV_TYPES_TYP_H_
