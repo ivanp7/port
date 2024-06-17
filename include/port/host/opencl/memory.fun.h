@@ -32,6 +32,7 @@
  * @brief Memory allocator function.
  *
  * clSVMAlloc() is used for memory allocation.
+ * Properties must be a pointer to port_memory_opencl_alloc_properties_t.
  *
  * @return Newly allocated memory or NULL.
  */
@@ -46,6 +47,7 @@ port_memory_opencl_alloc(
  * @brief Memory deallocator function.
  *
  * clSVMFree() is used for memory deallocation.
+ * Properties must be a pointer to port_memory_opencl_alloc_properties_t.
  */
 void
 port_memory_opencl_free(
@@ -57,6 +59,7 @@ port_memory_opencl_free(
  * @brief Memory mapping function.
  *
  * clEnqueueSVMMap() is used for memory mapping, operation is always blocking.
+ * Properties must be a pointer to port_memory_opencl_map_properties_t.
  *
  * @return True if succeed, otherwise false.
  */
@@ -71,6 +74,7 @@ port_memory_opencl_map(
  * @brief Memory unmapping function.
  *
  * clEnqueueSVMUnmap() is used for memory unmapping.
+ * Properties must be a pointer to port_memory_opencl_map_properties_t.
  *
  * @return True if succeed, otherwise false.
  */

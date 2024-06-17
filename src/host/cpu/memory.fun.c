@@ -48,7 +48,9 @@ port_memory_cpu_free(
         port_void_ptr_t memory,
         port_void_ptr_t properties)
 {
-    (void) properties;
+    port_bool_t *p = properties;
+    if ((p != NULL) && !*p)
+        return;
 
     free(memory);
 }

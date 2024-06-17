@@ -32,8 +32,7 @@
  * @brief Memory allocator function.
  *
  * If alignment is 0, malloc() is used, otherwise aligned_alloc() is used.
- *
- * Parameter properties is ignored.
+ * Properties are ignored.
  *
  * @return Newly allocated memory or NULL.
  */
@@ -48,8 +47,8 @@ port_memory_cpu_alloc(
  * @brief Memory deallocator function.
  *
  * free() is used for memory deallocation.
- *
- * Parameter properties is ignored.
+ * Properties can be either NULL or a pointer to port_bool_t.
+ * If that bool is false, then the function does nothing.
  */
 void
 port_memory_cpu_free(
@@ -62,7 +61,7 @@ port_memory_cpu_free(
  *
  * This function does nothing.
  *
- * @return True if succeed, otherwise false.
+ * @return Always true.
  */
 port_bool_t
 port_memory_cpu_map(
@@ -76,7 +75,7 @@ port_memory_cpu_map(
  *
  * This function does nothing.
  *
- * @return True if succeed, otherwise false.
+ * @return Always true.
  */
 port_bool_t
 port_memory_cpu_unmap(
