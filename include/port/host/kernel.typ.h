@@ -19,54 +19,33 @@
 
 /**
  * @file
- * @brief Function types for memory operations.
+ * @brief Types for kernels.
  */
 
 #pragma once
-#ifndef _PORT_HOST_BASE_MEMORY_TYP_H_
-#define _PORT_HOST_BASE_MEMORY_TYP_H_
+#ifndef _PORT_HOST_KERNEL_TYP_H
+#define _PORT_HOST_KERNEL_TYP_H
 
 #include <port/cdev/memory.typ.h>
 
-/**
- * @brief Memory allocator function.
- *
- * @return Newly allocated memory or NULL.
- */
-typedef port_void_ptr_t (*port_memory_alloc_func_t)(
-        port_size_t num_bytes, ///< [in] Number of bytes to allocate.
-        port_size_t alignment, ///< [in] Memory alignment.
-        port_void_ptr_t properties ///< [in] Memory allocator properties.
-);
+struct port_segmented_memory;
 
 /**
- * @brief Memory deallocator function.
+ * @brief Set of kernel arguments divided by type.
  */
-typedef void (*port_memory_free_func_t)(
-        port_void_ptr_t memory, ///< [in] Memory to deallocate.
-        port_void_ptr_t properties ///< [in] Memory deallocator properties.
-);
+typedef struct port_kernel_arguments {
+    port_void_ptr_t parameters; ///< Computation parameters for kernels.
 
-/**
- * @brief Memory mapping function.
- *
- * @return True if succeed, otherwise false.
- */
-typedef port_bool_t (*port_memory_map_func_t)(
-        port_void_ptr_t memory, ///< [in] Memory to map.
-        port_size_t num_bytes, ///< [in] Number of bytes to allocate.
-        port_void_ptr_t properties ///< [in] Memory mapping properties.
-);
+    struct {
+        struct port_segmented_memory *memory; ///< Array of pointers to segmented data.
+        port_void_ptr_t layout; ///< Layout (array index -> field correspondence).
+    } data; ///< Data for computation.
 
-/**
- * @brief Memory unmapping function.
- *
- * @return True if succeed, otherwise false.
- */
-typedef port_bool_t (*port_memory_unmap_func_t)(
-        port_void_ptr_t memory, ///< [in] Memory to unmap.
-        port_void_ptr_t properties ///< [in] Memory unmapping properties.
-);
+    struct {
+        struct port_segmented_memory *memory; ///< Pointer to segmented memory with contents.
+        port_void_ptr_t layout; ///< Layout (table index -> field correspondence).
+    } state; ///< State of computation.
+} port_kernel_arguments_t;
 
-#endif // _PORT_HOST_BASE_MEMORY_TYP_H_
+#endif // _PORT_HOST_KERNEL_TYP_H
 

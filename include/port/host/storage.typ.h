@@ -19,12 +19,12 @@
 
 /**
  * @file
- * @brief Data storage format.
+ * @brief Data storage representation and format.
  */
 
 #pragma once
-#ifndef _PORT_HOST_BASE_STORAGE_TYP_H_
-#define _PORT_HOST_BASE_STORAGE_TYP_H_
+#ifndef _PORT_HOST_STORAGE_TYP_H_
+#define _PORT_HOST_STORAGE_TYP_H_
 
 #include <port/cdev/memory.typ.h>
 
@@ -120,5 +120,5 @@ typedef struct port_data_storage_file_property_table_entry {
     port_uint_single_t offset;       ///< Property value offset.
 } port_data_storage_file_property_table_entry_t;
 
-#endif // _PORT_HOST_BASE_STORAGE_TYP_H_
+#endif // _PORT_HOST_STORAGE_TYP_H_
 
