@@ -35,16 +35,7 @@
 /**
  * @brief Follow memory reference.
  *
- * Meaning of a memory reference value is different depending on its sign.
- *
- * If reference < 0, then it is a local offset in memory units,
- * so address = base_ptr - reference
- *
- * If reference >= 0, then its value is interpreted as
- * reference = (offset << num_idx_bits) | memory_table_index,
- * so address = memory_table[memory_table_index] + (offset << offset_shift).
- *
- * If base_ptr is NULL, memory_table[0] is used instead.
+ * See description of PORT_MEMORY_REFERENCE().
  *
  * @return Pointer to referenced memory.
  */

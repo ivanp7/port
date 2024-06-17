@@ -34,17 +34,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Number of bits enough to store any valid memory table index length --
- * number of index bits in far memory references.
- *
- * For 32-bit memory references, the value is 5 (2^5 = 32).
- * For 16-bit memory references, the value is 4 (2^4 = 16).
- * For  8-bit memory references, the value is 3 (2^3 = 8).
- */
-#define PORT_MEMORY_REF_NUM_IDXLEN_BITS(ref_type) \
-    (sizeof(ref_type) / 2 + PORT_NUM_BYTE_BITS_LOG2)
-
-/**
  * @brief Construct far memory reference.
  *
  * Layout of far memory reference:
@@ -68,6 +57,37 @@
     PORT_EXTRACT_LSBITS_TO((idx_ptr), ref_type, (ref), (num_idx_bits));                  \
     PORT_EXTRACT_MSBITS_TO((offset_ptr), ref_type, (ref), (num_idx_bits));               \
 } while (0)
+
+/**
+ * @brief Follow memory reference.
+ *
+ * Meaning of a memory reference value is different depending on its sign.
+ *
+ * If reference < 0, then it is a local offset in memory units,
+ * so address = base_ptr - reference
+ *
+ * If reference >= 0, then its value is interpreted as
+ * reference = (offset << num_idx_bits) | memory_table_index,
+ * so address = memory_table[memory_table_index] + (offset << offset_shift).
+ *
+ * If base_ptr is NULL, memory_table[0] is used instead.
+ */
+#define PORT_MEMORY_REFERENCE(ref, num_idx_bits, offset_shift, base_ptr, memory_table) \
+    (PORT_MEMORY_REF_IS_FAR(ref) ?                                  \
+     (memory_table)[(ref) & PORT_SINGLE_ZMASK(num_idx_bits)] +      \
+     ((port_size_t)((ref) >> (num_idx_bits)) << (offset_shift)) :   \
+     (((base_ptr) ? (base_ptr) : (memory_table)[0]) - (ref)))
+
+/**
+ * @brief Number of bits enough to store any valid memory table index length --
+ * number of index bits in far memory references.
+ *
+ * For 32-bit memory references, the value is 5 (2^5 = 32).
+ * For 16-bit memory references, the value is 4 (2^4 = 16).
+ * For  8-bit memory references, the value is 3 (2^3 = 8).
+ */
+#define PORT_MEMORY_REF_NUM_IDXLEN_BITS(ref_type) \
+    (sizeof(ref_type) / 2 + PORT_NUM_BYTE_BITS_LOG2)
 
 /**
  * @brief Invalid value of a memory reference log2(size).
