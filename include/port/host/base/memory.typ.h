@@ -28,10 +28,6 @@
 
 #include <port/cdev/memory.typ.h>
 
-///////////////////////////////////////////////////////////////////////////////
-// Memory operations
-///////////////////////////////////////////////////////////////////////////////
-
 /**
  * @brief Memory allocator function.
  *
@@ -71,70 +67,6 @@ typedef port_bool_t (*port_memory_unmap_func_t)(
         port_void_ptr_t memory, ///< [in] Memory to unmap.
         port_void_ptr_t properties ///< [in] Memory unmapping properties.
 );
-
-///////////////////////////////////////////////////////////////////////////////
-// Data storage
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * @brief Data storage header.
- */
-typedef struct port_data_storage_header {
-    port_uint_single_t format;    ///< Description of the data storage format.
-    port_uint_single_t full_size; ///< Full size of the data storage.
-
-    struct {
-        port_uint_single_t num_entries;    ///< Number of entries in a table.
-        port_uint_single_t entries_offset; ///< Offset of table entries.
-    } string_table,     ///< Strings.
-        section_table,  ///< Data sections.
-        symbol_table,   ///< Symbols (references into sections).
-        property_table; ///< Properties (named values).
-
-    struct {
-        port_uint_single_t contents_size;   ///< Size of contents.
-        port_uint_single_t contents_offset; ///< Offset to contents.
-    } strings,      ///< Strings.
-        sections,   ///< Data sections.
-        properties; ///< Properties.
-} port_data_storage_header_t;
-
-/**
- * @brief Entry of data storage string table.
- */
-typedef struct port_data_storage_string_table_entry {
-    port_uint_single_t length; ///< String length.
-    port_uint_single_t offset; ///< String offset.
-} port_data_storage_string_table_entry_t;
-
-/**
- * @brief Entry of data storage section table.
- */
-typedef struct port_data_storage_section_table_entry {
-    port_uint_single_t name_str_idx; ///< String table index of section name string.
-    port_uint_single_t size;         ///< Section size.
-    port_uint_single_t offset;       ///< Section offset.
-} port_data_storage_section_table_entry_t;
-
-/**
- * @brief Entry of data storage symbol table.
- *
- * Symbols have no contents.
- */
-typedef struct port_data_storage_symbol_table_entry {
-    port_uint_single_t name_str_idx; ///< String table index of symbol name string.
-    port_uint_single_t section_idx;  ///< Index of section the symbol is relative to.
-    port_uint_single_t value;        ///< Symbol offset relative to the section beginning.
-} port_data_storage_symbol_table_entry_t;
-
-/**
- * @brief Entry of data storage property table.
- */
-typedef struct port_data_storage_property_table_entry {
-    port_uint_single_t name_str_idx; ///< String table index of property name string.
-    port_uint_single_t size;         ///< Property value size.
-    port_uint_single_t offset;       ///< Property value offset.
-} port_data_storage_property_table_entry_t;
 
 #endif // _PORT_HOST_BASE_MEMORY_TYP_H_
 
