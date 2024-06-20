@@ -103,29 +103,26 @@ target_ptr = memory_table[index] + offset;
 
 There are 3 types of arguments of a kernel:
 
-* parameters -- scalar values and small arrays of data (common to all work items, input only);
+* parameters -- scalar values and small constant arrays (common to all work items);
 
-* data -- large arrays of data (common to all work items, input and output);
+* data -- arbitrarily organized chunks of data (common to all work items);
 
-* state -- arrays storing current state of computation (one element per work item, input and output).
+* states -- arrays of values (one array element per work item).
 
 ```
       <Inputs>                    <Outputs>
                       +-----+
-      parameters      |     |
---------------------->|  K  |
+      parameters      |  K  |
+--------------------->|     |
+                      |  E  |
                       |     |
-         data         |  E  |        data
---------------------->|     |-------------------->
-                      |  R  |
-     input state      |     |
---------------------->|  N  |
+         data         |  R  |   data (modified)
+--------------------->|     |- - - - - - - - - - >
+                      |  N  |
                       |     |
-  input/output state  |  E  | input/output state
+        states        |  E  |       states
 --------------------->|     |-------------------->
                       |  L  |
-                      |     |    output state
-                      |     |-------------------->
                       +-----+
 ```
 

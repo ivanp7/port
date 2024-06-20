@@ -19,30 +19,20 @@
 
 /**
  * @file
- * @brief Types for kernels.
+ * @brief Macros for concurrent processing functions.
  */
 
 #pragma once
-#ifndef _PORT_HOST_KERNEL_TYP_H
-#define _PORT_HOST_KERNEL_TYP_H
-
-#include <port/cdev/memory.typ.h>
-
-struct port_segmented_memory;
+#ifndef _PORT_HOST_CPU_PFUNC_DEF_H_
+#define _PORT_HOST_CPU_PFUNC_DEF_H_
 
 /**
- * @brief Set of kernel arguments separated by type.
+ * @brief Declarator of a concurrent processing function.
+ *
+ * See description of port_pfunc_t type.
  */
-typedef struct port_kernel_arguments {
-    port_void_ptr_t parameters; ///< Computation parameters.
-    struct port_segmented_memory *data; ///< Array of pointers to segmented data.
-    port_void_ptr_t *states; ///< Array of pointers to computation states.
+#define PORT_PFUNC(name) \
+    void name(port_void_ptr_t data, port_uint32_t work_item_idx, port_uint16_t thread_idx)
 
-    struct {
-        port_void_ptr_t data;
-        port_void_ptr_t states;
-    } layout; ///< Layout (structure field <- table index).
-} port_kernel_arguments_t;
-
-#endif // _PORT_HOST_KERNEL_TYP_H
+#endif // _PORT_HOST_CPU_PFUNC_DEF_H_
 

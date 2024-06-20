@@ -19,30 +19,30 @@
 
 /**
  * @file
- * @brief Types for kernels.
+ * @brief Type of kernel arguments setter functions.
  */
 
 #pragma once
-#ifndef _PORT_HOST_KERNEL_TYP_H
-#define _PORT_HOST_KERNEL_TYP_H
+#ifndef _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
+#define _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
 
 #include <port/cdev/memory.typ.h>
 
-struct port_segmented_memory;
+#include <CL/cl.h>
 
 /**
- * @brief Set of kernel arguments separated by type.
+ * @brief Arguments setter function for an OpenCL kernel.
+ *
+ * arg_mask specifies which kernel arguments to set.
+ *
+ * @return CL_SUCCESS or error code returned by clSetKernelArg(),
+ * clSetKernelArgSVMPointer(), or clSetKernelExecInfo().
  */
-typedef struct port_kernel_arguments {
-    port_void_ptr_t parameters; ///< Computation parameters.
-    struct port_segmented_memory *data; ///< Array of pointers to segmented data.
-    port_void_ptr_t *states; ///< Array of pointers to computation states.
+typedef cl_int (*port_kargs_setter_t)(
+        cl_kernel kernel,  ///< [in] OpenCL kernel.
+        cl_ulong arg_mask, ///< [in] Mask of kernel arguments to set.
+        port_const_void_ptr_t kargs ///< [in] Data for kernel arguments.
+);
 
-    struct {
-        port_void_ptr_t data;
-        port_void_ptr_t states;
-    } layout; ///< Layout (structure field <- table index).
-} port_kernel_arguments_t;
-
-#endif // _PORT_HOST_KERNEL_TYP_H
+#endif // _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
 

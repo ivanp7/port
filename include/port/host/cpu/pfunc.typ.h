@@ -19,30 +19,25 @@
 
 /**
  * @file
- * @brief Types for kernels.
+ * @brief Type of concurrent processing functions.
  */
 
 #pragma once
-#ifndef _PORT_HOST_KERNEL_TYP_H
-#define _PORT_HOST_KERNEL_TYP_H
+#ifndef _PORT_HOST_CPU_PFUNC_TYP_H_
+#define _PORT_HOST_CPU_PFUNC_TYP_H_
 
 #include <port/cdev/memory.typ.h>
 
-struct port_segmented_memory;
-
 /**
- * @brief Set of kernel arguments separated by type.
+ * @brief Concurrent processing function.
+ *
+ * This function type is guaranteed to be equivalent to station_pfunc_t from Station library.
  */
-typedef struct port_kernel_arguments {
-    port_void_ptr_t parameters; ///< Computation parameters.
-    struct port_segmented_memory *data; ///< Array of pointers to segmented data.
-    port_void_ptr_t *states; ///< Array of pointers to computation states.
+typedef void (*port_pfunc_t)(
+        port_void_ptr_t data,        ///< [in,out] Processed data.
+        port_uint32_t work_item_idx, ///< [in] Index of the current work item.
+        port_uint16_t thread_idx     ///< [in] Index of the current thread.
+);
 
-    struct {
-        port_void_ptr_t data;
-        port_void_ptr_t states;
-    } layout; ///< Layout (structure field <- table index).
-} port_kernel_arguments_t;
-
-#endif // _PORT_HOST_KERNEL_TYP_H
+#endif // _PORT_HOST_CPU_PFUNC_TYP_H_
 
