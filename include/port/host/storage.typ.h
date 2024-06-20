@@ -36,24 +36,23 @@
  * @brief Data storage in memory.
  */
 typedef struct port_data_storage {
-    port_uint_single_t format; ///< Description of the data storage format.
+    port_uint_single_t num_strings; ///< Number of strings.
+    char **strings; ///< Array of strings used as names of sections, symbols, properties.
 
-    port_uint_single_t num_sections;   ///< Number of sections.
-    port_void_ptr_t *sections;         ///< Sections contents.
+    port_uint_single_t num_sections; ///< Number of sections.
+    port_uint_single_t *section_name_str_idx; ///< Indices of strings that are section names.
+    port_void_ptr_t *sections; ///< Sections contents.
     port_uint_single_t *section_sizes; ///< Sizes of sections.
-    char **section_names;              ///< Names of sections.
 
-    port_uint_single_t num_symbols;      ///< Number of symbols.
-    port_uint_single_t *symbol_sections; ///< Indices of sections symbols belong to.
-    port_uint_single_t *symbol_offsets;  ///< Offsets of symbols.
+    port_uint_single_t num_symbols; ///< Number of symbols.
+    port_uint_single_t *symbol_name_str_idx; ///< Indices of strings that are symbol names.
+    port_uint_single_t *symbol_section_idx; ///< Indices of sections symbols belong to.
+    port_uint_single_t *symbol_values; ///< Values (offsets) of symbols.
 
-    port_uint_single_t num_properties;        ///< Number of properties.
-    char **property_names;                    ///< Names of properties.
-    port_void_ptr *property_values;           ///< Values of properties.
+    port_uint_single_t num_properties; ///< Number of properties.
+    port_uint_single_t *property_name_str_idx; ///< Indices of strings that are property names.
+    port_void_ptr_t *property_values; ///< Values of properties.
     port_uint_single_t *property_value_sizes; ///< Sizes of properties values.
-
-    port_void_ptr strings; ///< Common memory for all strings of the storage.
-    port_void_ptr properties; ///< Common memory for all properties values of the storage.
 } port_data_storage_t;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,7 +64,7 @@ typedef struct port_data_storage {
  */
 typedef struct port_data_storage_file_header {
     port_uint_single_t format;    ///< Description of the data storage format.
-    port_uint_single_t full_size; ///< Full size of the data storage.
+    port_uint_single_t full_size; ///< Full size of the data storage excluding header.
 
     struct {
         port_uint_single_t num_entries;    ///< Number of entries in a table.
