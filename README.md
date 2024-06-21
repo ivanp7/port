@@ -99,33 +99,6 @@ target_ptr = memory_table[index] + offset;
 
 `memory_table`, `num_index_bits`, and `offset_shift` are specifications of a data structure format.
 
-## Kernel arguments
-
-There are 3 types of arguments of a kernel:
-
-* parameters -- scalar values and small constant arrays (common to all work items);
-
-* data -- arbitrarily organized chunks of data (common to all work items);
-
-* states -- arrays of values (one array element per work item).
-
-```
-      <Inputs>                    <Outputs>
-                      +-----+
-      parameters      |  K  |
---------------------->|     |
-                      |  E  |
-                      |     |
-         data         |  R  |   data (modified)
---------------------->|     |- - - - - - - - - - >
-                      |  N  |
-                      |     |
-        states        |  E  |       states
---------------------->|     |-------------------->
-                      |  L  |
-                      +-----+
-```
-
 ## How to build
 
 The project is built using the Ninja build system.
