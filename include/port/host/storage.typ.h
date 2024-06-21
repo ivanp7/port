@@ -36,23 +36,34 @@
  * @brief Data storage in memory.
  */
 typedef struct port_data_storage {
-    port_uint_single_t num_strings; ///< Number of strings.
-    char **strings; ///< Array of strings used as names of sections, symbols, properties.
+    struct {
+        port_void_ptr_t *sections; ///< Sections.
+        port_void_ptr_t *properties; ///< Values of properties.
+        char **strings; ///< Array of strings used as names of sections, symbols, properties.
+    } content; ///< Contents of things.
 
-    port_uint_single_t num_sections; ///< Number of sections.
-    port_uint_single_t *section_name_str_idx; ///< Indices of strings that are section names.
-    port_void_ptr_t *sections; ///< Sections contents.
-    port_uint_single_t *section_sizes; ///< Sizes of sections.
+    struct {
+        port_uint_single_t *sections; ///< Sizes of sections.
+        port_uint_single_t *properties; ///< Sizes of properties values.
+    } size; // Sizes of contents.
 
-    port_uint_single_t num_symbols; ///< Number of symbols.
-    port_uint_single_t *symbol_name_str_idx; ///< Indices of strings that are symbol names.
-    port_uint_single_t *symbol_section_idx; ///< Indices of sections symbols belong to.
-    port_uint_single_t *symbol_values; ///< Values (offsets) of symbols.
+    struct {
+        port_uint_single_t *section_idx; ///< Indices of sections symbols belong to.
+        port_uint_single_t *values; ///< Values (offsets) of symbols.
+    } symbol; ///< Symbols.
 
-    port_uint_single_t num_properties; ///< Number of properties.
-    port_uint_single_t *property_name_str_idx; ///< Indices of strings that are property names.
-    port_void_ptr_t *property_values; ///< Values of properties.
-    port_uint_single_t *property_value_sizes; ///< Sizes of properties values.
+    struct {
+        port_uint_single_t *sections; ///< Indices of strings that are section names.
+        port_uint_single_t *symbols; ///< Indices of strings that are symbol names.
+        port_uint_single_t *properties; ///< Indices of strings that are property names.
+    } name_str_idx; ///< Indices of strings that are thing names.
+
+    struct {
+        port_uint_single_t sections; ///< Number of sections.
+        port_uint_single_t symbols; ///< Number of symbols.
+        port_uint_single_t properties; ///< Number of properties.
+        port_uint_single_t strings; ///< Number of strings.
+    } num; ///< Numbers of things.
 } port_data_storage_t;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,16 +81,16 @@ typedef struct port_data_storage_file_header {
         port_uint_single_t num_entries;    ///< Number of entries in a table.
         port_uint_single_t entries_offset; ///< Offset of table entries.
     } string_table,     ///< Strings.
+        property_table, ///< Properties (named values).
         section_table,  ///< Data sections.
-        symbol_table,   ///< Symbols (references into sections).
-        property_table; ///< Properties (named values).
+        symbol_table;   ///< Symbols (references into sections).
 
     struct {
         port_uint_single_t contents_size;   ///< Size of contents.
         port_uint_single_t contents_offset; ///< Offset to contents.
     } strings,      ///< Strings.
-        sections,   ///< Data sections.
-        properties; ///< Properties.
+        properties, ///< Properties.
+        sections;   ///< Data sections.
 } port_data_storage_file_header_t;
 
 /**
@@ -89,6 +100,15 @@ typedef struct port_data_storage_file_string_table_entry {
     port_uint_single_t length; ///< String length.
     port_uint_single_t offset; ///< String offset.
 } port_data_storage_file_string_table_entry_t;
+
+/**
+ * @brief Entry of data storage property table.
+ */
+typedef struct port_data_storage_file_property_table_entry {
+    port_uint_single_t name_str_idx; ///< String table index of property name string.
+    port_uint_single_t size;         ///< Property value size.
+    port_uint_single_t offset;       ///< Property value offset.
+} port_data_storage_file_property_table_entry_t;
 
 /**
  * @brief Entry of data storage section table.
@@ -109,15 +129,6 @@ typedef struct port_data_storage_file_symbol_table_entry {
     port_uint_single_t section_idx;  ///< Index of section the symbol is relative to.
     port_uint_single_t value;        ///< Symbol offset relative to the section beginning.
 } port_data_storage_file_symbol_table_entry_t;
-
-/**
- * @brief Entry of data storage property table.
- */
-typedef struct port_data_storage_file_property_table_entry {
-    port_uint_single_t name_str_idx; ///< String table index of property name string.
-    port_uint_single_t size;         ///< Property value size.
-    port_uint_single_t offset;       ///< Property value offset.
-} port_data_storage_file_property_table_entry_t;
 
 #endif // _PORT_HOST_STORAGE_TYP_H_
 

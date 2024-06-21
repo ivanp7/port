@@ -53,6 +53,21 @@ port_check_data_storage_file_header_validity(
     }
 
     {
+        if (file_header->property_table.entries_offset > file_header->full_size)
+            return false;
+
+        if (file_header->property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t) >
+                file_header->full_size - file_header->property_table.entries_offset)
+            return false;
+
+        if (file_header->properties.contents_offset > file_header->full_size)
+            return false;
+
+        if (file_header->properties.contents_size > file_header->full_size - file_header->properties.contents_offset)
+            return false;
+    }
+
+    {
         if (file_header->section_table.entries_offset > file_header->full_size)
             return false;
 
@@ -76,29 +91,14 @@ port_check_data_storage_file_header_validity(
             return false;
     }
 
-    {
-        if (file_header->property_table.entries_offset > file_header->full_size)
-            return false;
-
-        if (file_header->property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t) >
-                file_header->full_size - file_header->property_table.entries_offset)
-            return false;
-
-        if (file_header->properties.contents_offset > file_header->full_size)
-            return false;
-
-        if (file_header->properties.contents_size > file_header->full_size - file_header->properties.contents_offset)
-            return false;
-    }
-
     // Check contents are not empty for non-empty tables
     if ((file_header->string_table.num_entries > 0) && (file_header->strings.contents_size == 0))
         return false;
 
-    if ((file_header->section_table.num_entries > 0) && (file_header->sections.contents_size == 0))
+    if ((file_header->property_table.num_entries > 0) && (file_header->properties.contents_size == 0))
         return false;
 
-    if ((file_header->property_table.num_entries > 0) && (file_header->properties.contents_size == 0))
+    if ((file_header->section_table.num_entries > 0) && (file_header->sections.contents_size == 0))
         return false;
 
     // Check tables and contents don't collide
@@ -112,6 +112,11 @@ port_check_data_storage_file_header_validity(
     {
         CHECK_COLLISION(string_table.entries_offset,
                 string_table.num_entries * sizeof(port_data_storage_file_string_table_entry_t),
+                property_table.entries_offset,
+                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t));
+
+        CHECK_COLLISION(string_table.entries_offset,
+                string_table.num_entries * sizeof(port_data_storage_file_string_table_entry_t),
                 section_table.entries_offset,
                 section_table.num_entries * sizeof(port_data_storage_file_section_table_entry_t));
 
@@ -122,23 +127,46 @@ port_check_data_storage_file_header_validity(
 
         CHECK_COLLISION(string_table.entries_offset,
                 string_table.num_entries * sizeof(port_data_storage_file_string_table_entry_t),
-                property_table.entries_offset,
-                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t));
-
-        CHECK_COLLISION(string_table.entries_offset,
-                string_table.num_entries * sizeof(port_data_storage_file_string_table_entry_t),
                 strings.contents_offset,
                 strings.contents_size);
 
         CHECK_COLLISION(string_table.entries_offset,
                 string_table.num_entries * sizeof(port_data_storage_file_string_table_entry_t),
-                sections.contents_offset,
-                sections.contents_size);
+                properties.contents_offset,
+                properties.contents_size);
 
         CHECK_COLLISION(string_table.entries_offset,
                 string_table.num_entries * sizeof(port_data_storage_file_string_table_entry_t),
+                sections.contents_offset,
+                sections.contents_size);
+    }
+
+    if (file_header->property_table.num_entries > 0)
+    {
+        CHECK_COLLISION(property_table.entries_offset,
+                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t),
+                section_table.entries_offset,
+                section_table.num_entries * sizeof(port_data_storage_file_section_table_entry_t));
+
+        CHECK_COLLISION(property_table.entries_offset,
+                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t),
+                symbol_table.entries_offset,
+                symbol_table.num_entries * sizeof(port_data_storage_file_symbol_table_entry_t));
+
+        CHECK_COLLISION(property_table.entries_offset,
+                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t),
+                strings.contents_offset,
+                strings.contents_size);
+
+        CHECK_COLLISION(property_table.entries_offset,
+                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t),
                 properties.contents_offset,
                 properties.contents_size);
+
+        CHECK_COLLISION(property_table.entries_offset,
+                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t),
+                sections.contents_offset,
+                sections.contents_size);
     }
 
     if (file_header->section_table.num_entries > 0)
@@ -150,85 +178,57 @@ port_check_data_storage_file_header_validity(
 
         CHECK_COLLISION(section_table.entries_offset,
                 section_table.num_entries * sizeof(port_data_storage_file_section_table_entry_t),
-                property_table.entries_offset,
-                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t));
-
-        CHECK_COLLISION(section_table.entries_offset,
-                section_table.num_entries * sizeof(port_data_storage_file_section_table_entry_t),
                 strings.contents_offset,
                 strings.contents_size);
 
         CHECK_COLLISION(section_table.entries_offset,
                 section_table.num_entries * sizeof(port_data_storage_file_section_table_entry_t),
-                sections.contents_offset,
-                sections.contents_size);
+                properties.contents_offset,
+                properties.contents_size);
 
         CHECK_COLLISION(section_table.entries_offset,
                 section_table.num_entries * sizeof(port_data_storage_file_section_table_entry_t),
-                properties.contents_offset,
-                properties.contents_size);
+                sections.contents_offset,
+                sections.contents_size);
     }
 
     if (file_header->symbol_table.num_entries > 0)
     {
         CHECK_COLLISION(symbol_table.entries_offset,
                 symbol_table.num_entries * sizeof(port_data_storage_file_symbol_table_entry_t),
-                property_table.entries_offset,
-                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t));
-
-        CHECK_COLLISION(symbol_table.entries_offset,
-                symbol_table.num_entries * sizeof(port_data_storage_file_symbol_table_entry_t),
                 strings.contents_offset,
                 strings.contents_size);
 
         CHECK_COLLISION(symbol_table.entries_offset,
                 symbol_table.num_entries * sizeof(port_data_storage_file_symbol_table_entry_t),
-                sections.contents_offset,
-                sections.contents_size);
+                properties.contents_offset,
+                properties.contents_size);
 
         CHECK_COLLISION(symbol_table.entries_offset,
                 symbol_table.num_entries * sizeof(port_data_storage_file_symbol_table_entry_t),
-                properties.contents_offset,
-                properties.contents_size);
-    }
-
-    if (file_header->property_table.num_entries > 0)
-    {
-        CHECK_COLLISION(property_table.entries_offset,
-                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t),
-                strings.contents_offset,
-                strings.contents_size);
-
-        CHECK_COLLISION(property_table.entries_offset,
-                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t),
                 sections.contents_offset,
                 sections.contents_size);
-
-        CHECK_COLLISION(property_table.entries_offset,
-                property_table.num_entries * sizeof(port_data_storage_file_property_table_entry_t),
-                properties.contents_offset,
-                properties.contents_size);
     }
 
     if (file_header->strings.contents_size > 0)
     {
         CHECK_COLLISION(strings.contents_offset,
                 strings.contents_size,
-                sections.contents_offset,
-                sections.contents_size);
+                properties.contents_offset,
+                properties.contents_size);
 
         CHECK_COLLISION(strings.contents_offset,
                 strings.contents_size,
-                properties.contents_offset,
-                properties.contents_size);
+                sections.contents_offset,
+                sections.contents_size);
     }
 
-    if (file_header->sections.contents_size > 0)
+    if (file_header->properties.contents_size > 0)
     {
-        CHECK_COLLISION(sections.contents_offset,
-                sections.contents_size,
-                properties.contents_offset,
-                properties.contents_size);
+        CHECK_COLLISION(properties.contents_offset,
+                properties.contents_size,
+                sections.contents_offset,
+                sections.contents_size);
     }
 
 #undef CHECK_COLLISION
@@ -270,9 +270,9 @@ port_init_data_storage_from_file(
     port_data_storage_t st = {0};
 
     port_data_storage_file_string_table_entry_t *string_table = NULL;
+    port_data_storage_file_property_table_entry_t *property_table = NULL;
     port_data_storage_file_section_table_entry_t *section_table = NULL;
     port_data_storage_file_symbol_table_entry_t *symbol_table = NULL;
-    port_data_storage_file_property_table_entry_t *property_table = NULL;
 
     // Read file header
     port_data_storage_file_header_t file_header;
@@ -297,6 +297,11 @@ port_init_data_storage_from_file(
     FSEEK(file_header.string_table.entries_offset);
     FREAD(string_table, sizeof(*string_table) * file_header.string_table.num_entries);
 
+    property_table = malloc(sizeof(*property_table) * file_header.property_table.num_entries);
+    ALLOC_CHECK(property_table);
+    FSEEK(file_header.property_table.entries_offset);
+    FREAD(property_table, sizeof(*property_table) * file_header.property_table.num_entries);
+
     section_table = malloc(sizeof(*section_table) * file_header.section_table.num_entries);
     ALLOC_CHECK(section_table);
     FSEEK(file_header.section_table.entries_offset);
@@ -307,16 +312,19 @@ port_init_data_storage_from_file(
     FSEEK(file_header.symbol_table.entries_offset);
     FREAD(symbol_table, sizeof(*symbol_table) * file_header.symbol_table.num_entries);
 
-    property_table = malloc(sizeof(*property_table) * file_header.property_table.num_entries);
-    ALLOC_CHECK(property_table);
-    FSEEK(file_header.property_table.entries_offset);
-    FREAD(property_table, sizeof(*property_table) * file_header.property_table.num_entries);
-
     // Check validity of tables entries
     for (port_uint_single_t i = 0; i < file_header.string_table.num_entries; i++)
     {
         if ((string_table[i].offset > file_header.strings.contents_size) ||
                 (string_table[i].length > file_header.strings.contents_size - string_table[i].offset))
+            ERROR(1);
+    }
+
+    for (port_uint_single_t i = 0; i < file_header.property_table.num_entries; i++)
+    {
+        if ((property_table[i].name_str_idx >= file_header.string_table.num_entries) ||
+                (property_table[i].offset > file_header.properties.contents_size) ||
+                (property_table[i].size > file_header.properties.contents_size - property_table[i].offset))
             ERROR(1);
     }
 
@@ -335,14 +343,6 @@ port_init_data_storage_from_file(
             ERROR(1);
     }
 
-    for (port_uint_single_t i = 0; i < file_header.property_table.num_entries; i++)
-    {
-        if ((property_table[i].name_str_idx >= file_header.string_table.num_entries) ||
-                (property_table[i].offset > file_header.properties.contents_size) ||
-                (property_table[i].size > file_header.properties.contents_size - property_table[i].offset))
-            ERROR(1);
-    }
-
     // Set output parameters
     if (format != NULL)
         *format = file_header.format;
@@ -350,112 +350,122 @@ port_init_data_storage_from_file(
     if (storage != NULL)
     {
         // Create data storage representation in memory
-        st.num_strings = file_header.string_table.num_entries;
-        if (st.num_strings > 0)
+        st.num.strings = file_header.string_table.num_entries;
+        if (st.num.strings > 0)
         {
+            st.content.strings = malloc(sizeof(*st.content.strings) * st.num.strings);
+            ALLOC_CHECK(st.content.strings);
+            for (port_uint_single_t i = 0; i < st.num.strings; i++)
+                st.content.strings[i] = NULL;
 
-            st.strings = malloc(sizeof(*st.strings) * st.num_strings);
-            ALLOC_CHECK(st.strings);
-            for (port_uint_single_t i = 0; i < st.num_strings; i++)
-                st.strings[i] = NULL;
-
-            for (port_uint_single_t i = 0; i < st.num_strings; i++)
+            for (port_uint_single_t i = 0; i < st.num.strings; i++)
             {
-                st.strings[i] = malloc((port_size_t)string_table[i].length + 1);
-                ALLOC_CHECK(st.strings[i]);
+                st.content.strings[i] = malloc((port_size_t)string_table[i].length + 1);
+                ALLOC_CHECK(st.content.strings[i]);
+            }
 
+            for (port_uint_single_t i = 0; i < st.num.strings; i++)
+            {
                 if (string_table[i].length > 0)
                 {
                     FSEEK(file_header.strings.contents_offset + string_table[i].offset);
-                    FREAD(st.strings[i], string_table[i].length);
+                    FREAD(st.content.strings[i], string_table[i].length);
                 }
-                st.strings[i][string_table[i].length] = '\0';
+                st.content.strings[i][string_table[i].length] = '\0';
             }
         }
 
-        st.num_sections = file_header.section_table.num_entries;
-        if (st.num_sections > 0)
+        st.num.properties = file_header.property_table.num_entries;
+        if (st.num.properties > 0)
         {
-            st.section_name_str_idx = malloc(sizeof(*st.section_name_str_idx) * st.num_sections);
-            ALLOC_CHECK(st.section_name_str_idx);
+            st.content.properties = malloc(sizeof(*st.content.properties) * st.num.properties);
+            ALLOC_CHECK(st.content.properties);
+            for (port_uint_single_t i = 0; i < st.num.properties; i++)
+                st.content.properties[i] = NULL;
 
-            st.sections = malloc(sizeof(*st.sections) * st.num_sections);
-            ALLOC_CHECK(st.sections);
-            for (port_uint_single_t i = 0; i < st.num_sections; i++)
-                st.sections[i] = NULL;
-
-            st.section_sizes = malloc(sizeof(*st.section_sizes) * st.num_sections);
-            ALLOC_CHECK(st.section_sizes);
-
-            for (port_uint_single_t i = 0; i < st.num_sections; i++)
+            for (port_uint_single_t i = 0; i < st.num.properties; i++)
             {
-                st.section_name_str_idx[i] = section_table[i].name_str_idx;
-
-                if (section_table[i].size > 0)
-                {
-                    st.sections[i] = malloc(section_table[i].size);
-                    ALLOC_CHECK(st.sections[i]);
-
-                    FSEEK(file_header.sections.contents_offset + section_table[i].offset);
-                    FREAD(st.sections[i], section_table[i].size);
-                }
-
-                st.section_sizes[i] = section_table[i].size;
-            }
-        }
-
-        st.num_symbols = file_header.symbol_table.num_entries;
-        if (st.num_symbols > 0)
-        {
-            st.symbol_name_str_idx = malloc(sizeof(*st.symbol_name_str_idx) * st.num_symbols);
-            ALLOC_CHECK(st.symbol_name_str_idx);
-
-            st.symbol_section_idx = malloc(sizeof(*st.symbol_section_idx) * st.num_symbols);
-            ALLOC_CHECK(st.symbol_section_idx);
-
-            st.symbol_values = malloc(sizeof(*st.symbol_values) * st.num_symbols);
-            ALLOC_CHECK(st.symbol_values);
-
-            for (port_uint_single_t i = 0; i < st.num_symbols; i++)
-            {
-                st.symbol_name_str_idx[i] = symbol_table[i].name_str_idx;
-                st.symbol_section_idx[i] = symbol_table[i].section_idx;
-                st.symbol_values[i] = symbol_table[i].value;
-
-                // Set all invalid symbol to "the first after the last"
-                if (st.symbol_values[i] > section_table[symbol_table[i].section_idx].size)
-                    st.symbol_values[i] = section_table[symbol_table[i].section_idx].size;
-            }
-        }
-
-        st.num_properties = file_header.property_table.num_entries;
-        if (st.num_properties > 0)
-        {
-            st.property_name_str_idx = malloc(sizeof(*st.property_name_str_idx) * st.num_properties);
-            ALLOC_CHECK(st.property_name_str_idx);
-
-            st.property_values = malloc(sizeof(*st.property_values) * st.num_properties);
-            ALLOC_CHECK(st.property_values);
-            for (port_uint_single_t i = 0; i < st.num_properties; i++)
-                st.property_values[i] = NULL;
-
-            st.property_value_sizes = malloc(sizeof(*st.property_value_sizes) * st.num_properties);
-            ALLOC_CHECK(st.property_value_sizes);
-
-            for (port_uint_single_t i = 0; i < st.num_properties; i++)
-            {
-                st.property_name_str_idx[i] = property_table[i].name_str_idx;
-
                 if (property_table[i].size > 0)
                 {
-                    st.property_values[i] = malloc(property_table[i].size);
-                    ALLOC_CHECK(st.property_values[i]);
-
-                    FSEEK(file_header.properties.contents_offset + property_table[i].offset);
-                    FREAD(st.property_values[i], property_table[i].size);
+                    st.content.properties[i] = malloc(property_table[i].size);
+                    ALLOC_CHECK(st.content.properties[i]);
                 }
+            }
 
-                st.property_value_sizes[i] = property_table[i].size;
+            st.size.properties = malloc(sizeof(*st.size.properties) * st.num.properties);
+            ALLOC_CHECK(st.size.properties);
+
+            st.name_str_idx.properties = malloc(sizeof(*st.name_str_idx.properties) * st.num.properties);
+            ALLOC_CHECK(st.name_str_idx.properties);
+
+            for (port_uint_single_t i = 0; i < st.num.properties; i++)
+            {
+                if (property_table[i].size > 0)
+                {
+                    FSEEK(file_header.properties.contents_offset + property_table[i].offset);
+                    FREAD(st.content.properties[i], property_table[i].size);
+                }
+                st.size.properties[i] = property_table[i].size;
+                st.name_str_idx.properties[i] = property_table[i].name_str_idx;
+            }
+        }
+
+        st.num.sections = file_header.section_table.num_entries;
+        if (st.num.sections > 0)
+        {
+            st.content.sections = malloc(sizeof(*st.content.sections) * st.num.sections);
+            ALLOC_CHECK(st.content.sections);
+            for (port_uint_single_t i = 0; i < st.num.sections; i++)
+                st.content.sections[i] = NULL;
+
+            for (port_uint_single_t i = 0; i < st.num.sections; i++)
+            {
+                if (section_table[i].size > 0)
+                {
+                    st.content.sections[i] = malloc(section_table[i].size);
+                    ALLOC_CHECK(st.content.sections[i]);
+                }
+            }
+
+            st.size.sections = malloc(sizeof(*st.size.sections) * st.num.sections);
+            ALLOC_CHECK(st.size.sections);
+
+            st.name_str_idx.sections = malloc(sizeof(*st.name_str_idx.sections) * st.num.sections);
+            ALLOC_CHECK(st.name_str_idx.sections);
+
+            for (port_uint_single_t i = 0; i < st.num.sections; i++)
+            {
+                if (section_table[i].size > 0)
+                {
+                    FSEEK(file_header.sections.contents_offset + section_table[i].offset);
+                    FREAD(st.content.sections[i], section_table[i].size);
+                }
+                st.size.sections[i] = section_table[i].size;
+                st.name_str_idx.sections[i] = section_table[i].name_str_idx;
+            }
+        }
+
+        st.num.symbols = file_header.symbol_table.num_entries;
+        if (st.num.symbols > 0)
+        {
+            st.symbol.section_idx = malloc(sizeof(*st.symbol.section_idx) * st.num.symbols);
+            ALLOC_CHECK(st.symbol.section_idx);
+
+            st.symbol.values = malloc(sizeof(*st.symbol.values) * st.num.symbols);
+            ALLOC_CHECK(st.symbol.values);
+
+            st.name_str_idx.symbols = malloc(sizeof(*st.name_str_idx.symbols) * st.num.symbols);
+            ALLOC_CHECK(st.name_str_idx.symbols);
+
+            for (port_uint_single_t i = 0; i < st.num.symbols; i++)
+            {
+                st.symbol.section_idx[i] = symbol_table[i].section_idx;
+                st.symbol.values[i] = symbol_table[i].value;
+                st.name_str_idx.symbols[i] = symbol_table[i].name_str_idx;
+
+                // Set all invalid symbol to "the first after the last"
+                if (st.symbol.values[i] > section_table[symbol_table[i].section_idx].size)
+                    st.symbol.values[i] = section_table[symbol_table[i].section_idx].size;
             }
         }
 
@@ -463,9 +473,9 @@ port_init_data_storage_from_file(
     }
 
     free(string_table);
+    free(property_table);
     free(section_table);
     free(symbol_table);
-    free(property_table);
 
     fseek(file, global_offset + file_header.full_size, SEEK_SET);
     return 0;
@@ -474,9 +484,9 @@ failure:
     port_reset_data_storage(&st);
 
     free(string_table);
+    free(property_table);
     free(section_table);
     free(symbol_table);
-    free(property_table);
 
     return error;
 }
@@ -503,26 +513,26 @@ port_write_data_storage_to_file(
         return 0;
 
     // Calculate file size
-    port_size_t string_table_size = sizeof(port_data_storage_file_string_table_entry_t) * storage->num_strings;
-    port_size_t section_table_size = sizeof(port_data_storage_file_section_table_entry_t) * storage->num_sections;
-    port_size_t symbol_table_size = sizeof(port_data_storage_file_symbol_table_entry_t) * storage->num_symbols;
-    port_size_t property_table_size = sizeof(port_data_storage_file_property_table_entry_t) * storage->num_properties;
+    port_size_t string_table_size = sizeof(port_data_storage_file_string_table_entry_t) * storage->num.strings;
+    port_size_t property_table_size = sizeof(port_data_storage_file_property_table_entry_t) * storage->num.properties;
+    port_size_t section_table_size = sizeof(port_data_storage_file_section_table_entry_t) * storage->num.sections;
+    port_size_t symbol_table_size = sizeof(port_data_storage_file_symbol_table_entry_t) * storage->num.symbols;
 
-    port_size_t all_tables_size = string_table_size + section_table_size +
-        symbol_table_size + property_table_size;
+    port_size_t all_tables_size = string_table_size + property_table_size +
+        section_table_size + symbol_table_size;
 
-    port_size_t strings_contents_size = 0, sections_contents_size = 0, properties_contents_size = 0;
+    port_size_t strings_contents_size = 0, properties_contents_size = 0, sections_contents_size = 0;
 
-    for (port_uint_single_t i = 0; i < storage->num_strings; i++)
-        strings_contents_size += strlen(storage->strings[i]);
+    for (port_uint_single_t i = 0; i < storage->num.strings; i++)
+        strings_contents_size += strlen(storage->content.strings[i]);
 
-    for (port_uint_single_t i = 0; i < storage->num_sections; i++)
-        sections_contents_size += storage->section_sizes[i];
+    for (port_uint_single_t i = 0; i < storage->num.properties; i++)
+        properties_contents_size += storage->size.properties[i];
 
-    for (port_uint_single_t i = 0; i < storage->num_properties; i++)
-        properties_contents_size += storage->property_value_sizes[i];
+    for (port_uint_single_t i = 0; i < storage->num.sections; i++)
+        sections_contents_size += storage->size.sections[i];
 
-    port_size_t all_contents_size = strings_contents_size + sections_contents_size + properties_contents_size;
+    port_size_t all_contents_size = strings_contents_size + properties_contents_size + sections_contents_size;
 
     if (all_tables_size + all_contents_size > (port_uint_single_t)-1)
         return 1;
@@ -531,22 +541,22 @@ port_write_data_storage_to_file(
         *full_size = all_tables_size + all_contents_size;
 
     // Check indices
-    for (port_uint_single_t i = 0; i < storage->num_sections; i++)
+    for (port_uint_single_t i = 0; i < storage->num.properties; i++)
     {
-        if (storage->section_name_str_idx[i] >= storage->num_strings)
+        if (storage->name_str_idx.properties[i] >= storage->num.strings)
             return 2;
     }
 
-    for (port_uint_single_t i = 0; i < storage->num_symbols; i++)
+    for (port_uint_single_t i = 0; i < storage->num.sections; i++)
     {
-        if ((storage->symbol_name_str_idx[i] >= storage->num_strings) ||
-                (storage->symbol_section_idx[i] >= storage->num_sections))
+        if (storage->name_str_idx.sections[i] >= storage->num.strings)
             return 2;
     }
 
-    for (port_uint_single_t i = 0; i < storage->num_properties; i++)
+    for (port_uint_single_t i = 0; i < storage->num.symbols; i++)
     {
-        if (storage->property_name_str_idx[i] >= storage->num_strings)
+        if ((storage->name_str_idx.symbols[i] >= storage->num.strings) ||
+                (storage->symbol.section_idx[i] >= storage->num.sections))
             return 2;
     }
 
@@ -556,17 +566,18 @@ port_write_data_storage_to_file(
 
     port_data_storage_file_header_t file_header = {
         .format = format, .full_size = all_tables_size + all_contents_size,
-        .string_table = {.num_entries = storage->num_strings, .entries_offset = 0},
-        .section_table = {.num_entries = storage->num_sections, .entries_offset = string_table_size},
-        .symbol_table = {.num_entries = storage->num_symbols, .entries_offset =
-            string_table_size + section_table_size},
-        .property_table = {.num_entries = storage->num_properties, .entries_offset =
-            string_table_size + section_table_size + symbol_table_size},
+        .string_table = {.num_entries = storage->num.strings, .entries_offset = 0},
+        .property_table = {.num_entries = storage->num.properties, .entries_offset =
+            string_table_size},
+        .section_table = {.num_entries = storage->num.sections, .entries_offset =
+            string_table_size + property_table_size},
+        .symbol_table = {.num_entries = storage->num.symbols, .entries_offset =
+            string_table_size + property_table_size + section_table_size},
         .strings = {.contents_size = strings_contents_size, .contents_offset = all_tables_size},
-        .sections = {.contents_size = sections_contents_size, .contents_offset =
-            all_tables_size + strings_contents_size},
         .properties = {.contents_size = properties_contents_size, .contents_offset =
-            all_tables_size + strings_contents_size + sections_contents_size},
+            all_tables_size + strings_contents_size},
+        .sections = {.contents_size = sections_contents_size, .contents_offset =
+            all_tables_size + strings_contents_size + properties_contents_size},
     };
 
     FWRITE(&file_header, sizeof(file_header));
@@ -574,9 +585,9 @@ port_write_data_storage_to_file(
     // Write tables
     port_uint_single_t offset = 0;
 
-    for (port_uint_single_t i = 0; i < storage->num_strings; i++)
+    for (port_uint_single_t i = 0; i < storage->num.strings; i++)
     {
-        port_size_t length = strlen(storage->strings[i]);
+        port_size_t length = strlen(storage->content.strings[i]);
         port_data_storage_file_string_table_entry_t string_table_entry = {
             .length = length, .offset = offset};
         offset += length;
@@ -586,47 +597,47 @@ port_write_data_storage_to_file(
 
     offset = 0;
 
-    for (port_uint_single_t i = 0; i < storage->num_sections; i++)
-    {
-        port_data_storage_file_section_table_entry_t section_table_entry = {
-            .name_str_idx = storage->section_name_str_idx[i],
-            .size = storage->section_sizes[i], .offset = offset};
-        offset += storage->section_sizes[i];
-
-        FWRITE(&section_table_entry, sizeof(section_table_entry));
-    }
-
-    for (port_uint_single_t i = 0; i < storage->num_symbols; i++)
-    {
-        port_data_storage_file_symbol_table_entry_t symbol_table_entry = {
-            .name_str_idx = storage->symbol_name_str_idx[i],
-            .section_idx = storage->symbol_section_idx[i],
-            .value = storage->symbol_values[i]};
-
-        FWRITE(&symbol_table_entry, sizeof(symbol_table_entry));
-    }
-
-    offset = 0;
-
-    for (port_uint_single_t i = 0; i < storage->num_properties; i++)
+    for (port_uint_single_t i = 0; i < storage->num.properties; i++)
     {
         port_data_storage_file_property_table_entry_t property_table_entry = {
-            .name_str_idx = storage->property_name_str_idx[i],
-            .size = storage->property_value_sizes[i], .offset = offset};
-        offset += storage->property_value_sizes[i];
+            .name_str_idx = storage->name_str_idx.properties[i],
+            .size = storage->size.properties[i], .offset = offset};
+        offset += storage->size.properties[i];
 
         FWRITE(&property_table_entry, sizeof(property_table_entry));
     }
 
+    offset = 0;
+
+    for (port_uint_single_t i = 0; i < storage->num.sections; i++)
+    {
+        port_data_storage_file_section_table_entry_t section_table_entry = {
+            .name_str_idx = storage->name_str_idx.sections[i],
+            .size = storage->size.sections[i], .offset = offset};
+        offset += storage->size.sections[i];
+
+        FWRITE(&section_table_entry, sizeof(section_table_entry));
+    }
+
+    for (port_uint_single_t i = 0; i < storage->num.symbols; i++)
+    {
+        port_data_storage_file_symbol_table_entry_t symbol_table_entry = {
+            .name_str_idx = storage->name_str_idx.symbols[i],
+            .section_idx = storage->symbol.section_idx[i],
+            .value = storage->symbol.values[i]};
+
+        FWRITE(&symbol_table_entry, sizeof(symbol_table_entry));
+    }
+
     // Write contents
-    for (port_uint_single_t i = 0; i < storage->num_strings; i++)
-        FWRITE(storage->strings[i], strlen(storage->strings[i]));
+    for (port_uint_single_t i = 0; i < storage->num.strings; i++)
+        FWRITE(storage->content.strings[i], strlen(storage->content.strings[i]));
 
-    for (port_uint_single_t i = 0; i < storage->num_sections; i++)
-        FWRITE(storage->sections[i], storage->section_sizes[i]);
+    for (port_uint_single_t i = 0; i < storage->num.properties; i++)
+        FWRITE(storage->content.properties[i], storage->size.properties[i]);
 
-    for (port_uint_single_t i = 0; i < storage->num_properties; i++)
-        FWRITE(storage->property_values[i], storage->property_value_sizes[i]);
+    for (port_uint_single_t i = 0; i < storage->num.sections; i++)
+        FWRITE(storage->content.sections[i], storage->size.sections[i]);
 
     return 0;
 }
@@ -640,37 +651,34 @@ port_reset_data_storage(
     if (storage == NULL)
         return;
 
-    if (storage->strings != NULL)
+    if (storage->content.sections != NULL)
     {
-        for (port_uint_single_t i = 0; i < storage->num_strings; i++)
-            free(storage->strings[i]);
-
-        free(storage->strings);
+        for (port_uint_single_t i = 0; i < storage->num.sections; i++)
+            free(storage->content.sections[i]);
+        free(storage->content.sections);
+    }
+    if (storage->content.properties != NULL)
+    {
+        for (port_uint_single_t i = 0; i < storage->num.properties; i++)
+            free(storage->content.properties[i]);
+        free(storage->content.properties);
+    }
+    if (storage->content.strings != NULL)
+    {
+        for (port_uint_single_t i = 0; i < storage->num.strings; i++)
+            free(storage->content.strings[i]);
+        free(storage->content.strings);
     }
 
-    free(storage->section_name_str_idx);
-    if (storage->sections != NULL)
-    {
-        for (port_uint_single_t i = 0; i < storage->num_sections; i++)
-            free(storage->sections[i]);
+    free(storage->size.sections);
+    free(storage->size.properties);
 
-        free(storage->sections);
-    }
-    free(storage->section_sizes);
+    free(storage->symbol.section_idx);
+    free(storage->symbol.values);
 
-    free(storage->symbol_name_str_idx);
-    free(storage->symbol_section_idx);
-    free(storage->symbol_values);
-
-    free(storage->property_name_str_idx);
-    if (storage->property_values != NULL)
-    {
-        for (port_uint_single_t i = 0; i < storage->num_properties; i++)
-            free(storage->property_values[i]);
-
-        free(storage->property_values);
-    }
-    free(storage->property_value_sizes);
+    free(storage->name_str_idx.sections);
+    free(storage->name_str_idx.symbols);
+    free(storage->name_str_idx.properties);
 
     *storage = (port_data_storage_t){0};
 }

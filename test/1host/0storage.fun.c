@@ -161,23 +161,23 @@ TEST(port_init_data_storage_from_file)
         3, // file_header.string_table.num_entries
         4, // file_header.string_table.entries_offset
 
+        3, // file_header.property_table.num_entries
+        144, // file_header.property_table.entries_offset
+
         2, // file_header.section_table.num_entries
         44, // file_header.section_table.entries_offset
 
         3, // file_header.symbol_table.num_entries
         100, // file_header.symbol_table.entries_offset
 
-        3, // file_header.property_table.num_entries
-        144, // file_header.property_table.entries_offset
-
         11, // file_header.strings.contents_size,
         32, // file_header.strings.contents_offset
 
-        32, // file_header.sections.contents_size,
-        68, // file_header.sections.contents_offset
-
         8, // file_header.properties.contents_size,
         180, // file_header.properties.contents_offset
+
+        32, // file_header.sections.contents_size,
+        68, // file_header.sections.contents_offset
 
         0xDEAD, // skipped
 
@@ -193,13 +193,10 @@ TEST(port_init_data_storage_from_file)
 
         0xDEAD, // skipped
 
-        // strings FIXME
+        // strings
         (union {port_uint_single_t as_uint; char str[4];}){.str = "1sts"}.as_uint,
         (union {port_uint_single_t as_uint; char str[4];}){.str = "econ"}.as_uint,
         (union {port_uint_single_t as_uint; char str[4];}){.str = "d3+ "}.as_uint,
-        /* '1' | ('s' >> 8) | ('t' >> 16) | ('s' >> 24), */
-        /* 'e' | ('c' >> 8) | ('o' >> 16) | ('n' >> 24), */
-        /* 'd' | ('3' >> 8), */
 
         // section table entry #1
         0, // name_str_idx
@@ -259,62 +256,64 @@ TEST(port_init_data_storage_from_file)
 
     ASSERT_EQ(format, 0x1BADC0DE, port_uint_single_t, "%u");
 
-    ASSERT_EQ(storage.num_strings, 3, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.strings != NULL);
-    ASSERT_TRUE(strcmp(storage.strings[0], "1st") == 0);
-    ASSERT_TRUE(strcmp(storage.strings[1], "second") == 0);
-    ASSERT_TRUE(strcmp(storage.strings[2], "3") == 0);
+    ASSERT_EQ(storage.num.strings, 3, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.content.strings != NULL);
+    ASSERT_TRUE(strcmp(storage.content.strings[0], "1st") == 0);
+    ASSERT_TRUE(strcmp(storage.content.strings[1], "second") == 0);
+    ASSERT_TRUE(strcmp(storage.content.strings[2], "3") == 0);
 
-    ASSERT_EQ(storage.num_sections, 2, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.section_name_str_idx != NULL);
-    ASSERT_EQ(storage.section_name_str_idx[0], 0, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.section_name_str_idx[1], 1, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.sections != NULL);
-    ASSERT_TRUE(storage.sections[0] != NULL);
-    ASSERT_TRUE(storage.sections[1] != NULL);
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[0])[0], 0xAAAAAAAA, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[0])[1], 0xBBBBBBBB, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[0])[2], 0xCCCCCCCC, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[0])[3], 0xDDDDDDDD, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[0])[4], 0xEEEEEEEE, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[0])[5], 0xFFFFFFFF, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.section_sizes != NULL);
-    ASSERT_EQ(storage.section_sizes[0], 24, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[1])[0], 0xEEEEEEEE, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[1])[1], 0xFFFFFFFF, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[1])[2], 0x88888888, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.sections[1])[3], 0x77777777, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.section_sizes[1], 16, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.num.properties, 3, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.content.properties != NULL);
+    ASSERT_TRUE(storage.content.properties[0] == NULL);
+    ASSERT_TRUE(storage.content.properties[1] != NULL);
+    ASSERT_TRUE(storage.content.properties[2] != NULL);
+    ASSERT_EQ(((port_uint_single_t*)storage.content.properties[1])[0], 0x12345678,
+            port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.properties[2])[0], 0x87654321,
+            port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.size.properties != NULL);
+    ASSERT_EQ(((port_uint_single_t*)storage.size.properties)[0], 0, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.size.properties)[1], 4, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.size.properties)[2], 4, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.name_str_idx.properties != NULL);
+    ASSERT_EQ(storage.name_str_idx.properties[0], 1, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.name_str_idx.properties[1], 1, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.name_str_idx.properties[2], 2, port_uint_single_t, "%u");
 
-    ASSERT_EQ(storage.num_symbols, 3, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.symbol_name_str_idx != NULL);
-    ASSERT_EQ(storage.symbol_name_str_idx[0], 2, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.symbol_name_str_idx[1], 1, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.symbol_name_str_idx[2], 0, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.symbol_section_idx != NULL);
-    ASSERT_EQ(storage.symbol_section_idx[0], 0, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.symbol_section_idx[1], 0, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.symbol_section_idx[2], 1, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.symbol_values != NULL);
-    ASSERT_EQ(storage.symbol_values[0], 4, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.symbol_values[1], 24, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.symbol_values[2], 0, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.num.sections, 2, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.content.sections != NULL);
+    ASSERT_TRUE(storage.content.sections[0] != NULL);
+    ASSERT_TRUE(storage.content.sections[1] != NULL);
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[0])[0], 0xAAAAAAAA, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[0])[1], 0xBBBBBBBB, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[0])[2], 0xCCCCCCCC, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[0])[3], 0xDDDDDDDD, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[0])[4], 0xEEEEEEEE, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[0])[5], 0xFFFFFFFF, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.size.sections != NULL);
+    ASSERT_EQ(storage.size.sections[0], 24, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[1])[0], 0xEEEEEEEE, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[1])[1], 0xFFFFFFFF, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[1])[2], 0x88888888, port_uint_single_t, "%u");
+    ASSERT_EQ(((port_uint_single_t*)storage.content.sections[1])[3], 0x77777777, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.size.sections[1], 16, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.name_str_idx.sections != NULL);
+    ASSERT_EQ(storage.name_str_idx.sections[0], 0, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.name_str_idx.sections[1], 1, port_uint_single_t, "%u");
 
-    ASSERT_EQ(storage.num_properties, 3, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.property_name_str_idx != NULL);
-    ASSERT_EQ(storage.property_name_str_idx[0], 1, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.property_name_str_idx[1], 1, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.property_name_str_idx[2], 2, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.property_values != NULL);
-    ASSERT_TRUE(storage.property_values[0] == NULL);
-    ASSERT_TRUE(storage.property_values[1] != NULL);
-    ASSERT_TRUE(storage.property_values[2] != NULL);
-    ASSERT_EQ(((port_uint_single_t*)storage.property_values[1])[0], 0x12345678, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.property_values[2])[0], 0x87654321, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage.property_value_sizes != NULL);
-    ASSERT_EQ(((port_uint_single_t*)storage.property_value_sizes)[0], 0, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.property_value_sizes)[1], 4, port_uint_single_t, "%u");
-    ASSERT_EQ(((port_uint_single_t*)storage.property_value_sizes)[2], 4, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.num.symbols, 3, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.symbol.section_idx != NULL);
+    ASSERT_EQ(storage.symbol.section_idx[0], 0, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.symbol.section_idx[1], 0, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.symbol.section_idx[2], 1, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.symbol.values != NULL);
+    ASSERT_EQ(storage.symbol.values[0], 4, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.symbol.values[1], 24, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.symbol.values[2], 0, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage.name_str_idx.symbols != NULL);
+    ASSERT_EQ(storage.name_str_idx.symbols[0], 2, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.name_str_idx.symbols[1], 1, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.name_str_idx.symbols[2], 0, port_uint_single_t, "%u");
 
     port_reset_data_storage(&storage);
 }
@@ -322,6 +321,11 @@ TEST(port_init_data_storage_from_file)
 TEST(port_write_data_storage_to_file)
 {
     char *strings[] = {"hello", "world", "!!!"};
+
+    port_uint_single_t property_name_str_idx[] = {0, 1};
+    port_uint_single_t values[] = {0x12345678, 0xABCDEF01};
+    port_void_ptr_t property_values[] = {&values[0], &values[1]};
+    port_uint_single_t property_value_sizes[] = {sizeof(values[0]), sizeof(values[1])};
 
     port_uint_single_t section_name_str_idx[] = {0, 1};
     port_void_ptr_t sections[] = {"12345678", "abcdefgh"};
@@ -331,29 +335,35 @@ TEST(port_write_data_storage_to_file)
     port_uint_single_t symbol_section_idx[] = {0, 0, 1, 1};
     port_uint_single_t symbol_values[] = {0, 8, 0, 8};
 
-    port_uint_single_t property_name_str_idx[] = {0, 1};
-    port_uint_single_t values[] = {0x12345678, 0xABCDEF01};
-    port_void_ptr_t property_values[] = {&values[0], &values[1]};
-    port_uint_single_t property_value_sizes[] = {sizeof(values[0]), sizeof(values[1])};
-
     port_data_storage_t storage = {
-        .num_strings = 3,
-        .strings = strings,
+        .content = {
+            .sections = sections,
+            .properties = property_values,
+            .strings = strings,
+        },
 
-        .num_sections = 2,
-        .section_name_str_idx = section_name_str_idx,
-        .sections = sections,
-        .section_sizes = section_sizes,
+        .size = {
+            .sections = section_sizes,
+            .properties = property_value_sizes,
+        },
 
-        .num_symbols = 4,
-        .symbol_name_str_idx = symbol_name_str_idx,
-        .symbol_section_idx = symbol_section_idx,
-        .symbol_values = symbol_values,
+        .symbol = {
+            .section_idx = symbol_section_idx,
+            .values = symbol_values,
+        },
 
-        .num_properties = 2,
-        .property_name_str_idx = property_name_str_idx,
-        .property_values = property_values,
-        .property_value_sizes = property_value_sizes,
+        .name_str_idx = {
+            .sections = section_name_str_idx,
+            .properties = property_name_str_idx,
+            .symbols = symbol_name_str_idx,
+        },
+
+        .num = {
+            .properties = 2,
+            .sections = 2,
+            .symbols = 4,
+            .strings = 3,
+        },
     };
 
     char *buffer = NULL;
@@ -386,61 +396,61 @@ TEST(port_write_data_storage_to_file)
 
     ASSERT_EQ(format, 0x1BADC0DE, port_uint_single_t, "%u");
 
-    ASSERT_EQ(storage2.num_strings, storage.num_strings, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage2.strings != NULL);
-    for (port_uint_single_t i = 0; i < storage.num_strings; i++)
-        ASSERT_TRUE(strcmp(storage2.strings[i], storage.strings[i]) == 0);
+    ASSERT_EQ(storage2.num.strings, storage.num.strings, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage2.content.strings != NULL);
+    for (port_uint_single_t i = 0; i < storage.num.strings; i++)
+        ASSERT_TRUE(strcmp(storage2.content.strings[i], storage.content.strings[i]) == 0);
 
-    ASSERT_EQ(storage2.num_sections, storage.num_sections, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage2.section_name_str_idx != NULL);
-    ASSERT_TRUE(storage2.sections != NULL);
-    ASSERT_TRUE(storage2.section_sizes != NULL);
-    for (port_uint_single_t i = 0; i < storage.num_sections; i++)
+    ASSERT_EQ(storage2.num.properties, storage.num.properties, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage2.content.properties != NULL);
+    ASSERT_TRUE(storage2.size.properties != NULL);
+    ASSERT_TRUE(storage2.name_str_idx.properties != NULL);
+    for (port_uint_single_t i = 0; i < storage.num.properties; i++)
     {
-        ASSERT_EQ(storage2.section_name_str_idx[i], storage.section_name_str_idx[i],
+        ASSERT_EQ(storage2.size.properties[i], storage.size.properties[i],
                 port_uint_single_t, "%u");
-        ASSERT_EQ(storage2.section_sizes[i], storage.section_sizes[i],
+        ASSERT_EQ(storage2.name_str_idx.properties[i], storage.name_str_idx.properties[i],
                 port_uint_single_t, "%u");
 
-        if (storage2.section_sizes[i] == storage.section_sizes[i])
+        if (storage2.size.properties[i] == storage.size.properties[i])
         {
-            for (port_uint_single_t j = 0; j < storage.section_sizes[i]; j++)
-                ASSERT_EQ(((char*)storage2.sections[i])[j],
-                        ((char*)storage.sections[i])[j], port_uint8_t, "%u");
+            for (port_uint_single_t j = 0; j < storage.size.properties[i]; j++)
+                ASSERT_EQ(((char*)storage2.content.properties[i])[j],
+                        ((char*)storage.content.properties[i])[j], port_uint8_t, "%u");
         }
     }
 
-    ASSERT_EQ(storage2.num_symbols, storage.num_symbols, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage2.symbol_name_str_idx != NULL);
-    ASSERT_TRUE(storage2.symbol_section_idx != NULL);
-    ASSERT_TRUE(storage2.symbol_values != NULL);
-    for (port_uint_single_t i = 0; i < storage.num_symbols; i++)
+    ASSERT_EQ(storage2.num.sections, storage.num.sections, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage2.content.sections != NULL);
+    ASSERT_TRUE(storage2.size.sections != NULL);
+    ASSERT_TRUE(storage2.name_str_idx.sections != NULL);
+    for (port_uint_single_t i = 0; i < storage.num.sections; i++)
     {
-        ASSERT_EQ(storage2.symbol_name_str_idx[i], storage.symbol_name_str_idx[i],
+        ASSERT_EQ(storage2.size.sections[i], storage.size.sections[i],
                 port_uint_single_t, "%u");
-        ASSERT_EQ(storage2.symbol_section_idx[i], storage.symbol_section_idx[i],
+        ASSERT_EQ(storage2.name_str_idx.sections[i], storage.name_str_idx.sections[i],
                 port_uint_single_t, "%u");
-        ASSERT_EQ(storage2.symbol_values[i], storage.symbol_values[i],
-                port_uint_single_t, "%u");
+
+        if (storage2.size.sections[i] == storage.size.sections[i])
+        {
+            for (port_uint_single_t j = 0; j < storage.size.sections[i]; j++)
+                ASSERT_EQ(((char*)storage2.content.sections[i])[j],
+                        ((char*)storage.content.sections[i])[j], port_uint8_t, "%u");
+        }
     }
 
-    ASSERT_EQ(storage2.num_properties, storage.num_properties, port_uint_single_t, "%u");
-    ASSERT_TRUE(storage2.property_name_str_idx != NULL);
-    ASSERT_TRUE(storage2.property_values != NULL);
-    ASSERT_TRUE(storage2.property_value_sizes != NULL);
-    for (port_uint_single_t i = 0; i < storage.num_properties; i++)
+    ASSERT_EQ(storage2.num.symbols, storage.num.symbols, port_uint_single_t, "%u");
+    ASSERT_TRUE(storage2.symbol.section_idx != NULL);
+    ASSERT_TRUE(storage2.symbol.values != NULL);
+    ASSERT_TRUE(storage2.name_str_idx.symbols != NULL);
+    for (port_uint_single_t i = 0; i < storage.num.symbols; i++)
     {
-        ASSERT_EQ(storage2.property_name_str_idx[i], storage.property_name_str_idx[i],
+        ASSERT_EQ(storage2.symbol.section_idx[i], storage.symbol.section_idx[i],
                 port_uint_single_t, "%u");
-        ASSERT_EQ(storage2.property_value_sizes[i], storage.property_value_sizes[i],
+        ASSERT_EQ(storage2.symbol.values[i], storage.symbol.values[i],
                 port_uint_single_t, "%u");
-
-        if (storage2.property_value_sizes[i] == storage.property_value_sizes[i])
-        {
-            for (port_uint_single_t j = 0; j < storage.property_value_sizes[i]; j++)
-                ASSERT_EQ(((char*)storage2.property_values[i])[j],
-                        ((char*)storage.property_values[i])[j], port_uint8_t, "%u");
-        }
+        ASSERT_EQ(storage2.name_str_idx.symbols[i], storage.name_str_idx.symbols[i],
+                port_uint_single_t, "%u");
     }
 
     port_reset_data_storage(&storage2);
