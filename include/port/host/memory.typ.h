@@ -19,7 +19,7 @@
 
 /**
  * @file
- * @brief Types for memory operations.
+ * @brief Types for memory handling on host.
  */
 
 #pragma once

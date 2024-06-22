@@ -32,7 +32,7 @@
  * See description of port_kargs_setter_t type.
  */
 #define PORT_KARGS_SETTER(name) \
-    cl_int name(cl_kernel kernel, cl_ulong arg_mask, port_const_void_ptr_t kargs)
+    cl_int name(cl_kernel kernel, cl_ulong arg_mask, port_const_void_ptr_t data)
 
 #endif // _PORT_HOST_OPENCL_KARGS_SETTER_DEF_H_
 

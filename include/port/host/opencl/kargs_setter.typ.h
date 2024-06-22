@@ -41,7 +41,7 @@
 typedef cl_int (*port_kargs_setter_t)(
         cl_kernel kernel,  ///< [in] OpenCL kernel.
         cl_ulong arg_mask, ///< [in] Mask of kernel arguments to set.
-        port_const_void_ptr_t kargs ///< [in] Data for kernel arguments.
+        port_const_void_ptr_t data ///< [in] Data for kernel arguments.
 );
 
 #endif // _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
