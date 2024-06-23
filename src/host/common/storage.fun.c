@@ -322,7 +322,8 @@ port_init_data_storage_from_file(
 
     for (port_uint_single_t i = 0; i < file_header.property_table.num_entries; i++)
     {
-        if ((property_table[i].name_str_idx >= file_header.string_table.num_entries) ||
+        if (((property_table[i].name_str_idx >= file_header.string_table.num_entries) &&
+                    (property_table[i].name_str_idx != (port_uint_single_t)-1)) ||
                 (property_table[i].offset > file_header.properties.contents_size) ||
                 (property_table[i].size > file_header.properties.contents_size - property_table[i].offset))
             ERROR(1);
@@ -330,7 +331,8 @@ port_init_data_storage_from_file(
 
     for (port_uint_single_t i = 0; i < file_header.section_table.num_entries; i++)
     {
-        if ((section_table[i].name_str_idx >= file_header.string_table.num_entries) ||
+        if (((section_table[i].name_str_idx >= file_header.string_table.num_entries) &&
+                    (section_table[i].name_str_idx != (port_uint_single_t)-1)) ||
                 (section_table[i].offset > file_header.sections.contents_size) ||
                 (section_table[i].size > file_header.sections.contents_size - section_table[i].offset))
             ERROR(1);
@@ -338,8 +340,11 @@ port_init_data_storage_from_file(
 
     for (port_uint_single_t i = 0; i < file_header.symbol_table.num_entries; i++)
     {
-        if ((symbol_table[i].name_str_idx >= file_header.string_table.num_entries) ||
-                (symbol_table[i].section_idx >= file_header.section_table.num_entries))
+        if (((symbol_table[i].name_str_idx >= file_header.string_table.num_entries) &&
+                    (symbol_table[i].name_str_idx != (port_uint_single_t)-1)) ||
+                (symbol_table[i].section_idx >= file_header.section_table.num_entries) ||
+                ((symbol_table[i].value >= section_table[symbol_table[i].section_idx].size) &&
+                 (symbol_table[i].value != (port_uint_single_t)-1)))
             ERROR(1);
     }
 
@@ -463,9 +468,9 @@ port_init_data_storage_from_file(
                 st.symbol.values[i] = symbol_table[i].value;
                 st.name_str_idx.symbols[i] = symbol_table[i].name_str_idx;
 
-                // Set all invalid symbol to "the first after the last"
-                if (st.symbol.values[i] > section_table[symbol_table[i].section_idx].size)
-                    st.symbol.values[i] = section_table[symbol_table[i].section_idx].size;
+                // Set invalid symbol to "the first after the last" byte
+                if (st.symbol.values[i] == (port_uint_single_t)-1)
+                    st.symbol.values[i] = section_table[st.symbol.section_idx[i]].size;
             }
         }
 
@@ -543,20 +548,24 @@ port_write_data_storage_to_file(
     // Check indices
     for (port_uint_single_t i = 0; i < storage->num.properties; i++)
     {
-        if (storage->name_str_idx.properties[i] >= storage->num.strings)
+        if ((storage->name_str_idx.properties[i] >= storage->num.strings) &&
+                (storage->name_str_idx.properties[i] != (port_uint_single_t)-1))
             return 2;
     }
 
     for (port_uint_single_t i = 0; i < storage->num.sections; i++)
     {
-        if (storage->name_str_idx.sections[i] >= storage->num.strings)
+        if ((storage->name_str_idx.sections[i] >= storage->num.strings) &&
+                (storage->name_str_idx.sections[i] != (port_uint_single_t)-1))
             return 2;
     }
 
     for (port_uint_single_t i = 0; i < storage->num.symbols; i++)
     {
-        if ((storage->name_str_idx.symbols[i] >= storage->num.strings) ||
-                (storage->symbol.section_idx[i] >= storage->num.sections))
+        if (((storage->name_str_idx.symbols[i] >= storage->num.strings) &&
+                    (storage->name_str_idx.symbols[i] != (port_uint_single_t)-1)) ||
+                (storage->symbol.section_idx[i] >= storage->num.sections) ||
+                (storage->symbol.values[i] > storage->size.sections[storage->symbol.section_idx[i]]))
             return 2;
     }
 
@@ -625,6 +634,10 @@ port_write_data_storage_to_file(
             .name_str_idx = storage->name_str_idx.symbols[i],
             .section_idx = storage->symbol.section_idx[i],
             .value = storage->symbol.values[i]};
+
+        // Set "the first after the last" byte symbol to invalid value
+        if (symbol_table_entry.value == storage->size.sections[storage->symbol.section_idx[i]])
+            symbol_table_entry.value = (port_uint_single_t)-1;
 
         FWRITE(&symbol_table_entry, sizeof(symbol_table_entry));
     }

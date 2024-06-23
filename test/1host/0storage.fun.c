@@ -218,11 +218,11 @@ TEST(port_init_data_storage_from_file)
         // symbol table entry #2
         1, // name_str_idx
         0, // section_idx
-        24, // value
+        23, // value
         // symbol table entry #3
         0, // name_str_idx
         1, // section_idx
-        0, // value
+        0xFFFFFFFF, // value
 
         0xDEAD, // skipped
         0xDEAD, // skipped
@@ -308,8 +308,8 @@ TEST(port_init_data_storage_from_file)
     ASSERT_EQ(storage.symbol.section_idx[2], 1, port_uint_single_t, "%u");
     ASSERT_TRUE(storage.symbol.values != NULL);
     ASSERT_EQ(storage.symbol.values[0], 4, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.symbol.values[1], 24, port_uint_single_t, "%u");
-    ASSERT_EQ(storage.symbol.values[2], 0, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.symbol.values[1], 23, port_uint_single_t, "%u");
+    ASSERT_EQ(storage.symbol.values[2], 16, port_uint_single_t, "%u");
     ASSERT_TRUE(storage.name_str_idx.symbols != NULL);
     ASSERT_EQ(storage.name_str_idx.symbols[0], 2, port_uint_single_t, "%u");
     ASSERT_EQ(storage.name_str_idx.symbols[1], 1, port_uint_single_t, "%u");
