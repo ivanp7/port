@@ -19,41 +19,31 @@
 
 /**
  * @file
- * @brief Type of kernel arguments setter functions.
+ * @brief Type of vtable structure for libraries using Port.
  */
 
 #pragma once
-#ifndef _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
-#define _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
+#ifndef _PORT_HOST_VTABLE_TYP_H_
+#define _PORT_HOST_VTABLE_TYP_H_
 
-#include <port/cdev/memory.typ.h>
+#include <port/cdev/types.typ.h>
 
-#include <CL/cl.h>
-
-/**
- * @brief Arguments setter function for an OpenCL kernel.
- *
- * arg_mask specifies which kernel arguments to set.
- *
- * @return CL_SUCCESS or error code returned by clSetKernelArg(),
- * clSetKernelArgSVMPointer(), or clSetKernelExecInfo().
- */
-typedef cl_int (*port_kargs_setter_t)(
-        cl_kernel kernel,  ///< [in] OpenCL kernel.
-        cl_ulong arg_mask, ///< [in] Mask of kernel arguments to set.
-        port_const_void_ptr_t data ///< [in] Data for kernel arguments.
-);
+struct port_pfunc_description;
+struct port_kargs_setter_description;
+struct port_opencl_program_sources;
 
 /**
- * @brief Description of kernel arguments setter function.
+ * @brief Vtable structure for libraries using Port.
  */
-typedef struct port_kargs_setter_description {
-    const char *kernel_name; ///< OpenCL kernel name.
+typedef struct port_vtable {
+    port_uint32_t magic;   ///< Value uniquely identifying Port vtable structure.
+    port_uint32_t version; ///< Value determining vtable version and compatibility.
 
-    port_kargs_setter_t func; ///< Kernel arguments setter function.
-    cl_ulong arg_mask_in;  ///< Mask of kernel input arguments.
-    cl_ulong arg_mask_out; ///< Mask of kernel output arguments.
-} port_kargs_setter_description_t;
+    const struct port_pfunc_description *pfuncs; ///< Concurrent processing wrappers of kernels.
+    const struct port_kargs_setter_description *kargs_setters; ///< Kernel arguments setters.
 
-#endif // _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
+    const struct port_opencl_program_sources *program_sources; ///< Array of OpenCL program sources.
+} port_vtable_t;
+
+#endif // _PORT_HOST_VTABLE_TYP_H_
 

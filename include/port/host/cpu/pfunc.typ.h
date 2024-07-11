@@ -39,5 +39,14 @@ typedef void (*port_pfunc_t)(
         port_uint16_t thread_idx     ///< [in] Index of the current thread.
 );
 
+/**
+ * @brief Description of a concurrent processing function.
+ */
+typedef struct port_pfunc_description {
+    const char *kernel_name; ///< Kernel name.
+
+    port_pfunc_t func; ///< Concurrent processing function.
+} port_pfunc_description_t;
+
 #endif // _PORT_HOST_CPU_PFUNC_TYP_H_
 
