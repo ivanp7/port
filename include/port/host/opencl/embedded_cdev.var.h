@@ -26,17 +26,12 @@
 #ifndef _PORT_HOST_OPENCL_EMBEDDED_CDEV_VAR_H_
 #define _PORT_HOST_OPENCL_EMBEDDED_CDEV_VAR_H_
 
-#include <stddef.h>
+#include <port/host/opencl/program.typ.h>
 
-extern const unsigned int port_embedded_cdev_num_headers;           ///< Number of header files.
-extern const char *const port_embedded_cdev_header_include_names[]; ///< #include names of header files.
-extern const char *const port_embedded_cdev_headers[];              ///< Header files.
-extern const size_t port_embedded_cdev_header_sizes[];              ///< Sizes of header files.
-
-extern const unsigned int port_embedded_cdev_num_sources;   ///< Number of source files.
-extern const char *const port_embedded_cdev_source_names[]; ///< Names of source files.
-extern const char *const port_embedded_cdev_sources[];      ///< Source files.
-extern const size_t port_embedded_cdev_source_sizes[];      ///< Sizes of source files.
+/**
+ * @brief Embedded sources for OpenCL program builder.
+ */
+extern const port_opencl_program_sources_t port_embedded_cdev;
 
 #endif // _PORT_HOST_OPENCL_EMBEDDED_CDEV_VAR_H_
 

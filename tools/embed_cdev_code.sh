@@ -18,7 +18,7 @@ command -v "xxd" > /dev/null || { echo "'xxd' program is not available!"; exit 1
 : ${SDIR:="src"}
 : ${CDEV_SUBDIR:="cdev"}
 
-: ${VAR_PREFIX:="embedded_cdev"}
+: ${VAR_PREFIX:=""}
 
 GENERATED_SOURCE="$1"
 PROJECT_NAME="$2"
@@ -45,7 +45,7 @@ cat <<  _EOF_ > "$GENERATED_SOURCE"
 // This file is generated automatically by $(basename -- "$0")
 // Do not edit!
 
-#include <stddef.h>
+#include <port/host/opencl/program.typ.h>
 
 _EOF_
 
@@ -63,13 +63,13 @@ done
 # generate definition of num_headers
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
 
-const unsigned int ${VAR_PREFIX}_num_headers = $(echo "$CDEV_HEADERS" | wc -l);
+#define NUM_HEADERS $(echo "$CDEV_HEADERS" | wc -l)
 
 _EOF_
 
 # generate definition of header_include_names
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
-const char *const ${VAR_PREFIX}_header_include_names[] = {
+static const char *header_include_names[] = {
 _EOF_
 
 for file in $CDEV_HEADERS
@@ -86,7 +86,7 @@ _EOF_
 
 # generate definition of headers
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
-const char *const ${VAR_PREFIX}_headers[] = {
+static const char *headers[] = {
 _EOF_
 
 for file in $CDEV_HEADERS
@@ -105,7 +105,7 @@ _EOF_
 
 # generate definition of header_sizes
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
-const size_t ${VAR_PREFIX}_header_sizes[] = {
+static const size_t header_sizes[] = {
 _EOF_
 
 for file in $CDEV_HEADERS
@@ -125,13 +125,13 @@ _EOF_
 # generate definition of num_sources
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
 
-const unsigned int ${VAR_PREFIX}_num_sources = $(echo "$CDEV_SOURCES" | wc -l);
+#define NUM_SOURCES $(echo "$CDEV_SOURCES" | wc -l)
 
 _EOF_
 
 # generate definition of source_names
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
-const char *const ${VAR_PREFIX}_source_names[] = {
+static const char *source_names[] = {
 _EOF_
 
 for file in $CDEV_SOURCES
@@ -148,7 +148,7 @@ _EOF_
 
 # generate definition of sources
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
-const char *const ${VAR_PREFIX}_sources[] = {
+static const char *sources[] = {
 _EOF_
 
 for file in $CDEV_SOURCES
@@ -167,7 +167,7 @@ _EOF_
 
 # generate definition of source_sizes
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
-const size_t ${VAR_PREFIX}_source_sizes[] = {
+static const size_t source_sizes[] = {
 _EOF_
 
 for file in $CDEV_SOURCES
@@ -180,6 +180,22 @@ _EOF_
 done
 
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
+};
+
+_EOF_
+
+cat <<  _EOF_ >> "$GENERATED_SOURCE"
+
+const port_opencl_program_sources_t ${VAR_PREFIX}_embedded_cdev = {
+    .num_headers = NUM_HEADERS,
+    .header_include_names = header_include_names,
+    .headers = headers,
+    .header_sizes = header_sizes,
+
+    .num_sources = NUM_SOURCES,
+    .source_names = source_names,
+    .sources = sources,
+    .source_sizes = source_sizes,
 };
 
 _EOF_

@@ -42,7 +42,7 @@ typedef struct port_vtable {
     const struct port_pfunc_description *pfuncs; ///< Concurrent processing wrappers of kernels.
     const struct port_kargs_setter_description *kargs_setters; ///< Kernel arguments setters.
 
-    const struct port_opencl_program_sources *program_sources; ///< Array of OpenCL program sources.
+    const struct port_opencl_program_sources **program_sources; ///< Array of OpenCL program sources.
 } port_vtable_t;
 
 #endif // _PORT_HOST_VTABLE_TYP_H_

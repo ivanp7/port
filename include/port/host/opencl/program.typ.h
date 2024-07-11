@@ -26,18 +26,18 @@
 #ifndef _PORT_HOST_OPENCL_PROGRAM_TYP_H_
 #define _PORT_HOST_OPENCL_PROGRAM_TYP_H_
 
-#include <CL/cl.h>
+#include <stddef.h>
 
 /**
  * @brief Logically indivisible set of sources for OpenCL program builder.
  */
 typedef struct port_opencl_program_sources {
-    cl_uint num_headers;  ///< Number of header files.
+    unsigned int num_headers;  ///< Number of header files.
     const char **header_include_names; ///< #include names of header files.
     const char **headers; ///< Header files.
     size_t *header_sizes; ///< Sizes of header files.
 
-    cl_uint num_sources;  ///< Number of source files.
+    unsigned int num_sources;  ///< Number of source files.
     const char **source_names; ///< Names of source files.
     const char **sources; ///< Source files.
     size_t *source_sizes; ///< Sizes of source files.
