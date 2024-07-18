@@ -31,7 +31,7 @@
 /**
  * @brief Embedded sources for OpenCL program builder.
  */
-extern const port_opencl_program_sources_t port_embedded_cdev;
+extern const port_opencl_program_source_t port_embedded_cdev;
 
 #endif // _PORT_HOST_OPENCL_EMBEDDED_CDEV_VAR_H_
 

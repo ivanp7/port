@@ -31,17 +31,14 @@
 /**
  * @brief Logically indivisible set of sources for OpenCL program builder.
  */
-typedef struct port_opencl_program_sources {
-    unsigned int num_headers;  ///< Number of header files.
-    const char **header_include_names; ///< #include names of header files.
-    const char **headers; ///< Header files.
-    size_t *header_sizes; ///< Sizes of header files.
-
-    unsigned int num_sources;  ///< Number of source files.
-    const char **source_names; ///< Names of source files.
-    const char **sources; ///< Source files.
-    size_t *source_sizes; ///< Sizes of source files.
-} port_opencl_program_sources_t;
+typedef struct port_opencl_program_source {
+    struct {
+        unsigned int num_files;  ///< Number of files.
+        const char **file_paths; ///< Paths of files.
+        const char **file_contents; ///< File contents.
+        size_t *file_sizes; ///< Sizes of files.
+    } header, source;
+} port_opencl_program_source_t;
 
 #endif // _PORT_HOST_OPENCL_PROGRAM_TYP_H_
 

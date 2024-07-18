@@ -186,16 +186,19 @@ _EOF_
 
 cat <<  _EOF_ >> "$GENERATED_SOURCE"
 
-const port_opencl_program_sources_t ${VAR_PREFIX}_embedded_cdev = {
-    .num_headers = NUM_HEADERS,
-    .header_include_names = header_include_names,
-    .headers = headers,
-    .header_sizes = header_sizes,
-
-    .num_sources = NUM_SOURCES,
-    .source_names = source_names,
-    .sources = sources,
-    .source_sizes = source_sizes,
+const port_opencl_program_source_t ${VAR_PREFIX}_embedded_cdev = {
+    .header = {
+        .num_files = NUM_HEADERS,
+        .file_paths = header_include_names,
+        .file_contents = headers,
+        .file_sizes = (size_t*)header_sizes,
+    },
+    .source = {
+        .num_files = NUM_SOURCES,
+        .file_paths = source_names,
+        .file_contents = sources,
+        .file_sizes = (size_t*)source_sizes,
+    },
 };
 
 _EOF_
