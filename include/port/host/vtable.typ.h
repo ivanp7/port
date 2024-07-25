@@ -26,7 +26,7 @@
 #ifndef _PORT_HOST_VTABLE_TYP_H_
 #define _PORT_HOST_VTABLE_TYP_H_
 
-#include <port/cdev/types.typ.h>
+#include <port/host/kernel.typ.h>
 
 struct port_pfunc_description;
 struct port_kargs_setter_description;
@@ -43,6 +43,13 @@ typedef struct port_vtable {
     const struct port_kargs_setter_description *kargs_setters; ///< Kernel arguments setters.
 
     const struct port_opencl_program_source **program_sources; ///< Array of OpenCL program sources.
+
+    struct {
+        port_kargs_alloc_func_t alloc_fn; ///< Kernel arguments allocation function.
+        port_kargs_alloc_copy_func_t alloc_copy_fn; ///< Kernel arguments copy allocation function.
+        port_kargs_copy_func_t copy_fn; ///< Kernel arguments copy function.
+        port_kargs_free_func_t free_fn; ///< Kernel arguments deallocation function.
+    } kargs;
 } port_vtable_t;
 
 #endif // _PORT_HOST_VTABLE_TYP_H_

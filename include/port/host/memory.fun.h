@@ -43,8 +43,8 @@ port_init_segmented_memory_from_data_storage(
         struct port_segmented_memory *memory, ///< [out] Segmented memory.
         struct port_data_storage *storage, ///< [in] Data storage.
 
-        struct port_memory_operations *op, ///< [in] Memory operations.
-        struct port_memory_operation_properties *prop ///< [in] Properties for memory operations.
+        const struct port_memory_operations *op, ///< [in] Memory operations.
+        const struct port_memory_operation_properties *prop ///< [in] Properties for memory operations.
 );
 
 /**
@@ -54,8 +54,8 @@ void
 port_reset_segmented_memory(
         struct port_segmented_memory *memory, ///< [in,out] Segmented memory.
 
-        struct port_memory_operations *op, ///< [in] Memory operations.
-        struct port_memory_operation_properties *prop ///< [in] Properties for memory operations.
+        const struct port_memory_operations *op, ///< [in] Memory operations.
+        const struct port_memory_operation_properties *prop ///< [in] Properties for memory operations.
 );
 
 #endif // _PORT_HOST_MEMORY_FUN_H_

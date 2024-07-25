@@ -33,8 +33,8 @@ port_init_segmented_memory_from_data_storage(
         port_segmented_memory_t *memory,
         port_data_storage_t *storage,
 
-        port_memory_operations_t *op,
-        port_memory_operation_properties_t *prop)
+        const port_memory_operations_t *op,
+        const port_memory_operation_properties_t *prop)
 {
     if ((memory == NULL) || (storage == NULL) || (op == NULL) || (prop == NULL))
         return false;
@@ -125,8 +125,8 @@ void
 port_reset_segmented_memory(
         port_segmented_memory_t *memory,
 
-        port_memory_operations_t *op,
-        port_memory_operation_properties_t *prop)
+        const port_memory_operations_t *op,
+        const port_memory_operation_properties_t *prop)
 {
     if ((memory == NULL) || (op == NULL) || (prop == NULL))
         return;
