@@ -27,7 +27,6 @@
 #define _PORT_HOST_KERNEL_TYP_H_
 
 #include <port/cdev/memory.typ.h>
-#include <port/cdev/work_item.typ.h>
 
 struct port_memory_operations;
 struct port_memory_operation_properties;
