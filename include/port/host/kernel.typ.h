@@ -34,11 +34,9 @@ struct port_memory_operation_properties;
 /**
  * @brief Kernel arguments allocation function.
  *
- * @return True on success, otherwise false.
+ * @return Allocated kernel arguments, or NULL in case of failure.
  */
-typedef port_bool_t (*port_kargs_alloc_func_t)(
-        port_void_ptr_t kargs, ///< [out] Kernel arguments to allocate.
-
+typedef port_void_ptr_t (*port_kargs_alloc_func_t)(
         port_const_void_ptr_t alloc_opts, ///< [in] Allocator options.
 
         const struct port_memory_operations *op, ///< [in] Memory operations.
@@ -48,14 +46,13 @@ typedef port_bool_t (*port_kargs_alloc_func_t)(
 /**
  * @brief Kernel arguments copy allocation function.
  *
- * @return True on success, otherwise false.
+ * @return Allocated kernel arguments, or NULL in case of failure.
  */
-typedef port_bool_t (*port_kargs_alloc_copy_func_t)(
-        port_void_ptr_t kargs, ///< [out] Kernel arguments to allocate.
+typedef port_void_ptr_t (*port_kargs_alloc_copy_func_t)(
         port_const_void_ptr_t kargs_src, ///< [in] Kernel arguments to be copied.
 
-        const struct port_memory_operations *op, ///< [in] Memory operations.
-        const struct port_memory_operation_properties *prop, ///< [in] Properties for memory operations.
+        const struct port_memory_operations *op_dest, ///< [in] Memory operations for destination arguments.
+        const struct port_memory_operation_properties *prop_dest, ///< [in] Properties for memory operations for destination arguments.
 
         const struct port_memory_operations *op_src, ///< [in] Memory operations for source arguments.
         const struct port_memory_operation_properties *prop_src ///< [in] Properties for memory operations for source arguments.
@@ -67,13 +64,13 @@ typedef port_bool_t (*port_kargs_alloc_copy_func_t)(
  * @return True on success, otherwise false.
  */
 typedef port_bool_t (*port_kargs_copy_func_t)(
-        port_void_ptr_t kargs, ///< [in,out] Kernel arguments to copy to.
+        port_void_ptr_t kargs_dest, ///< [in,out] Kernel arguments to copy to.
         port_const_void_ptr_t kargs_src, ///< [in] Kernel arguments to be copied.
 
         port_bool_t writable_only, ///< [in] Whether to copy writable data only.
 
-        const struct port_memory_operations *op, ///< [in] Memory operations.
-        const struct port_memory_operation_properties *prop, ///< [in] Properties for memory operations.
+        const struct port_memory_operations *op_dest, ///< [in] Memory operations for destination arguments.
+        const struct port_memory_operation_properties *prop_dest, ///< [in] Properties for memory operations for destination arguments.
 
         const struct port_memory_operations *op_src, ///< [in] Memory operations for source arguments.
         const struct port_memory_operation_properties *prop_src ///< [in] Properties for memory operations for source arguments.
