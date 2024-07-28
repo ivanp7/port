@@ -19,36 +19,24 @@
 
 /**
  * @file
- * @brief Macros for work-item counting.
+ * @brief Types for work-item counting.
  */
 
 #pragma once
-#ifndef _PORT_CDEV_WORK_ITEM_DEF_H_
-#define _PORT_CDEV_WORK_ITEM_DEF_H_
+#ifndef _PORT_CDEV_WORK_TYP_H_
+#define _PORT_CDEV_WORK_TYP_H_
 
-#include <port/cdev/work_item.typ.h>
-
-#ifdef __OPENCL_C_VERSION__
-
-#  define PORT_WORK_ITEM_INDEX_PARAMETER(work_item_idx) // nothing
+#include <port/cdev/types.typ.h>
 
 /**
- * @brief Define and initialize kernel function local variable for work-item index.
+ * @brief Index of a work-item.
  */
-#  define PORT_WORK_ITEM_INDEX_INITIALIZE(work_item_idx) \
-    port_work_item_index_t work_item_idx = get_global_id(0)
-
-#else
+typedef port_size_t port_work_item_index_t;
 
 /**
- * @brief Declare kernel function parameter for work-item index.
+ * @brief Work size (number of work-items).
  */
-#  define PORT_WORK_ITEM_INDEX_PARAMETER(work_item_idx) \
-    , port_work_item_index_t work_item_idx
+typedef port_size_t port_work_size_t;
 
-#  define PORT_WORK_ITEM_INDEX_INITIALIZE(work_item_idx) // nothing
-
-#endif
-
-#endif // _PORT_CDEV_WORK_ITEM_DEF_H_
+#endif // _PORT_CDEV_WORK_TYP_H_
 
