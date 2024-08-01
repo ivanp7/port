@@ -47,7 +47,6 @@ typedef struct port_vtable {
         } metainfo; ///< Kernel arguments meta information.
 
         port_kargs_alloc_func_t alloc_fn; ///< Kernel arguments allocation function.
-        port_kargs_alloc_copy_func_t alloc_copy_fn; ///< Kernel arguments copy allocation function.
         port_kargs_copy_func_t copy_fn; ///< Kernel arguments copy function.
         port_kargs_free_func_t free_fn; ///< Kernel arguments deallocation function.
     } kargs;

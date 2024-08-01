@@ -76,26 +76,10 @@ typedef port_work_size_t (*port_kargs_metainfo_work_size_getter_func_t)(
 typedef port_void_ptr_t (*port_kargs_alloc_func_t)(
         port_const_void_ptr_t metainfo, ///< [in] Host information of kernel arguments.
 
+        port_bool_t writable_only, ///< [in] Whether to allocate writable data only.
+
         const struct port_memory_operations *op, ///< [in] Memory operations.
         const struct port_memory_operation_properties *prop ///< [in] Properties for memory operations.
-);
-
-/**
- * @brief Kernel arguments copy allocation function.
- *
- * @return Allocated kernel arguments, or NULL in case of failure.
- */
-typedef port_void_ptr_t (*port_kargs_alloc_copy_func_t)(
-        port_const_void_ptr_t metainfo_src, ///< [in] Host information of kernel arguments to be copied.
-        port_const_void_ptr_t src, ///< [in] Kernel arguments data to be copied.
-
-        port_bool_t writable_only, ///< [in] Whether to copy writable data only.
-
-        const struct port_memory_operations *op_dest, ///< [in] Memory operations for destination arguments.
-        const struct port_memory_operation_properties *prop_dest, ///< [in] Properties for memory operations for destination arguments.
-
-        const struct port_memory_operations *op_src, ///< [in] Memory operations for source arguments.
-        const struct port_memory_operation_properties *prop_src ///< [in] Properties for memory operations for source arguments.
 );
 
 /**
