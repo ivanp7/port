@@ -89,7 +89,7 @@ typedef port_void_ptr_t (*port_kargs_alloc_func_t)(
  */
 typedef port_bool_t (*port_kargs_copy_func_t)(
         port_void_ptr_t dest, ///< [out] Kernel arguments to copy to.
-        port_const_void_ptr_t metainfo_dest, ///< [in] Host information of kernel arguments to copy to.
+        port_void_ptr_t metainfo_dest, ///< [in,out] Host information of kernel arguments to copy to.
 
         port_const_void_ptr_t src, ///< [in] Kernel arguments to be copied.
         port_const_void_ptr_t metainfo_src, ///< [in] Host information of kernel arguments to be copied.
