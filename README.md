@@ -119,6 +119,8 @@ The configuration script also generates `port.pc` (pkg-config file for `libport`
 
 * OpenCL
 
+* [Station](https://github.com/ivanp7/station) (for applications from `app/`)
+
 ## Documentation
 
 Doxygen documentation is available at `docs` subdirectory. To build it, run `make`.

@@ -18,6 +18,7 @@ HOST_COMMON_SUBDIR="common"
 HOST_CPU_SUBDIR="cpu"
 HOST_OPENCL_SUBDIR="opencl"
 
+ADIR="app"
 TDIR="test"
 ODIR="build"
 
@@ -26,6 +27,8 @@ BUILD_TOOLS_DIR="tools"
 EMBEDDED_CDEV_VAR_PREFIX="${PROJECT_NAME}"
 EMBEDDED_CDEV_VAR_GENERATOR="${BUILD_TOOLS_DIR}/embed_cdev_code.sh"
 EMBEDDED_CDEV_VAR_FILE="${SDIR}/${HOST_SUBDIR}/${HOST_OPENCL_SUBDIR}/embedded_cdev.var.c"
+
+: ${STATION_PKGCONF_DIR:="${PROJECT_DIR}/3rdparty/station"}
 
 TEST_CODE_URL="https://gist.githubusercontent.com/ivanp7/506fe8dc053952fd4a960666814cfd9a/raw"
 
@@ -54,6 +57,10 @@ do
     case "$arg" in
         s) # output: build shared library (.so) instead of static (.a)
             OUTPUT_LIBRARY_SHARED="true"
+            ;;
+
+        a) # output: build applications
+            OUTPUT_APPLICATIONS="true"
             ;;
 
         t) # output: build test application
@@ -142,14 +149,38 @@ CFLAGS="-march=native -pipe -std=c17 -Wall -Wextra -Wpedantic -pedantic-errors \
 -I${PROJECT_DIR}/${IDIR} \
 $CFLAGS_COMMON \
 $CFLAGS_BUILD_TYPE \
-${OUTPUT_LIBRARY_SHARED:+"-fPIC"}"
-
-CFLAGS_TESTS="-march=native -pipe -std=c17 -Wall -Wextra -pedantic-errors -Wno-psabi -O0 -g3 -ggdb \
--I${PROJECT_DIR}/${IDIR} -I${PROJECT_DIR}/${ODIR}/${TDIR} \
-$CFLAGS_COMMON"
-LFLAGS_TESTS="-lm"
+${OUTPUT_LIBRARY_SHARED:+"-fPIC"} \
+${CFLAGS_DIAGNOSTICS:-} \
+"
 
 LFLAGS="$LFLAGS_COMMON"
+
+CFLAGS_APPS="-march=native -pipe -std=c17 -Wall -Wextra -Wpedantic -pedantic-errors \
+-Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition -Wno-psabi \
+-I${PROJECT_DIR}/${IDIR} \
+$CFLAGS_COMMON \
+$CFLAGS_BUILD_TYPE \
+${CFLAGS_DIAGNOSTICS:-} \
+$(PKG_CONFIG_PATH="${PROJECT_DIR}" pkg-config --cflags port) \
+$(PKG_CONFIG_PATH="$STATION_PKGCONF_DIR" pkg-config --cflags station-app) \
+"
+
+LFLAGS_APPS="$LFLAGS_COMMON \
+-lm \
+$(PKG_CONFIG_PATH="${PROJECT_DIR}" pkg-config --libs port) \
+$(PKG_CONFIG_PATH="$STATION_PKGCONF_DIR" pkg-config --libs station-app) \
+"
+
+CFLAGS_TESTS="-march=native -pipe -std=c17 -Wall -Wextra -pedantic-errors -Wno-psabi \
+-I${PROJECT_DIR}/${IDIR} -I${PROJECT_DIR}/${ODIR}/${TDIR} \
+$CFLAGS_COMMON \
+-O0 -g3 -ggdb \
+${CFLAGS_DIAGNOSTICS:-} \
+"
+
+LFLAGS_TESTS="$LFLAGS_COMMON \
+-lm \
+"
 
 ###############################################################################
 # Generate pkg-config file
@@ -174,9 +205,13 @@ fi
 ###############################################################################
 
 cat <<  _EOF_ > "${PROJECT_DIR}/${NINJA}"
-cflags = $CFLAGS ${CFLAGS_DIAGNOSTICS:-}
-cflags_tests = $CFLAGS_TESTS
+cflags = $CFLAGS
 lflags = $LFLAGS
+
+cflags_apps = $CFLAGS_APPS
+lflags_apps = $LFLAGS_APPS
+
+cflags_tests = $CFLAGS_TESTS
 lflags_tests = $LFLAGS_TESTS
 
 
@@ -282,6 +317,37 @@ fi
 
 echo "default library" >> "${PROJECT_DIR}/${NINJA}"
 
+### APPLICATIONS ###
+
+APPS=""
+
+for dir in $(cd -- "${PROJECT_DIR}"; find "${ADIR}" -mindepth 1 -maxdepth 1 -type d)
+do
+    OBJECTS=""
+
+    cat <<  _EOF_ >> "${PROJECT_DIR}/${NINJA}"
+
+
+_EOF_
+
+    build_directory "$dir" "cflags_apps"
+
+    APPS="$APPS ${ODIR}/$dir.app"
+
+    cat <<  _EOF_ >> "${PROJECT_DIR}/${NINJA}"
+build ${ODIR}/$dir.app: link $OBJECTS | library
+    cflags = \$cflags_apps
+    lflags = \$lflags_apps
+
+build applications: phony $APPS
+_EOF_
+done
+
+[ -z "${OUTPUT_APPLICATIONS:-}" ] ||
+    echo "default applications" >> "${PROJECT_DIR}/${NINJA}"
+
+### TEST APPLICATION ###
+
 cat <<  _EOF_ >> "${PROJECT_DIR}/${NINJA}"
 
 
@@ -309,15 +375,15 @@ do
 
     cat <<  _EOF_ >> "${PROJECT_DIR}/${NINJA}"
 build ${ODIR}/$obj: cc $src || ${ODIR}/${TDIR}/test.h
-    cflags_custom = \$cflags_tests
+    cflags = \$cflags_tests
 _EOF_
 done
 
 cat <<  _EOF_ >> "${PROJECT_DIR}/${NINJA}"
 
 build ${ODIR}/${OUT_TEST_APPLICATION}: link $OBJECTS
-    cflags_custom = \$cflags_tests
-    lflags_custom = \$lflags_tests
+    cflags = \$cflags_tests
+    lflags = \$lflags_tests
 
 build tests: phony ${ODIR}/${OUT_TEST_APPLICATION}
 _EOF_
