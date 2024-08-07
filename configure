@@ -261,7 +261,7 @@ _EOF_
 
             [ -z "$custom_cflags" ] ||
                 cat <<  _EOF_ >> "${PROJECT_DIR}/${NINJA}"
-    cflags = \$${custom_cflags}
+    cflags = ${custom_cflags}
 _EOF_
         fi
     done
@@ -330,7 +330,7 @@ do
 
 _EOF_
 
-    build_directory "$dir" "cflags_apps"
+    build_directory "$dir" "\$cflags_apps -DAPP_NAME='\"$(basename -- "$dir")\"'"
 
     APPS="$APPS ${ODIR}/$dir.app"
 
