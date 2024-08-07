@@ -79,7 +79,8 @@ typedef port_void_ptr_t (*port_kargs_alloc_func_t)(
         port_bool_t writable_only, ///< [in] Whether to allocate writable data only.
 
         const struct port_memory_operations *op, ///< [in] Memory operations.
-        const struct port_memory_operation_properties *prop ///< [in] Properties for memory operations.
+        const struct port_memory_operation_properties *prop_ro, ///< [in] Properties for memory operations (read-only memory).
+        const struct port_memory_operation_properties *prop_rw  ///< [in] Properties for memory operations (read-write memory).
 );
 
 /**
