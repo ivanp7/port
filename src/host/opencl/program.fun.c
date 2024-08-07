@@ -255,7 +255,7 @@ port_opencl_build_program(
         const cl_device_id *device_list,
 
         cl_uint num_inputs,
-        const port_opencl_program_source_t *inputs,
+        const port_opencl_program_source_t *inputs[],
 
         cl_uint num_libraries,
         const cl_program libraries[],
@@ -294,7 +294,7 @@ port_opencl_build_program(
     else if (inputs == NULL)
     {
         if (stream != NULL)
-            fprintf(stream, "Error: array of input sets of sources is NULL.\n");
+            fprintf(stream, "Error: array of pointers to input sets of sources is NULL.\n");
         if (error != NULL)
             *error = CL_INVALID_VALUE;
         return NULL;
@@ -313,12 +313,21 @@ port_opencl_build_program(
 
     for (cl_uint i = 0; i < num_inputs; i++)
     {
-        num_headers += inputs[i].header.num_files;
-        num_sources += inputs[i].source.num_files;
-
-        if (inputs[i].header.num_files > 0)
+        if (inputs[i] == NULL)
         {
-            if (inputs[i].header.file_paths == NULL)
+            if (stream != NULL)
+                fprintf(stream, "Error: pointer to input sets of sources is NULL (set #%u).\n", i);
+            if (error != NULL)
+                *error = CL_INVALID_VALUE;
+            return NULL;
+        }
+
+        num_headers += inputs[i]->header.num_files;
+        num_sources += inputs[i]->source.num_files;
+
+        if (inputs[i]->header.num_files > 0)
+        {
+            if (inputs[i]->header.file_paths == NULL)
             {
                 if (stream != NULL)
                     fprintf(stream, "Error: array of header include names is NULL (set #%u).\n", i);
@@ -326,7 +335,7 @@ port_opencl_build_program(
                     *error = CL_INVALID_VALUE;
                 return NULL;
             }
-            else if (inputs[i].header.file_contents == NULL)
+            else if (inputs[i]->header.file_contents == NULL)
             {
                 if (stream != NULL)
                     fprintf(stream, "Error: array of headers is NULL (set #%u).\n", i);
@@ -334,7 +343,7 @@ port_opencl_build_program(
                     *error = CL_INVALID_VALUE;
                 return NULL;
             }
-            else if (inputs[i].header.file_sizes == NULL)
+            else if (inputs[i]->header.file_sizes == NULL)
             {
                 if (stream != NULL)
                     fprintf(stream, "Error: array of header sizes is NULL (set #%u).\n", i);
@@ -344,7 +353,7 @@ port_opencl_build_program(
             }
         }
 
-        if (inputs[i].source.num_files == 0)
+        if (inputs[i]->source.num_files == 0)
         {
             if (stream != NULL)
                 fprintf(stream, "Error: number of sources is zero (set #%u).\n", i);
@@ -352,7 +361,7 @@ port_opencl_build_program(
                 *error = CL_INVALID_VALUE;
             return NULL;
         }
-        else if (inputs[i].source.file_paths == NULL)
+        else if (inputs[i]->source.file_paths == NULL)
         {
             if (stream != NULL)
                 fprintf(stream, "Error: array of source names is NULL (set #%u).\n", i);
@@ -360,7 +369,7 @@ port_opencl_build_program(
                 *error = CL_INVALID_VALUE;
             return NULL;
         }
-        else if (inputs[i].source.file_contents == NULL)
+        else if (inputs[i]->source.file_contents == NULL)
         {
             if (stream != NULL)
                 fprintf(stream, "Error: array of sources is NULL (set #%u).\n", i);
@@ -368,7 +377,7 @@ port_opencl_build_program(
                 *error = CL_INVALID_VALUE;
             return NULL;
         }
-        else if (inputs[i].source.file_sizes == NULL)
+        else if (inputs[i]->source.file_sizes == NULL)
         {
             if (stream != NULL)
                 fprintf(stream, "Error: array of source sizes is NULL (set #%u).\n", i);
@@ -412,14 +421,14 @@ port_opencl_build_program(
         cl_uint idx = 0;
         for (cl_uint i = 0; i < num_inputs; i++)
         {
-            for (cl_uint j = 0; j < inputs[i].header.num_files; j++)
+            for (cl_uint j = 0; j < inputs[i]->header.num_files; j++)
             {
-                header_include_names[idx] = inputs[i].header.file_paths[j];
+                header_include_names[idx] = inputs[i]->header.file_paths[j];
                 program_headers[idx++] = clCreateProgramWithSource(context,
-                        1, (const char**)&inputs[i].header.file_contents[j], &inputs[i].header.file_sizes[j], &err);
+                        1, (const char**)&inputs[i]->header.file_contents[j], &inputs[i]->header.file_sizes[j], &err);
 
                 if (stream != NULL)
-                    log_operation("clCreateProgramWithSource", inputs[i].header.file_paths[j],
+                    log_operation("clCreateProgramWithSource", inputs[i]->header.file_paths[j],
                             err, false, stream, NULL, 0, NULL);
 
                 if (err != CL_SUCCESS)
@@ -448,13 +457,13 @@ port_opencl_build_program(
         cl_uint idx = 0;
         for (cl_uint i = 0; i < num_inputs; i++)
         {
-            for (cl_uint j = 0; j < inputs[i].source.num_files; j++)
+            for (cl_uint j = 0; j < inputs[i]->source.num_files; j++)
             {
                 program_sources[idx++] = clCreateProgramWithSource(context,
-                        1, (const char**)&inputs[i].source.file_contents[j], &inputs[i].source.file_sizes[j], &err);
+                        1, (const char**)&inputs[i]->source.file_contents[j], &inputs[i]->source.file_sizes[j], &err);
 
                 if (stream != NULL)
-                    log_operation("clCreateProgramWithSource", inputs[i].source.file_paths[j],
+                    log_operation("clCreateProgramWithSource", inputs[i]->source.file_paths[j],
                             err, false, stream, NULL, 0, NULL);
 
                 if (err != CL_SUCCESS)
@@ -468,13 +477,13 @@ port_opencl_build_program(
         cl_uint idx = 0;
         for (cl_uint i = 0; i < num_inputs; i++)
         {
-            for (cl_uint j = 0; j < inputs[i].source.num_files; j++)
+            for (cl_uint j = 0; j < inputs[i]->source.num_files; j++)
             {
                 err = clCompileProgram(program_sources[idx], num_devices, device_list, cflags,
                         num_headers, program_headers, header_include_names, NULL, NULL);
 
                 if (stream != NULL)
-                    log_operation("clCompileProgram", inputs[i].source.file_paths[j],
+                    log_operation("clCompileProgram", inputs[i]->source.file_paths[j],
                             err, true, stream, program_sources[idx], num_devices, device_list);
 
                 if (err != CL_SUCCESS)

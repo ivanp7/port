@@ -53,7 +53,7 @@ port_opencl_build_program(
         const cl_device_id *device_list, ///< [in] List of devices to build the program for.
 
         cl_uint num_inputs, ///< [in] Number of input sets of sources.
-        const struct port_opencl_program_source *inputs, ///< [in] Input sets of sources.
+        const struct port_opencl_program_source *inputs[], ///< [in] Input sets of sources.
 
         cl_uint num_libraries,        ///< [in] Number of linked libraries.
         const cl_program libraries[], ///< [in] Libraries to link.
