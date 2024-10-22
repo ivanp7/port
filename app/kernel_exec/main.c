@@ -535,11 +535,17 @@ static STATION_PLUGIN_HELP_FUNC(plugin_help)
 // Plugin configuration function
 static STATION_PLUGIN_CONF_FUNC(plugin_conf)
 {
-    args->cmdline = malloc(sizeof(struct plugin_args));
-    if (args->cmdline == NULL)
     {
-        printf("[Error] couldn't allocate memory for command line arguments parser\n");
-        exit(EXIT_FAILURE);
+        struct plugin_args *pargs = malloc(sizeof(*pargs));
+
+        if (pargs == NULL)
+        {
+            printf("[Error] couldn't allocate memory for command line arguments parser\n");
+            exit(EXIT_FAILURE);
+        }
+
+        *pargs = (struct plugin_args){0};
+        args->cmdline = pargs;
     }
 
     error_t err = argp_parse(&plugin_args_parser, argc, argv,
