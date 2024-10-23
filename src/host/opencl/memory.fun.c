@@ -24,6 +24,7 @@
 
 #include <port/host/opencl/memory.fun.h>
 #include <port/host/opencl/memory.typ.h>
+#include <port/host/memory.def.h>
 
 #include <CL/cl.h>
 
@@ -37,7 +38,8 @@ port_memory_opencl_alloc(
     if (p == NULL)
         return NULL;
 
-    return clSVMAlloc(p->context, p->svm_mem_flags, num_bytes, alignment);
+    return clSVMAlloc(p->context, p->svm_mem_flags, num_bytes,
+            (alignment != 0) ? alignment : PORT_ALIGNMENT_MAX);
 }
 
 void

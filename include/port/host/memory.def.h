@@ -19,61 +19,21 @@
 
 /**
  * @file
- * @brief Functions for memory operations.
+ * @brief Constants for memory handling on host.
  */
 
-#include <port/host/cpu/memory.fun.h>
-#include <port/host/memory.def.h>
+#pragma once
+#ifndef _PORT_HOST_MEMORY_DEF_H_
+#define _PORT_HOST_MEMORY_DEF_H_
 
-#include <stdlib.h>
+#include <port/cdev/memory.typ.h>
 
-port_void_ptr_t
-port_memory_cpu_alloc(
-        port_size_t num_bytes,
-        port_size_t alignment,
-        port_void_ptr_t properties)
-{
-    (void) properties;
+#include <stdalign.h>
 
-    if (num_bytes == 0)
-        return NULL;
+/**
+ * @brief Alignment of largest data type supported by OpenCL.
+ */
+#define PORT_ALIGNMENT_MAX alignof(port_float64_v16_t)
 
-    return aligned_alloc((alignment != 0) ? alignment : PORT_ALIGNMENT_MAX, num_bytes);
-}
-
-void
-port_memory_cpu_free(
-        port_void_ptr_t memory,
-        port_void_ptr_t properties)
-{
-    port_bool_t *p = properties;
-    if ((p != NULL) && !*p)
-        return;
-
-    free(memory);
-}
-
-port_bool_t
-port_memory_cpu_map(
-        port_void_ptr_t memory,
-        port_size_t num_bytes,
-        port_void_ptr_t properties)
-{
-    (void) memory;
-    (void) num_bytes;
-    (void) properties;
-
-    return true;
-}
-
-port_bool_t
-port_memory_cpu_unmap(
-        port_void_ptr_t memory,
-        port_void_ptr_t properties)
-{
-    (void) memory;
-    (void) properties;
-
-    return true;
-}
+#endif // _PORT_HOST_MEMORY_DEF_H_
 
