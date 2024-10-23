@@ -65,6 +65,8 @@
 enum plugin_args_keys {
     ARGKEY_VERSION = 'v',
 
+    ARGKEY_BUILD_LOG = 'j',
+
     ARGKEY_WORK_SIZE = 'w',
 
     ARGKEY_OUT_SHM = 'o',
@@ -80,6 +82,8 @@ enum plugin_args_keys {
 
 static struct argp_option plugin_args_options[] = {
     {.name = "version", .key = ARGKEY_VERSION, .doc = "Display expected library vtable version", .group = -1},
+
+    {.name = "build-log", .key = ARGKEY_BUILD_LOG, .doc = "Display OpenCL program build log"},
 
     {.doc = "Output options:"},
     {.name = "out-shm", .key = ARGKEY_OUT_SHM, .arg = "IDHEX@PATH", .doc = "Shared memory with pointer support for writing output data"},
@@ -121,6 +125,7 @@ struct plugin_args {
     } cpu;
 
     struct {
+        bool build_log;
         unsigned device_idx;
         unsigned local_work_size;
     } opencl;
@@ -211,6 +216,10 @@ static error_t plugin_args_parse(int key, char *arg, struct argp_state *state)
                 printf("%u.%.2u.%.2u\n", version_year, version_month, version_day);
                 exit(EXIT_SUCCESS);
             }
+            break;
+
+        case ARGKEY_BUILD_LOG:
+            args->opencl.build_log = true;
             break;
 
         case ARGKEY_OUT_SHM:
@@ -647,7 +656,7 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
                 resources->opencl.contexts->context_info[0].device_ids,
                 num_program_sources, resources->exec.vtable->program_sources, 0, NULL,
                 "", "",
-                stdout, &err);
+                resources->args->opencl.build_log ? stdout : NULL, &err);
 
         if (resources->opencl.program == NULL)
         {
