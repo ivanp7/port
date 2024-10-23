@@ -477,7 +477,8 @@ static STATION_SFUNC(exec_loop)
 
     if (resources->exec.runs_done == 0)
     {
-        printf("Executing kernel '%s'...\n", resources->args->kernel_name);
+        printf("Executing kernel '%s' (work size %llu)...\n",
+                resources->args->kernel_name, (unsigned long long)resources->args->out.work_size);
         return;
     }
     else if (resources->exec.runs_done == 1)
@@ -499,7 +500,7 @@ static STATION_SFUNC(exec_loop)
         }
 
         if (resources->args->profile.runs > 0)
-            printf("Executing kernel %u more times to profile...\n",
+            printf("\nExecuting kernel %u more times to profile...\n",
                     resources->args->profile.runs);
     }
 
