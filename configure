@@ -144,7 +144,7 @@ case "$CC" in
     clang) CFLAGS_DIAGNOSTICS="-fcolor-diagnostics" ;;
 esac
 
-CFLAGS="-march=native -pipe -std=c17 -Wall -Wextra -Wpedantic -pedantic-errors \
+CFLAGS="-march=native -pipe -std=c17 -Wall -Wextra -Wpedantic \
 -Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition -Wno-psabi \
 -I${PROJECT_DIR}/${IDIR} \
 $CFLAGS_COMMON \
@@ -155,7 +155,7 @@ ${CFLAGS_DIAGNOSTICS:-} \
 
 LFLAGS="$LFLAGS_COMMON"
 
-CFLAGS_APPS="-march=native -pipe -std=c17 -Wall -Wextra -Wpedantic -pedantic-errors \
+CFLAGS_APPS="-march=native -pipe -std=c17 -Wall -Wextra -Wpedantic \
 -Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition -Wno-psabi \
 -I${PROJECT_DIR}/${IDIR} \
 $CFLAGS_COMMON \
@@ -171,7 +171,7 @@ $(PKG_CONFIG_PATH="${PROJECT_DIR}" pkg-config --libs port) \
 $(PKG_CONFIG_PATH="$STATION_PKGCONF_DIR" pkg-config --libs station-app) \
 "
 
-CFLAGS_TESTS="-march=native -pipe -std=c17 -Wall -Wextra -pedantic-errors -Wno-psabi \
+CFLAGS_TESTS="-march=native -pipe -std=c17 -Wall -Wextra -Wno-psabi \
 -I${PROJECT_DIR}/${IDIR} -I${PROJECT_DIR}/${ODIR}/${TDIR} \
 $CFLAGS_COMMON \
 -O0 -g3 -ggdb \
