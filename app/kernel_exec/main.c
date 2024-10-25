@@ -415,7 +415,8 @@ static STATION_SFUNC(exec_kernel_opencl)
     cl_event prof_event;
 
     cl_int err = clEnqueueNDRangeKernel(resources->opencl.command_queue,
-            resources->opencl.kernel, 1, NULL, &global_work_size, &local_work_size,
+            resources->opencl.kernel, 1, NULL, &global_work_size,
+            local_work_size > 0 ? &local_work_size : NULL,
             0, NULL, &prof_event);
     if (err != CL_SUCCESS)
     {
