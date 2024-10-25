@@ -50,11 +50,14 @@ port_convert_float16_to_float32(
 #ifdef __OPENCL_C_VERSION__
     return vload_half(0, (half*)&value);
 #elif defined(__GNUC__)
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wpedantic"
     union {
         port_uint16_t as_uint;
         _Float16 as_float;
     } u = {.as_uint = value};
     return (port_float32_t)u.as_float;
+#  pragma GCC diagnostic pop
 #else
     union {
         port_uint32_t as_uint;
@@ -162,11 +165,14 @@ port_convert_float32_to_float16(
 #ifdef __OPENCL_C_VERSION__
     vstore_half_rte(value, 0, (half*)&result);
 #elif defined(__GNUC__)
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wpedantic"
     union {
         port_uint16_t as_uint;
         _Float16 as_float;
     } u = {.as_float = value};
     return u.as_uint;
+#  pragma GCC diagnostic pop
 #else
     union {
         port_uint32_t as_uint;
