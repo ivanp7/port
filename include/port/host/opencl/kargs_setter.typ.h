@@ -44,16 +44,5 @@ typedef cl_int (*port_kargs_setter_t)(
         port_const_void_ptr_t data ///< [in] Data for kernel arguments.
 );
 
-/**
- * @brief Description of kernel arguments setter function.
- */
-typedef struct port_kargs_setter_description {
-    const char *kernel_name; ///< OpenCL kernel name.
-
-    port_kargs_setter_t func; ///< Kernel arguments setter function.
-    cl_ulong arg_mask_in;  ///< Mask of kernel input arguments.
-    cl_ulong arg_mask_out; ///< Mask of kernel output arguments.
-} port_kargs_setter_description_t;
-
 #endif // _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
 

@@ -28,10 +28,6 @@
 
 #include <port/cdev/memory.typ.h>
 
-///////////////////////////////////////////////////////////////////////////////
-// Memory operations
-///////////////////////////////////////////////////////////////////////////////
-
 /**
  * @brief Memory allocator function.
  *
@@ -87,23 +83,8 @@ typedef struct port_memory_operations {
  */
 typedef struct port_memory_operation_properties {
     port_void_ptr_t alloc_properties; ///< Properties for allocator/deallocator functions.
-    port_void_ptr_t map_properties; ///< Properties for mapping/unmapping functions.
+    port_void_ptr_t map_properties;   ///< Properties for mapping/unmapping functions.
 } port_memory_operation_properties_t;
-
-///////////////////////////////////////////////////////////////////////////////
-// Segmented memory
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * @brief Segmented memory description.
- */
-typedef struct port_segmented_memory {
-    port_void_ptr_t root;   ///< Root pointer into the memory segments.
-    port_void_ptr_t *table; ///< Table of pointers into the memory segments.
-
-    port_void_ptr_t *segments; ///< Array of pointers to memory segments.
-    port_size_t num_segments;  ///< Size of array of pointers to memory segments.
-} port_segmented_memory_t;
 
 #endif // _PORT_HOST_MEMORY_TYP_H_
 

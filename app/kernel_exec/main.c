@@ -155,7 +155,7 @@ struct plugin_resources {
     } kargs;
 
     struct {
-        port_vtable_t *vtable;
+        const port_vtable_t *vtable;
 
         struct {
             port_memory_operations_t op;
@@ -163,6 +163,8 @@ struct plugin_resources {
             port_memory_operation_properties_t op_prop_rw;
             port_memory_operation_properties_t op_prop_wo;
         } memory;
+
+        port_size_t work_type;
 
         station_sfunc_t sfunc;
         unsigned runs_done;
@@ -489,9 +491,10 @@ static STATION_SFUNC(exec_loop)
         // Write output data if needed
         if (resources->kargs.shm_out != NULL)
         {
-            if (!resources->exec.vtable->kargs.copy_fn(
+            if (!resources->exec.vtable->kargs_operations.copy_fn(
                         resources->kargs.shm_out, resources->kargs.shm_out_metadata,
                         resources->kargs.private, resources->kargs.private_metadata, true,
+                        &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                         &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                         &resources->exec.memory.op, &resources->exec.memory.op_prop_rw))
             {
@@ -521,9 +524,10 @@ static STATION_SFUNC(exec_loop)
     }
 
     // Restore kernel arguments
-    if (!resources->exec.vtable->kargs.copy_fn(
+    if (!resources->exec.vtable->kargs_operations.copy_fn(
                 resources->kargs.private, resources->kargs.private_metadata,
                 resources->kargs.shm_in, resources->kargs.shm_in_metadata, true,
+                &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                 &resources->exec.memory.op, &resources->exec.memory.op_prop_rw,
                 &resources->cpu.memory.op, &resources->cpu.memory.op_prop))
     {
@@ -656,7 +660,9 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
                 resources->opencl.contexts->contexts[0],
                 resources->opencl.contexts->context_info[0].num_devices,
                 resources->opencl.contexts->context_info[0].device_ids,
-                num_program_sources, resources->exec.vtable->program_sources, 0, NULL,
+                num_program_sources,
+                (const struct port_opencl_program_source**)resources->exec.vtable->program_sources,
+                0, NULL,
                 "", "",
                 resources->args->opencl.build_log ? stdout : NULL, &err);
 
@@ -686,53 +692,36 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
     }
 
     // Extract kernel wrapper
-    if (resources->cpu.used)
+    if (resources->exec.vtable->kernel_descriptions == NULL)
     {
-        if (resources->exec.vtable->pfuncs == NULL)
-        {
-            printf("[Error] concurrent processing wrappers list is not available\n");
-            goto failure;
-        }
-
-        for (const port_pfunc_description_t *descr = resources->exec.vtable->pfuncs;
-                descr->func != NULL; descr++)
-        {
-            if ((descr->kernel_name != NULL) &&
-                    (strcmp(descr->kernel_name, resources->args->kernel_name) == 0))
-            {
-                resources->cpu.pfunc = descr->func;
-                break;
-            }
-        }
-
-        if (resources->cpu.pfunc == NULL)
-        {
-            printf("[Error] concurrent processing wrapper is not found\n");
-            goto failure;
-        }
+        printf("[Error] kernel descriptions list is not available\n");
+        goto failure;
     }
-    else if (resources->opencl.used)
-    {
-        if (resources->exec.vtable->kargs_setters == NULL)
-        {
-            printf("[Error] OpenCL kernel arguments setters list is not available\n");
-            goto failure;
-        }
 
-        for (const port_kargs_setter_description_t *descr = resources->exec.vtable->kargs_setters;
-                descr->func != NULL; descr++)
+    {
+        port_bool_t kernel_found = false;
+
+        for (const port_vtable_kernel_description_t *descr = resources->exec.vtable->kernel_descriptions;
+                descr->kernel_name != NULL; descr++)
         {
-            if ((descr->kernel_name != NULL) &&
-                    (strcmp(descr->kernel_name, resources->args->kernel_name) == 0))
+            if (strcmp(descr->kernel_name, resources->args->kernel_name) == 0)
             {
-                resources->opencl.kargs_setter = descr->func;
+                kernel_found = true;
+
+                resources->exec.work_type = descr->work_type;
+
+                if (resources->cpu.used)
+                    resources->cpu.pfunc = descr->cpu.pfunc;
+                else if (resources->opencl.used)
+                    resources->opencl.kargs_setter = descr->opencl.kargs_setter_fn;
+
                 break;
             }
         }
 
-        if (resources->opencl.kargs_setter == NULL)
+        if (!kernel_found)
         {
-            printf("[Error] OpenCL kernel arguments setter is not found\n");
+            printf("[Error] kernel '%s' is not provided by the library\n", resources->args->kernel_name);
             goto failure;
         }
     }
@@ -819,15 +808,15 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
     resources->kargs.shm_in_metadata = *((void**)inputs->sharedmem_ptrs[0] + 1);
 
     // Initialize work size
-    if (resources->exec.vtable->kargs.metainfo.work_size_getter_fn == NULL)
+    if (resources->exec.vtable->kargs_operations.metainfo.work_size_getter_fn == NULL)
     {
         printf("[Error] work size getter function for kernel arguments metainfo is not available\n");
         goto failure;
     }
 
     {
-        port_work_size_t work_size = resources->exec.vtable->kargs.metainfo.work_size_getter_fn(
-                resources->kargs.shm_in_metadata, resources->args->kernel_name);
+        port_work_size_t work_size = resources->exec.vtable->kargs_operations.metainfo.work_size_getter_fn(
+                resources->kargs.shm_in_metadata, resources->exec.work_type);
 
         if ((resources->args->out.work_size == 0) || (work_size < resources->args->out.work_size))
             resources->args->out.work_size = work_size;
@@ -868,34 +857,34 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
     }
 
     // Initialize private kernel arguments
-    if (resources->exec.vtable->kargs.metainfo.alloc_copy_fn == NULL)
+    if (resources->exec.vtable->kargs_operations.metainfo.alloc_copy_fn == NULL)
     {
         printf("[Error] function for kernel arguments metainfo copy allocation is not available\n");
         goto failure;
     }
-    else if (resources->exec.vtable->kargs.metainfo.free_fn == NULL)
+    else if (resources->exec.vtable->kargs_operations.metainfo.free_fn == NULL)
     {
         printf("[Error] function for kernel arguments metainfo deallocation is not available\n");
         goto failure;
     }
-    else if (resources->exec.vtable->kargs.alloc_fn == NULL)
+    else if (resources->exec.vtable->kargs_operations.alloc_fn == NULL)
     {
         printf("[Error] function for kernel arguments allocation is not available\n");
         goto failure;
     }
-    else if (resources->exec.vtable->kargs.copy_fn == NULL)
+    else if (resources->exec.vtable->kargs_operations.copy_fn == NULL)
     {
         printf("[Error] function for kernel arguments copying is not available\n");
         goto failure;
     }
-    else if (resources->exec.vtable->kargs.free_fn == NULL)
+    else if (resources->exec.vtable->kargs_operations.free_fn == NULL)
     {
         printf("[Error] function for kernel arguments deallocation is not available\n");
         goto failure;
     }
 
-    resources->kargs.private_metadata = resources->exec.vtable->kargs.metainfo.alloc_copy_fn(
-            resources->kargs.shm_in_metadata);
+    resources->kargs.private_metadata = resources->exec.vtable->kargs_operations.metainfo.alloc_copy_fn(
+            resources->kargs.shm_in_metadata, &resources->cpu.memory.op, &resources->cpu.memory.op_prop);
     if (resources->kargs.private_metadata == NULL)
     {
         printf("[Error] couldn't copy input kernel arguments metadata\n");
@@ -903,8 +892,10 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
     }
     step = 6;
 
-    resources->kargs.private = resources->exec.vtable->kargs.alloc_fn(
-            resources->kargs.private_metadata, false, &resources->exec.memory.op,
+    resources->kargs.private = resources->exec.vtable->kargs_operations.alloc_fn(
+            resources->kargs.private_metadata, false,
+            &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
+            &resources->exec.memory.op,
             &resources->exec.memory.op_prop_ro, &resources->exec.memory.op_prop_rw);
     if (resources->kargs.private == NULL)
     {
@@ -913,9 +904,10 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
     }
     step = 7;
 
-    if (!resources->exec.vtable->kargs.copy_fn(
+    if (!resources->exec.vtable->kargs_operations.copy_fn(
                 resources->kargs.private, resources->kargs.private_metadata,
                 resources->kargs.shm_in, resources->kargs.shm_in_metadata, false,
+                &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                 &resources->exec.memory.op, &resources->exec.memory.op_prop_rw,
                 &resources->cpu.memory.op, &resources->cpu.memory.op_prop))
     {
@@ -938,13 +930,15 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
 failure:
     if (step >= 7)
         if (resources->kargs.private != NULL)
-            resources->exec.vtable->kargs.free_fn(resources->kargs.private,
+            resources->exec.vtable->kargs_operations.free_fn(resources->kargs.private,
                     resources->kargs.private_metadata,
+                    &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                     &resources->exec.memory.op, &resources->exec.memory.op_prop_rw);
 
     if (step >= 6)
         if (resources->kargs.private_metadata != NULL)
-            resources->exec.vtable->kargs.metainfo.free_fn(resources->kargs.private_metadata);
+            resources->exec.vtable->kargs_operations.metainfo.free_fn(resources->kargs.private_metadata,
+                    &resources->cpu.memory.op, &resources->cpu.memory.op_prop);
 
     if (step >= 5)
         if (resources->kargs.shm_out_addr != NULL)
@@ -982,12 +976,14 @@ static STATION_PLUGIN_FINAL_FUNC(plugin_final)
     struct plugin_resources *resources = plugin_resources;
 
     if (resources->kargs.private != NULL)
-        resources->exec.vtable->kargs.free_fn(resources->kargs.private,
+        resources->exec.vtable->kargs_operations.free_fn(resources->kargs.private,
                 resources->kargs.private_metadata,
+                &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                 &resources->exec.memory.op, &resources->exec.memory.op_prop_rw);
 
     if (resources->kargs.private_metadata != NULL)
-        resources->exec.vtable->kargs.metainfo.free_fn(resources->kargs.private_metadata);
+        resources->exec.vtable->kargs_operations.metainfo.free_fn(resources->kargs.private_metadata,
+                &resources->cpu.memory.op, &resources->cpu.memory.op_prop);
 
     if (resources->kargs.shm_out_addr != NULL)
         shmdt(resources->kargs.shm_out_addr);
