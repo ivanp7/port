@@ -120,10 +120,10 @@ typedef struct port_kargs_segmented_memory_table {
 /**
  * @brief Kernel arguments metainfo copy allocation function.
  *
- * @return Allocated kernel arguments metainfo copy, or NULL in case of failure.
+ * @return Allocated kernel arguments metainfo, or NULL in case of failure.
  */
 typedef port_void_ptr_t (*port_kargs_metainfo_alloc_copy_func_t)(
-        port_const_void_ptr_t metainfo, ///< [in] Host information of kernel arguments.
+        port_const_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
         const struct port_memory_operations *op_host, ///< [in] Host memory operations.
         const struct port_memory_operation_properties *prop_host ///< [in] Properties for host memory operations.
@@ -134,8 +134,8 @@ typedef port_void_ptr_t (*port_kargs_metainfo_alloc_copy_func_t)(
  *
  * @return True on success, otherwise false.
  */
-typedef port_bool_t (*port_kargs_metainfo_free_func_t)(
-        port_void_ptr_t metainfo, ///< [in] Host information of kernel arguments.
+typedef void (*port_kargs_metainfo_free_func_t)(
+        port_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
         const struct port_memory_operations *op_host, ///< [in] Host memory operations.
         const struct port_memory_operation_properties *prop_host ///< [in] Properties for host memory operations.
@@ -147,7 +147,7 @@ typedef port_bool_t (*port_kargs_metainfo_free_func_t)(
  * @return Maximum work size for the kernel.
  */
 typedef port_work_size_t (*port_kargs_metainfo_work_size_getter_func_t)(
-        port_const_void_ptr_t metainfo, ///< [in] Host information of kernel arguments.
+        port_const_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
         port_size_t work_type ///< [in] Index of work type.
 );
 
@@ -161,7 +161,7 @@ typedef port_work_size_t (*port_kargs_metainfo_work_size_getter_func_t)(
  * @return Allocated kernel arguments, or NULL in case of failure.
  */
 typedef port_void_ptr_t (*port_kargs_alloc_func_t)(
-        port_const_void_ptr_t metainfo, ///< [in] Host information of kernel arguments.
+        port_const_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
         port_bool_t writable_only, ///< [in] Whether to allocate writable data only.
 
@@ -175,12 +175,10 @@ typedef port_void_ptr_t (*port_kargs_alloc_func_t)(
 
 /**
  * @brief Kernel arguments deallocation function.
- *
- * @return True on success, otherwise false.
  */
-typedef port_bool_t (*port_kargs_free_func_t)(
-        port_void_ptr_t kargs, ///< [in] Kernel arguments to deallocate.
-        port_const_void_ptr_t metainfo, ///< [in] Host information of kernel arguments.
+typedef void (*port_kargs_free_func_t)(
+        port_void_ptr_t kargs,          ///< [in] Kernel arguments to deallocate.
+        port_const_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
         const struct port_memory_operations *op_host, ///< [in] Host memory operations.
         const struct port_memory_operation_properties *prop_host, ///< [in] Properties for host memory operations.
@@ -195,11 +193,9 @@ typedef port_bool_t (*port_kargs_free_func_t)(
  * @return True on success, otherwise false.
  */
 typedef port_bool_t (*port_kargs_copy_func_t)(
-        port_void_ptr_t dest, ///< [out] Kernel arguments to copy to.
-        port_void_ptr_t metainfo_dest, ///< [in,out] Host information of kernel arguments to copy to.
-
-        port_const_void_ptr_t src, ///< [in] Kernel arguments to be copied.
-        port_const_void_ptr_t metainfo_src, ///< [in] Host information of kernel arguments to be copied.
+        port_void_ptr_t kargs_dest,      ///< [out] Kernel arguments to copy to.
+        port_const_void_ptr_t kargs_src, ///< [in] Kernel arguments to be copied.
+        port_const_void_ptr_t metainfo,  ///< [in] Meta information of kernel arguments.
 
         port_bool_t writable_only, ///< [in] Whether to copy writable data only.
 

@@ -505,8 +505,8 @@ static STATION_SFUNC(exec_loop)
         if (resources->kargs.shm_out != NULL)
         {
             if (!resources->exec.vtable->kargs_operations.copy_fn(
-                        resources->kargs.shm_out, resources->kargs.shm_out_metadata,
-                        resources->kargs.private, resources->kargs.private_metadata, true,
+                        resources->kargs.shm_out, resources->kargs.private, resources->kargs.private_metadata,
+                        true,
                         &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                         &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                         &resources->exec.memory.op, &resources->exec.memory.op_prop_rw))
@@ -538,8 +538,8 @@ static STATION_SFUNC(exec_loop)
 
     // Restore kernel arguments
     if (!resources->exec.vtable->kargs_operations.copy_fn(
-                resources->kargs.private, resources->kargs.private_metadata,
-                resources->kargs.shm_in, resources->kargs.shm_in_metadata, true,
+                resources->kargs.private, resources->kargs.shm_in, resources->kargs.private_metadata,
+                true,
                 &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                 &resources->exec.memory.op, &resources->exec.memory.op_prop_rw,
                 &resources->cpu.memory.op, &resources->cpu.memory.op_prop))
@@ -918,8 +918,8 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
     step = 7;
 
     if (!resources->exec.vtable->kargs_operations.copy_fn(
-                resources->kargs.private, resources->kargs.private_metadata,
-                resources->kargs.shm_in, resources->kargs.shm_in_metadata, false,
+                resources->kargs.private, resources->kargs.shm_in, resources->kargs.private_metadata,
+                false,
                 &resources->cpu.memory.op, &resources->cpu.memory.op_prop,
                 &resources->exec.memory.op, &resources->exec.memory.op_prop_rw,
                 &resources->cpu.memory.op, &resources->cpu.memory.op_prop))
