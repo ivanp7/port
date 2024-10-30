@@ -63,9 +63,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 enum plugin_args_keys {
-    ARGKEY_VERSION = 'v',
+    ARGKEY_VERSION = 'V',
 
     ARGKEY_BUILD_LOG = 'j',
+
+    ARGKEY_VTABLE_SYMBOL = 'v',
 
     ARGKEY_WORK_SIZE = 'w',
 
@@ -84,6 +86,9 @@ static struct argp_option plugin_args_options[] = {
     {.name = "version", .key = ARGKEY_VERSION, .doc = "Display expected library vtable version", .group = -1},
 
     {.name = "build-log", .key = ARGKEY_BUILD_LOG, .doc = "Display OpenCL program build log"},
+
+    {.doc = "Input options:"},
+    {.name = "vtable", .key = ARGKEY_VTABLE_SYMBOL, .arg = "NAME", .doc = "Name of vtable symbol in the shared library"},
 
     {.doc = "Output options:"},
     {.name = "out-shm", .key = ARGKEY_OUT_SHM, .arg = "IDHEX@PATH", .doc = "Shared memory with pointer support for writing output data"},
@@ -112,6 +117,10 @@ static struct argp plugin_args_parser = {
 };
 
 struct plugin_args {
+    struct {
+        const char *vtable_symbol_name;
+    } in;
+
     struct {
         const char *shm_path;
         int shm_proj_id;
@@ -222,6 +231,10 @@ static error_t plugin_args_parse(int key, char *arg, struct argp_state *state)
 
         case ARGKEY_BUILD_LOG:
             args->opencl.build_log = true;
+            break;
+
+        case ARGKEY_VTABLE_SYMBOL:
+            args->in.vtable_symbol_name = arg;
             break;
 
         case ARGKEY_OUT_SHM:
@@ -437,7 +450,7 @@ static STATION_SFUNC(exec_kernel_opencl)
     // Update time records when profiling
     if (resources->exec.runs_done > 0)
     {
-        cl_ulong start_time, end_time;
+        cl_ulong start_time, end_time; // nanoseconds
 
         err = clGetEventProfilingInfo(prof_event, CL_PROFILING_COMMAND_START,
                     sizeof(start_time), &start_time, NULL);
@@ -602,7 +615,7 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
         goto failure;
     }
 
-    resources->exec.vtable = dlsym(inputs->libraries[0], STR(PORT_VTABLE_OBJECT));
+    resources->exec.vtable = dlsym(inputs->libraries[0], resources->args->in.vtable_symbol_name);
     if (resources->exec.vtable == NULL)
     {
         printf("[Error] couldn't get library vtable address\n");
@@ -645,14 +658,14 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
     // Build OpenCL program
     if (resources->opencl.used)
     {
-        if (resources->exec.vtable->program_sources == NULL)
+        if (resources->exec.vtable->opencl.program_sources == NULL)
         {
             printf("[Error] OpenCL program sources are not available\n");
             goto failure;
         }
 
         size_t num_program_sources = 0;
-        while (resources->exec.vtable->program_sources[num_program_sources] != NULL)
+        while (resources->exec.vtable->opencl.program_sources[num_program_sources] != NULL)
             num_program_sources++;
 
         cl_int err;
@@ -661,7 +674,7 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
                 resources->opencl.contexts->context_info[0].num_devices,
                 resources->opencl.contexts->context_info[0].device_ids,
                 num_program_sources,
-                (const struct port_opencl_program_source**)resources->exec.vtable->program_sources,
+                (const struct port_opencl_program_source**)resources->exec.vtable->opencl.program_sources,
                 0, NULL,
                 "", "",
                 resources->args->opencl.build_log ? stdout : NULL, &err);

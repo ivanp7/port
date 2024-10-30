@@ -59,9 +59,12 @@ typedef struct port_vtable {
     port_uint32_t magic;   ///< Value uniquely identifying Port vtable structure.
     port_uint32_t version; ///< Value determining vtable version and compatibility.
 
-    struct port_opencl_program_source **program_sources; ///< Array of OpenCL program sources.
-    port_vtable_kernel_description_t *kernel_descriptions; ///< Descriptions of kernels provided by the library.
     port_kargs_operations_t kargs_operations; ///< Operations on kernel arguments.
+    port_vtable_kernel_description_t *kernel_descriptions; ///< Descriptions of kernels provided by the library.
+
+    struct {
+        struct port_opencl_program_source **program_sources; ///< Array of OpenCL program sources.
+    } opencl; ///< OpenCL-related resources.
 } port_vtable_t;
 
 #endif // _PORT_HOST_VTABLE_TYP_H_

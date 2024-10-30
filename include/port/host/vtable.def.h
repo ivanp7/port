@@ -33,12 +33,7 @@
 /**
  * @brief Version - value determining vtable version and compatibility.
  */
-#define PORT_VTABLE_VERSION 20240711
-
-/**
- * @brief Name of plugin vtable structure object.
- */
-#define PORT_VTABLE_OBJECT port_vtable
+#define PORT_VTABLE_VERSION 20241030
 
 #endif // _PORT_HOST_VTABLE_DEF_H_
 
