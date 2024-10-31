@@ -232,15 +232,23 @@ port_kargs_copy_cstate_memory(
 
     port_size_t num_of = sizes->num_of;
 
-    for (port_size_t i = 0; i < num_of; i++)
+    if ((ptrs_dest->arrays != NULL) && (ptrs_src->arrays != NULL))
     {
-        port_size_t size = sizes->sizes[i];
+        assert(sizes->sizes != NULL);
 
-        MAP(ptrs_src->arrays[i], size, op_src_cdev, prop_src_cdev);
-        MAP(ptrs_dest->arrays[i], size, op_dest_cdev, prop_dest_cdev);
-        MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size);
-        UNMAP(ptrs_dest->arrays[i], op_dest_cdev, prop_dest_cdev);
-        UNMAP(ptrs_src->arrays[i], op_src_cdev, prop_src_cdev);
+        for (port_size_t i = 0; i < num_of; i++)
+        {
+            port_size_t size = sizes->sizes[i];
+
+            if ((ptrs_dest->arrays[i] != NULL) && (ptrs_src->arrays[i] != NULL))
+            {
+                MAP(ptrs_src->arrays[i], size, op_src_cdev, prop_src_cdev);
+                MAP(ptrs_dest->arrays[i], size, op_dest_cdev, prop_dest_cdev);
+                MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size);
+                UNMAP(ptrs_dest->arrays[i], op_dest_cdev, prop_dest_cdev);
+                UNMAP(ptrs_src->arrays[i], op_src_cdev, prop_src_cdev);
+            }
+        }
     }
 
     return true;
@@ -468,22 +476,35 @@ port_kargs_copy_cparam_memory(
     {
         port_size_t num_of = sizes->structures.num_of;
 
-        for (port_size_t i = 0; i < num_of; i++)
-            MEMCOPY(ptrs_dest->structures[i], ptrs_src->structures[i], sizes->structures.sizes[i]);
+        assert(sizes->structures.sizes != NULL);
+
+        if ((ptrs_dest->structures != NULL) && (ptrs_src->structures != NULL))
+        {
+            for (port_size_t i = 0; i < num_of; i++)
+                MEMCOPY(ptrs_dest->structures[i], ptrs_src->structures[i], sizes->structures.sizes[i]);
+        }
     }
 
     {
         port_size_t num_of = sizes->arrays.num_of;
 
-        for (port_size_t i = 0; i < num_of; i++)
+        if ((ptrs_dest->arrays != NULL) && (ptrs_src->arrays != NULL))
         {
-            port_size_t size = sizes->arrays.sizes[i];
+            assert(sizes->arrays.sizes != NULL);
 
-            MAP(ptrs_src->arrays[i], size, op_src_cdev, prop_src_cdev);
-            MAP(ptrs_dest->arrays[i], size, op_dest_cdev, prop_dest_cdev);
-            MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size);
-            UNMAP(ptrs_dest->arrays[i], op_dest_cdev, prop_dest_cdev);
-            UNMAP(ptrs_src->arrays[i], op_src_cdev, prop_src_cdev);
+            for (port_size_t i = 0; i < num_of; i++)
+            {
+                port_size_t size = sizes->arrays.sizes[i];
+
+                if ((ptrs_dest->arrays[i] != NULL) && (ptrs_src->arrays[i] != NULL))
+                {
+                    MAP(ptrs_src->arrays[i], size, op_src_cdev, prop_src_cdev);
+                    MAP(ptrs_dest->arrays[i], size, op_dest_cdev, prop_dest_cdev);
+                    MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size);
+                    UNMAP(ptrs_dest->arrays[i], op_dest_cdev, prop_dest_cdev);
+                    UNMAP(ptrs_src->arrays[i], op_src_cdev, prop_src_cdev);
+                }
+            }
         }
     }
 
@@ -693,6 +714,7 @@ port_kargs_free_segmented_memory_memory(
     }
 
     FREE(ptrs->table, op_cdev, prop_cdev);
+    ptrs->root = NULL;
 }
 
 port_bool_t
@@ -721,15 +743,23 @@ port_kargs_copy_segmented_memory_memory(
 
     port_size_t num_segments = sizes->num_segments;
 
-    for (port_size_t i = 0; i < num_segments; i++)
-    {
-        port_size_t size = sizes->segment_sizes[i];
+    assert(sizes->segment_sizes != NULL);
 
-        MAP(ptrs_src->segments[i], size, op_src_cdev, prop_src_cdev);
-        MAP(ptrs_dest->segments[i], size, op_dest_cdev, prop_dest_cdev);
-        MEMCOPY(ptrs_dest->segments[i], ptrs_src->segments[i], size);
-        UNMAP(ptrs_dest->segments[i], op_dest_cdev, prop_dest_cdev);
-        UNMAP(ptrs_src->segments[i], op_src_cdev, prop_src_cdev);
+    if ((ptrs_dest->segments != NULL) && (ptrs_src->segments != NULL))
+    {
+        for (port_size_t i = 0; i < num_segments; i++)
+        {
+            port_size_t size = sizes->segment_sizes[i];
+
+            if ((ptrs_dest->segments[i] != NULL) && (ptrs_src->segments[i] != NULL))
+            {
+                MAP(ptrs_src->segments[i], size, op_src_cdev, prop_src_cdev);
+                MAP(ptrs_dest->segments[i], size, op_dest_cdev, prop_dest_cdev);
+                MEMCOPY(ptrs_dest->segments[i], ptrs_src->segments[i], size);
+                UNMAP(ptrs_dest->segments[i], op_dest_cdev, prop_dest_cdev);
+                UNMAP(ptrs_src->segments[i], op_src_cdev, prop_src_cdev);
+            }
+        }
     }
 
     return true;
@@ -757,15 +787,19 @@ port_kargs_write_segmented_memory_table(
     assert(op_cdev->unmap_fn != NULL);
     assert(prop_cdev != NULL);
 
-    {
-        assert(table->root_symbol.segment_idx < sizes->num_segments);
-        assert(table->root_symbol.value <= sizes->segment_sizes[table->root_symbol.segment_idx]);
+    // Root symbol
+    assert(table->root_symbol.segment_idx < sizes->num_segments);
+    assert(table->root_symbol.value <= sizes->segment_sizes[table->root_symbol.segment_idx]);
 
-        ptrs->root = (char*)ptrs->segments[table->root_symbol.segment_idx] + table->root_symbol.value;
-    }
+    ptrs->root = (char*)ptrs->segments[table->root_symbol.segment_idx] + table->root_symbol.value;
 
+    // Table symbols
+    port_size_t num_symbols = table->num_table_symbols;
+
+    if (ptrs->table != NULL)
     {
-        port_size_t num_symbols = table->num_table_symbols;
+        assert(sizes->segment_sizes != NULL);
+        assert(ptrs->segments != NULL);
 
         MAP(ptrs->table, sizeof(*ptrs->table) * num_symbols, op_cdev, prop_cdev);
 
