@@ -209,6 +209,15 @@ typedef port_bool_t (*port_kargs_copy_func_t)(
         const struct port_memory_operation_properties *prop_src_cdev ///< [in] Properties for compute device memory operations for source arguments.
 );
 
+/**
+ * @brief Meta information getter function for kernel arguments structure.
+ *
+ * @return Meta information of kernel arguments.
+ */
+typedef port_const_void_ptr_t (*port_kargs_metainfo_getter_func_t)(
+        port_const_void_ptr_t kargs ///< [in] Kernel arguments.
+);
+
 ///////////////////////////////////////////////////////////////////////////////
 // Kernel arguments
 ///////////////////////////////////////////////////////////////////////////////
@@ -226,6 +235,7 @@ typedef struct port_kargs_operations {
     port_kargs_alloc_func_t alloc_fn; ///< Kernel arguments allocation function.
     port_kargs_free_func_t free_fn;   ///< Kernel arguments deallocation function.
     port_kargs_copy_func_t copy_fn;   ///< Kernel arguments copy function.
+    port_kargs_metainfo_getter_func_t metainfo_getter_fn; ///< Kernel arguments metainfo getter function.
 } port_kargs_operations_t;
 
 #endif // _PORT_HOST_KERNEL_TYP_H_

@@ -816,9 +816,14 @@ static STATION_PLUGIN_INIT_FUNC(plugin_init)
         printf("[Error] no kernel arguments data has been specified\n");
         goto failure;
     }
+    else if (resources->exec.vtable->kargs_operations.metainfo_getter_fn == NULL)
+    {
+        printf("[Error] metainfo getter function for kernel arguments is not available\n");
+        goto failure;
+    }
 
     resources->kargs.shm_in = *(void**)inputs->sharedmem_ptrs[0];
-    resources->kargs.shm_in_metadata = *((void**)inputs->sharedmem_ptrs[0] + 1);
+    resources->kargs.shm_in_metadata = resources->exec.vtable->kargs_operations.metainfo_getter_fn(resources->kargs.shm_in);
 
     // Initialize work size
     if (resources->exec.vtable->kargs_operations.metainfo.work_size_getter_fn == NULL)
