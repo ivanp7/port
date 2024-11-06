@@ -113,7 +113,9 @@ TEST(port_convert_float32_to_float16)
     ASSERT_EQ(port_convert_float32_to_float16(copysign(0.0f, -1.0f)), 0x8000, port_uint16_t, "%x");
 
     ASSERT_EQ(port_convert_float32_to_float16(1.0e-8f), 0x0000, port_uint16_t, "%x");
-    ASSERT_EQ(port_convert_float32_to_float16(5.9604641222676946199499070644378662109375e-8f), 0x0000, port_uint16_t, "%x");
+    ASSERT_EQ(port_convert_float32_to_float16(2.9802320611338473099749535322189331055e-8f), 0x0000, port_uint16_t, "%x");
+    ASSERT_EQ(port_convert_float32_to_float16(2.98023223876953125e-8f), 0x0000, port_uint16_t, "%x");
+    ASSERT_EQ(port_convert_float32_to_float16(2.9802325940408991300500929355621337891e-8f), 0x0001, port_uint16_t, "%x");
 
     ASSERT_EQ(port_convert_float32_to_float16(5.9604644775390625e-8f), 0x0001, port_uint16_t, "%x");
     ASSERT_EQ(port_convert_float32_to_float16(1.78813934326171875e-7f), 0x0003, port_uint16_t, "%x");

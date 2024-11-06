@@ -225,6 +225,11 @@ port_convert_float32_to_float16(
         value_exp = (u.as_uint & PORT_BIT32(F16_MNT_NBITS)) >> F16_MNT_NBITS; // overflow bit is exponent
         u.as_uint &= PORT_NZMASK32(F16_MNT_NBITS);
     }
+    else if ((value_exp == (F32_EXP_BIAS - F16_EXP_BIAS) - F16_MNT_NBITS) && (u.as_uint > 0)) // underflow to minimum value
+    {
+        value_exp = 0;
+        u.as_uint = 1;
+    }
     else // underflow to zero
     {
         value_exp = 0;
