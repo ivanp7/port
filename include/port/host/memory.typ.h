@@ -82,9 +82,17 @@ typedef struct port_memory_operations {
  * @brief Set of properties for memory operations.
  */
 typedef struct port_memory_operation_properties {
-    port_void_ptr_t alloc_properties; ///< Properties for allocator/deallocator functions.
-    port_void_ptr_t map_properties;   ///< Properties for mapping/unmapping functions.
+    port_void_ptr_t alloc; ///< Properties for allocator/deallocator functions.
+    port_void_ptr_t map;   ///< Properties for mapping/unmapping functions.
 } port_memory_operation_properties_t;
+
+/**
+ * @brief Memory operations with properties.
+ */
+typedef struct port_memory_operations_with_properties {
+    port_memory_operations_t operations; ///< Memory operations.
+    port_memory_operation_properties_t properties; ///< Properties for memory operations.
+} port_memory_operations_with_properties_t;
 
 #endif // _PORT_HOST_MEMORY_TYP_H_
 

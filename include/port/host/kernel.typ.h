@@ -29,8 +29,7 @@
 #include <port/cdev/memory.typ.h>
 #include <port/cdev/work.typ.h>
 
-struct port_memory_operations;
-struct port_memory_operation_properties;
+struct port_memory_operations_with_properties;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Computation states
@@ -125,8 +124,7 @@ typedef struct port_kargs_segmented_memory_table {
 typedef port_void_ptr_t (*port_kargs_metainfo_alloc_copy_func_t)(
         port_const_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
-        const struct port_memory_operations *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operation_properties *prop_host ///< [in] Properties for host memory operations.
+        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
 );
 
 /**
@@ -137,8 +135,7 @@ typedef port_void_ptr_t (*port_kargs_metainfo_alloc_copy_func_t)(
 typedef void (*port_kargs_metainfo_free_func_t)(
         port_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
-        const struct port_memory_operations *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operation_properties *prop_host ///< [in] Properties for host memory operations.
+        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
 );
 
 /**
@@ -165,12 +162,10 @@ typedef port_void_ptr_t (*port_kargs_alloc_func_t)(
 
         port_bool_t writable_only, ///< [in] Whether to allocate writable data only.
 
-        const struct port_memory_operations *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operation_properties *prop_host, ///< [in] Properties for host memory operations.
-
-        const struct port_memory_operations *op_cdev, ///< [in] Compute device memory operations.
-        const struct port_memory_operation_properties *prop_ro_cdev, ///< [in] Properties for compute device memory operations (read-only memory).
-        const struct port_memory_operation_properties *prop_rw_cdev  ///< [in] Properties for compute device memory operations (read-write memory).
+        const struct port_memory_operations_with_properties *op_host, ///< [in] Host memory operations.
+        const struct port_memory_operations_with_properties *op_cdev_ro, ///< [in] Compute device memory operations (read-only).
+        const struct port_memory_operations_with_properties *op_cdev_wo, ///< [in] Compute device memory operations (write-only).
+        const struct port_memory_operations_with_properties *op_cdev_rw  ///< [in] Compute device memory operations (read-write).
 );
 
 /**
@@ -178,35 +173,26 @@ typedef port_void_ptr_t (*port_kargs_alloc_func_t)(
  */
 typedef void (*port_kargs_free_func_t)(
         port_void_ptr_t kargs,          ///< [in] Kernel arguments to deallocate.
-        port_const_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
-        const struct port_memory_operations *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operation_properties *prop_host, ///< [in] Properties for host memory operations.
-
-        const struct port_memory_operations *op_cdev, ///< [in] Compute device memory operations.
-        const struct port_memory_operation_properties *prop_cdev ///< [in] Properties for compute device memory operations.
+        const struct port_memory_operations_with_properties *op_host, ///< [in] Host memory operations.
+        const struct port_memory_operations_with_properties *op_cdev  ///< [in] Compute device memory operations.
 );
 
 /**
  * @brief Kernel arguments copy function.
+ *
+ * Meta information of source and destination must be compatible for copying.
  *
  * @return True on success, otherwise false.
  */
 typedef port_bool_t (*port_kargs_copy_func_t)(
         port_void_ptr_t kargs_dest,      ///< [out] Kernel arguments to copy to.
         port_const_void_ptr_t kargs_src, ///< [in] Kernel arguments to be copied.
-        port_const_void_ptr_t metainfo,  ///< [in] Meta information of kernel arguments.
 
         port_bool_t writable_only, ///< [in] Whether to copy writable data only.
 
-        const struct port_memory_operations *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operation_properties *prop_host, ///< [in] Properties for host memory operations.
-
-        const struct port_memory_operations *op_dest_cdev, ///< [in] Compute device memory operations for destination arguments.
-        const struct port_memory_operation_properties *prop_dest_cdev, ///< [in] Properties for compute device memory operations for destination arguments.
-
-        const struct port_memory_operations *op_src_cdev, ///< [in] Compute device memory operations for source arguments.
-        const struct port_memory_operation_properties *prop_src_cdev ///< [in] Properties for compute device memory operations for source arguments.
+        const struct port_memory_operations_with_properties *op_dest_cdev, ///< [in] Compute device memory operations for destination arguments.
+        const struct port_memory_operations_with_properties *op_src_cdev   ///< [in] Compute device memory operations for source arguments.
 );
 
 /**
