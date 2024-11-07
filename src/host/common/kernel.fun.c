@@ -80,9 +80,12 @@ port_kargs_alloc_copy_cstate_sizes(
 
     port_size_t num_of = sizes_src->num_of;
 
-    ALLOC_ARRAY(sizes_dest->sizes, num_of, op_host);
-    MEMCOPY(sizes_dest->sizes, sizes_src->sizes, sizeof(*sizes_dest->sizes) * num_of);
-    sizes_dest->num_of = num_of;
+    if (num_of > 0)
+    {
+        ALLOC_ARRAY(sizes_dest->sizes, num_of, op_host);
+        MEMCOPY(sizes_dest->sizes, sizes_src->sizes, sizeof(*sizes_dest->sizes) * num_of);
+        sizes_dest->num_of = num_of;
+    }
 
     return true;
 
@@ -119,7 +122,8 @@ port_kargs_alloc_cstate_arrays(
 
     *ptrs = (port_kargs_cstate_ptrs_t){0};
 
-    ALLOC_ARRAY(ptrs->arrays, sizes->num_of, op_host);
+    if (sizes->num_of > 0)
+        ALLOC_ARRAY(ptrs->arrays, sizes->num_of, op_host);
 
     return true;
 
@@ -159,10 +163,11 @@ port_kargs_alloc_cstate_memory(
 
     if (ptrs->arrays != NULL)
     {
-        port_size_t num_of = sizes->num_of;
-
-        for (port_size_t i = 0; i < num_of; i++)
-            ALLOC(ptrs->arrays[i], sizes->sizes[i], 0, op_cdev);
+        for (port_size_t i = 0; i < sizes->num_of; i++)
+        {
+            if (sizes->sizes[i] > 0)
+                ALLOC(ptrs->arrays[i], sizes->sizes[i], 0, op_cdev);
+        }
     }
 
     return true;
@@ -186,9 +191,7 @@ port_kargs_free_cstate_memory(
 
     if (ptrs->arrays != NULL)
     {
-        port_size_t num_of = sizes->num_of;
-
-        for (port_size_t i = 0; i < num_of; i++)
+        for (port_size_t i = 0; i < sizes->num_of; i++)
             FREE(ptrs->arrays[i], op_cdev);
     }
 }
@@ -212,17 +215,15 @@ port_kargs_copy_cstate_memory(
     assert(op_src_cdev->operations.map_fn != NULL);
     assert(op_src_cdev->operations.unmap_fn != NULL);
 
-    port_size_t num_of = sizes->num_of;
-
-    if ((ptrs_dest->arrays != NULL) && (ptrs_src->arrays != NULL))
+    if ((sizes->num_of > 0) && (ptrs_dest->arrays != NULL) && (ptrs_src->arrays != NULL))
     {
         assert(sizes->sizes != NULL);
 
-        for (port_size_t i = 0; i < num_of; i++)
+        for (port_size_t i = 0; i < sizes->num_of; i++)
         {
             port_size_t size = sizes->sizes[i];
 
-            if ((ptrs_dest->arrays[i] != NULL) && (ptrs_src->arrays[i] != NULL))
+            if ((size > 0) && (ptrs_dest->arrays[i] != NULL) && (ptrs_src->arrays[i] != NULL))
             {
                 MAP(ptrs_src->arrays[i], size, op_src_cdev);
                 MAP(ptrs_dest->arrays[i], size, op_dest_cdev);
@@ -260,21 +261,27 @@ port_kargs_alloc_copy_cparam_sizes(
     {
         port_size_t num_of = sizes_src->structures.num_of;
 
-        ALLOC_ARRAY(sizes_dest->structures.sizes, num_of, op_host);
-        MEMCOPY(sizes_dest->structures.sizes, sizes_src->structures.sizes,
-                sizeof(*sizes_dest->structures.sizes) * num_of);
+        if (num_of > 0)
+        {
+            ALLOC_ARRAY(sizes_dest->structures.sizes, num_of, op_host);
+            MEMCOPY(sizes_dest->structures.sizes, sizes_src->structures.sizes,
+                    sizeof(*sizes_dest->structures.sizes) * num_of);
 
-        sizes_dest->structures.num_of = num_of;
+            sizes_dest->structures.num_of = num_of;
+        }
     }
 
     {
         port_size_t num_of = sizes_src->arrays.num_of;
 
-        ALLOC_ARRAY(sizes_dest->arrays.sizes, num_of, op_host);
-        MEMCOPY(sizes_dest->arrays.sizes, sizes_src->arrays.sizes,
-                sizeof(*sizes_dest->arrays.sizes) * num_of);
+        if (num_of > 0)
+        {
+            ALLOC_ARRAY(sizes_dest->arrays.sizes, num_of, op_host);
+            MEMCOPY(sizes_dest->arrays.sizes, sizes_src->arrays.sizes,
+                    sizeof(*sizes_dest->arrays.sizes) * num_of);
 
-        sizes_dest->arrays.num_of = num_of;
+            sizes_dest->arrays.num_of = num_of;
+        }
     }
 
     return true;
@@ -315,8 +322,11 @@ port_kargs_alloc_cparam_arrays(
 
     *ptrs = (port_kargs_cparam_ptrs_t){0};
 
-    ALLOC_ARRAY(ptrs->structures, sizes->structures.num_of, op_host);
-    ALLOC_ARRAY(ptrs->arrays, sizes->arrays.num_of, op_host);
+    if (sizes->structures.num_of > 0)
+        ALLOC_ARRAY(ptrs->structures, sizes->structures.num_of, op_host);
+
+    if (sizes->arrays.num_of > 0)
+        ALLOC_ARRAY(ptrs->arrays, sizes->arrays.num_of, op_host);
 
     return true;
 
@@ -360,18 +370,16 @@ port_kargs_alloc_cparam_memory(
 
     if (ptrs->structures != NULL)
     {
-        port_size_t num_of = sizes->structures.num_of;
-
-        for (port_size_t i = 0; i < num_of; i++)
-            ALLOC(ptrs->structures[i], sizes->structures.sizes[i], 0, op_host);
+        for (port_size_t i = 0; i < sizes->structures.num_of; i++)
+            if (sizes->structures.sizes[i] > 0)
+                ALLOC(ptrs->structures[i], sizes->structures.sizes[i], 0, op_host);
     }
 
     if (ptrs->arrays != NULL)
     {
-        port_size_t num_of = sizes->arrays.num_of;
-
-        for (port_size_t i = 0; i < num_of; i++)
-            ALLOC(ptrs->arrays[i], sizes->arrays.sizes[i], 0, op_cdev);
+        for (port_size_t i = 0; i < sizes->arrays.num_of; i++)
+            if (sizes->arrays.sizes[i] > 0)
+                ALLOC(ptrs->arrays[i], sizes->arrays.sizes[i], 0, op_cdev);
     }
 
     return true;
@@ -398,17 +406,13 @@ port_kargs_free_cparam_memory(
 
     if (ptrs->structures != NULL)
     {
-        port_size_t num_of = sizes->structures.num_of;
-
-        for (port_size_t i = 0; i < num_of; i++)
+        for (port_size_t i = 0; i < sizes->structures.num_of; i++)
             FREE(ptrs->structures[i], op_host);
     }
 
     if (ptrs->arrays != NULL)
     {
-        port_size_t num_of = sizes->arrays.num_of;
-
-        for (port_size_t i = 0; i < num_of; i++)
+        for (port_size_t i = 0; i < sizes->arrays.num_of; i++)
             FREE(ptrs->arrays[i], op_cdev);
     }
 }
@@ -432,37 +436,30 @@ port_kargs_copy_cparam_memory(
     assert(op_src_cdev->operations.map_fn != NULL);
     assert(op_src_cdev->operations.unmap_fn != NULL);
 
+    if ((sizes->structures.num_of > 0) && (ptrs_dest->structures != NULL) && (ptrs_src->structures != NULL))
     {
-        port_size_t num_of = sizes->structures.num_of;
-
         assert(sizes->structures.sizes != NULL);
 
-        if ((ptrs_dest->structures != NULL) && (ptrs_src->structures != NULL))
-        {
-            for (port_size_t i = 0; i < num_of; i++)
+        for (port_size_t i = 0; i < sizes->structures.num_of; i++)
+            if (sizes->structures.sizes[i] > 0)
                 MEMCOPY(ptrs_dest->structures[i], ptrs_src->structures[i], sizes->structures.sizes[i]);
-        }
     }
 
+    if ((sizes->arrays.num_of > 0) && (ptrs_dest->arrays != NULL) && (ptrs_src->arrays != NULL))
     {
-        port_size_t num_of = sizes->arrays.num_of;
+        assert(sizes->arrays.sizes != NULL);
 
-        if ((ptrs_dest->arrays != NULL) && (ptrs_src->arrays != NULL))
+        for (port_size_t i = 0; i < sizes->arrays.num_of; i++)
         {
-            assert(sizes->arrays.sizes != NULL);
+            port_size_t size = sizes->arrays.sizes[i];
 
-            for (port_size_t i = 0; i < num_of; i++)
+            if ((size > 0) && (ptrs_dest->arrays[i] != NULL) && (ptrs_src->arrays[i] != NULL))
             {
-                port_size_t size = sizes->arrays.sizes[i];
-
-                if ((ptrs_dest->arrays[i] != NULL) && (ptrs_src->arrays[i] != NULL))
-                {
-                    MAP(ptrs_src->arrays[i], size, op_src_cdev);
-                    MAP(ptrs_dest->arrays[i], size, op_dest_cdev);
-                    MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size);
-                    UNMAP(ptrs_dest->arrays[i], op_dest_cdev);
-                    UNMAP(ptrs_src->arrays[i], op_src_cdev);
-                }
+                MAP(ptrs_src->arrays[i], size, op_src_cdev);
+                MAP(ptrs_dest->arrays[i], size, op_dest_cdev);
+                MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size);
+                UNMAP(ptrs_dest->arrays[i], op_dest_cdev);
+                UNMAP(ptrs_src->arrays[i], op_src_cdev);
             }
         }
     }
@@ -493,10 +490,13 @@ port_kargs_alloc_copy_segmented_memory_sizes(
 
     port_size_t num_segments = sizes_src->num_segments;
 
-    ALLOC_ARRAY(sizes_dest->segment_sizes, num_segments, op_host);
-    MEMCOPY(sizes_dest->segment_sizes, sizes_src->segment_sizes,
-            sizeof(*sizes_dest->segment_sizes) * num_segments);
-    sizes_dest->num_segments = num_segments;
+    if (num_segments > 0)
+    {
+        ALLOC_ARRAY(sizes_dest->segment_sizes, num_segments, op_host);
+        MEMCOPY(sizes_dest->segment_sizes, sizes_src->segment_sizes,
+                sizeof(*sizes_dest->segment_sizes) * num_segments);
+        sizes_dest->num_segments = num_segments;
+    }
 
     return true;
 
@@ -575,7 +575,8 @@ port_kargs_alloc_segmented_memory_arrays(
 
     *ptrs = (port_kargs_segmented_memory_ptrs_t){0};
 
-    ALLOC_ARRAY(ptrs->segments, sizes->num_segments, op_host);
+    if (sizes->num_segments > 0)
+        ALLOC_ARRAY(ptrs->segments, sizes->num_segments, op_host);
 
     return true;
 
@@ -617,10 +618,9 @@ port_kargs_alloc_segmented_memory_memory(
 
     if (ptrs->segments != NULL)
     {
-        port_size_t num_of = sizes->num_segments;
-
-        for (port_size_t i = 0; i < num_of; i++)
-            ALLOC(ptrs->segments[i], sizes->segment_sizes[i], 0, op_cdev);
+        for (port_size_t i = 0; i < sizes->num_segments; i++)
+            if (sizes->segment_sizes[i] > 0)
+                ALLOC(ptrs->segments[i], sizes->segment_sizes[i], 0, op_cdev);
     }
 
     ALLOC_ARRAY(ptrs->table, table->num_table_symbols, op_cdev);
@@ -650,9 +650,7 @@ port_kargs_free_segmented_memory_memory(
 
     if (ptrs->segments != NULL)
     {
-        port_size_t num_of = sizes->num_segments;
-
-        for (port_size_t i = 0; i < num_of; i++)
+        for (port_size_t i = 0; i < sizes->num_segments; i++)
             FREE(ptrs->segments[i], op_cdev);
     }
 
@@ -679,17 +677,15 @@ port_kargs_copy_segmented_memory_memory(
     assert(op_src_cdev->operations.map_fn != NULL);
     assert(op_src_cdev->operations.unmap_fn != NULL);
 
-    port_size_t num_segments = sizes->num_segments;
-
-    assert(sizes->segment_sizes != NULL);
-
-    if ((ptrs_dest->segments != NULL) && (ptrs_src->segments != NULL))
+    if ((sizes->num_segments > 0) && (ptrs_dest->segments != NULL) && (ptrs_src->segments != NULL))
     {
-        for (port_size_t i = 0; i < num_segments; i++)
+        assert(sizes->segment_sizes != NULL);
+
+        for (port_size_t i = 0; i < sizes->num_segments; i++)
         {
             port_size_t size = sizes->segment_sizes[i];
 
-            if ((ptrs_dest->segments[i] != NULL) && (ptrs_src->segments[i] != NULL))
+            if ((size > 0) && (ptrs_dest->segments[i] != NULL) && (ptrs_src->segments[i] != NULL))
             {
                 MAP(ptrs_src->segments[i], size, op_src_cdev);
                 MAP(ptrs_dest->segments[i], size, op_dest_cdev);
@@ -727,12 +723,13 @@ port_kargs_write_segmented_memory_table(
     assert(table->root_symbol.segment_idx < sizes->num_segments);
     assert(table->root_symbol.value <= sizes->segment_sizes[table->root_symbol.segment_idx]);
 
-    ptrs->root = (char*)ptrs->segments[table->root_symbol.segment_idx] + table->root_symbol.value;
+    ptrs->root = (port_memory_ptr_t)ptrs->segments[table->root_symbol.segment_idx] +
+        table->root_symbol.value;
 
     // Table symbols
     port_size_t num_symbols = table->num_table_symbols;
 
-    if (ptrs->table != NULL)
+    if ((num_symbols > 0) && (ptrs->table != NULL))
     {
         assert(sizes->segment_sizes != NULL);
         assert(ptrs->segments != NULL);
@@ -745,7 +742,7 @@ port_kargs_write_segmented_memory_table(
             assert(table->table_symbols[i].value <=
                     sizes->segment_sizes[table->table_symbols[i].segment_idx]);
 
-            ptrs->table[i] = (char*)ptrs->segments[table->table_symbols[i].segment_idx] +
+            ptrs->table[i] = (port_memory_ptr_t)ptrs->segments[table->table_symbols[i].segment_idx] +
                 table->table_symbols[i].value;
         }
 
