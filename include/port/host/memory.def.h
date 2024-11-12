@@ -33,7 +33,7 @@
 /**
  * @brief Alignment of largest data type supported by OpenCL.
  */
-#define PORT_ALIGNMENT_MAX alignof(port_float64_v16_t)
+#define PORT_ALIGNMENT_MAX alignof(port_uint64_v16_t)
 
 #endif // _PORT_HOST_MEMORY_DEF_H_
 

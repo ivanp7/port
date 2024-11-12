@@ -19,24 +19,34 @@
 
 /**
  * @file
- * @brief Constants for OpenCL memory handling on host.
+ * @brief Memory operations on host.
  */
 
 #pragma once
-#ifndef _PORT_HOST_OPENCL_MEMORY_DEF_H_
-#define _PORT_HOST_OPENCL_MEMORY_DEF_H_
+#ifndef _PORT_HOST_MEMORY_FUN_H_
+#define _PORT_HOST_MEMORY_FUN_H_
 
-#include <port/host/opencl/memory.fun.h>
+#include <port/cdev/memory.typ.h>
+
+struct port_memory_allocator;
 
 /**
- * @brief OpenCL memory operations.
+ * @brief Map, copy, unmap memory contents.
+ *
+ * Memory regions must not overlap.
+ *
+ * @return True on success, otherwise false.
  */
-#define PORT_MEMORY_ALLOCATOR_OPERATIONS_OPENCL { \
-    .alloc_fn = port_memory_opencl_alloc,   \
-    .free_fn = port_memory_opencl_free,     \
-    .map_fn = port_memory_opencl_map,       \
-    .unmap_fn = port_memory_opencl_unmap,   \
-}
+port_bool_t
+port_memory_map_copy_unmap(
+        port_void_ptr_t mem_dest,      ///< [out] Destination memory.
+        port_const_void_ptr_t mem_src, ///< [in] Source memory.
 
-#endif // _PORT_HOST_OPENCL_MEMORY_DEF_H_
+        port_size_t size, ///< [in] Number of copied bytes.
+
+        const struct port_memory_allocator *ma_dest, ///< [in] Memory allocator (destination).
+        const struct port_memory_allocator *ma_src   ///< [in] Memory allocator (source).
+);
+
+#endif // _PORT_HOST_MEMORY_FUN_H_
 

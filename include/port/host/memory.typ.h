@@ -68,31 +68,33 @@ typedef port_bool_t (*port_memory_unmap_func_t)(
         port_void_ptr_t properties ///< [in] Memory unmapping properties.
 );
 
+///////////////////////////////////////////////////////////////////////////////
+
 /**
- * @brief Set of memory operations.
+ * @brief Memory allocator operations.
  */
-typedef struct port_memory_operations {
-    port_memory_alloc_func_t alloc_fn; ///< Memory allocator function.
-    port_memory_free_func_t free_fn;   ///< Memory deallocator function.
+typedef struct port_memory_allocator_operations {
+    port_memory_alloc_func_t alloc_fn; ///< Memory allocation function.
+    port_memory_free_func_t free_fn;   ///< Memory deallocation function.
     port_memory_map_func_t map_fn;     ///< Memory mapping function.
     port_memory_unmap_func_t unmap_fn; ///< Memory unmapping function.
-} port_memory_operations_t;
+} port_memory_allocator_operations_t;
 
 /**
- * @brief Set of properties for memory operations.
+ * @brief Memory allocator properties.
  */
-typedef struct port_memory_operation_properties {
+typedef struct port_memory_allocator_properties {
     port_void_ptr_t alloc; ///< Properties for allocator/deallocator functions.
     port_void_ptr_t map;   ///< Properties for mapping/unmapping functions.
-} port_memory_operation_properties_t;
+} port_memory_allocator_properties_t;
 
 /**
- * @brief Memory operations with properties.
+ * @brief Memory allocator.
  */
-typedef struct port_memory_operations_with_properties {
-    port_memory_operations_t operations; ///< Memory operations.
-    port_memory_operation_properties_t properties; ///< Properties for memory operations.
-} port_memory_operations_with_properties_t;
+typedef struct port_memory_allocator {
+    port_memory_allocator_operations_t operations; ///< Memory allocator operations.
+    port_memory_allocator_properties_t properties; ///< Memory allocator properties.
+} port_memory_allocator_t;
 
 #endif // _PORT_HOST_MEMORY_TYP_H_
 

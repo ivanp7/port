@@ -31,7 +31,7 @@
 /**
  * @brief CPU memory operations.
  */
-#define PORT_MEMORY_OPERATIONS_CPU {    \
+#define PORT_MEMORY_ALLOCATOR_OPERATIONS_CPU { \
     .alloc_fn = port_memory_cpu_alloc,  \
     .free_fn = port_memory_cpu_free,    \
     .map_fn = port_memory_cpu_map,      \

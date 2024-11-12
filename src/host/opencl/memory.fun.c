@@ -64,8 +64,8 @@ port_memory_opencl_map(
     if (p == NULL)
         return false;
 
-    return CL_SUCCESS == clEnqueueSVMMap(p->command_queue, CL_TRUE, p->map_flags, memory, num_bytes,
-            0, NULL, NULL);
+    return CL_SUCCESS == clEnqueueSVMMap(p->command_queue, CL_TRUE,
+            p->map_flags, memory, num_bytes, 0, NULL, NULL);
 }
 
 port_bool_t
@@ -77,7 +77,13 @@ port_memory_opencl_unmap(
     if (p == NULL)
         return false;
 
-    return CL_SUCCESS == clEnqueueSVMUnmap(p->command_queue, memory,
-            0, NULL, NULL);
+    cl_int ret;
+
+    cl_event event;
+    ret = clEnqueueSVMUnmap(p->command_queue, memory, 0, NULL, &event);
+    if (ret == CL_SUCCESS)
+        ret = clWaitForEvents(1, &event);
+
+    return CL_SUCCESS == ret;
 }
 

@@ -29,7 +29,8 @@
 #include <port/cdev/memory.typ.h>
 #include <port/cdev/work.typ.h>
 
-struct port_memory_operations_with_properties;
+struct port_memory_allocator;
+struct port_memory_allocator_properties;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Computation states
@@ -93,6 +94,8 @@ typedef struct port_kargs_segmented_memory_ptrs {
 typedef struct port_kargs_segmented_memory_sizes {
     port_size_t *segment_sizes; ///< Sizes of segments.
     port_size_t num_segments;   ///< Number of segments.
+
+    port_size_t num_table_entries; ///< Number of table entries.
 } port_kargs_segmented_memory_sizes_t;
 
 /**
@@ -107,7 +110,6 @@ typedef struct port_kargs_segmented_memory_symbol {
  * @brief Segmented memory table.
  */
 typedef struct port_kargs_segmented_memory_table {
-    port_size_t num_table_symbols; ///< Number of table entries.
     port_kargs_segmented_memory_symbol_t root_symbol;     ///< Symbol defining root pointer.
     port_kargs_segmented_memory_symbol_t table_symbols[]; ///< Symbols defining memory table entries.
 } port_kargs_segmented_memory_table_t;
@@ -124,7 +126,7 @@ typedef struct port_kargs_segmented_memory_table {
 typedef port_void_ptr_t (*port_kargs_metainfo_alloc_copy_func_t)(
         port_const_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -135,7 +137,7 @@ typedef port_void_ptr_t (*port_kargs_metainfo_alloc_copy_func_t)(
 typedef void (*port_kargs_metainfo_free_func_t)(
         port_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -160,22 +162,20 @@ typedef port_work_size_t (*port_kargs_metainfo_work_size_getter_func_t)(
 typedef port_void_ptr_t (*port_kargs_alloc_func_t)(
         port_const_void_ptr_t metainfo, ///< [in] Meta information of kernel arguments.
 
-        port_bool_t writable_only, ///< [in] Whether to allocate writable data only.
-
-        const struct port_memory_operations_with_properties *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operations_with_properties *op_cdev_ro, ///< [in] Compute device memory operations (read-only).
-        const struct port_memory_operations_with_properties *op_cdev_wo, ///< [in] Compute device memory operations (write-only).
-        const struct port_memory_operations_with_properties *op_cdev_rw  ///< [in] Compute device memory operations (read-write).
+        const struct port_memory_allocator *ma_host, ///< [in] Host memory allocator.
+        const struct port_memory_allocator *ma_cdev, ///< [in] Compute device memory allocator (read-write).
+        const struct port_memory_allocator_properties *ma_prop_cdev_ro, ///< [in] Compute device memory allocator properties (read-only).
+        const struct port_memory_allocator_properties *ma_prop_cdev_wo  ///< [in] Compute device memory allocator properties (write-only).
 );
 
 /**
  * @brief Kernel arguments deallocation function.
  */
 typedef void (*port_kargs_free_func_t)(
-        port_void_ptr_t kargs,          ///< [in] Kernel arguments to deallocate.
+        port_void_ptr_t kargs, ///< [in] Kernel arguments to deallocate.
 
-        const struct port_memory_operations_with_properties *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operations_with_properties *op_cdev  ///< [in] Compute device memory operations.
+        const struct port_memory_allocator *ma_host, ///< [in] Host memory allocator.
+        const struct port_memory_allocator *ma_cdev  ///< [in] Compute device memory allocator.
 );
 
 /**
@@ -189,10 +189,11 @@ typedef port_bool_t (*port_kargs_copy_func_t)(
         port_void_ptr_t kargs_dest,      ///< [out] Kernel arguments to copy to.
         port_const_void_ptr_t kargs_src, ///< [in] Kernel arguments to be copied.
 
-        port_bool_t writable_only, ///< [in] Whether to copy writable data only.
+        port_bool_t copy_read_only, ///< [in] Whether to copy read-only (by kernels) data too.
 
-        const struct port_memory_operations_with_properties *op_dest_cdev, ///< [in] Compute device memory operations for destination arguments.
-        const struct port_memory_operations_with_properties *op_src_cdev   ///< [in] Compute device memory operations for source arguments.
+        const struct port_memory_allocator *ma_host,      ///< [in] Host memory allocator.
+        const struct port_memory_allocator *ma_cdev_dest, ///< [in] Compute device memory allocator for destination memory.
+        const struct port_memory_allocator *ma_cdev_src   ///< [in] Compute device memory allocator for source memory.
 );
 
 /**

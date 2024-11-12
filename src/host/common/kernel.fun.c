@@ -24,6 +24,7 @@
 
 #include <port/host/kernel.fun.h>
 #include <port/host/kernel.typ.h>
+#include <port/host/memory.fun.h>
 #include <port/host/memory.typ.h>
 #include <port/host/storage.typ.h>
 #include <port/host/cpu/memory.fun.h>
@@ -32,32 +33,25 @@
 #include <stdalign.h>
 #include <string.h>
 
-#define ALLOC(ptr, sz, algn, op) do { \
-    (ptr) = (op)->operations.alloc_fn((sz), (algn), (op)->properties.alloc); \
+#define ALLOC(ptr, sz, algn, ma) do { \
+    (ptr) = (ma)->operations.alloc_fn((sz), (algn), (ma)->properties.alloc); \
     if ((ptr) == NULL) goto failure; \
 } while (0)
 
-#define ALLOC_ARRAY(arr, num, op) do {                              \
-    ALLOC((arr), sizeof(*(arr)) * (num), alignof(*(arr)), (op));    \
-    for (port_size_t index = 0; index < (num); index++)             \
-        (arr)[index] = 0;                                           \
+#define ALLOC_ARRAY(arr, num, type, ma) do {                    \
+    ALLOC((arr), sizeof(*(arr)) * (num), alignof(type), (ma));  \
+    for (port_size_t index = 0; index < (num); index++)         \
+        (arr)[index] = 0;                                       \
 } while (0)
 
-#define FREE(ptr, op) do { \
-    (op)->operations.free_fn((ptr), (op)->properties.alloc); \
+#define FREE(ptr, ma) do { \
+    (ma)->operations.free_fn((ptr), (ma)->properties.alloc); \
     (ptr) = NULL; \
 } while (0)
 
-#define MAP(ptr, sz, op) do { \
-    if (!(op)->operations.map_fn((ptr), (sz), (op)->properties.map)) goto failure; \
-} while (0)
-
-#define UNMAP(ptr, op) do { \
-    if (!(op)->operations.unmap_fn((ptr), (op)->properties.map)) goto failure; \
-} while (0)
-
-#define MEMCOPY(dest, src, sz) do { \
-    memcpy((dest), (src), (sz)); \
+#define MEMCOPY(dest, src, sz, ma_dest, ma_src) do { \
+    if (!port_memory_map_copy_unmap((dest), (src), (sz), (ma_dest), (ma_src))) \
+        goto failure; \
 } while (0)
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,12 +63,12 @@ port_kargs_alloc_copy_cstate_sizes(
         port_kargs_cstate_sizes_t *sizes_dest,
         const port_kargs_cstate_sizes_t *sizes_src,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     assert(sizes_dest != NULL);
     assert(sizes_src != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.alloc_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.alloc_fn != NULL);
 
     *sizes_dest = (port_kargs_cstate_sizes_t){0};
 
@@ -82,15 +76,16 @@ port_kargs_alloc_copy_cstate_sizes(
 
     if (num_of > 0)
     {
-        ALLOC_ARRAY(sizes_dest->sizes, num_of, op_host);
-        MEMCOPY(sizes_dest->sizes, sizes_src->sizes, sizeof(*sizes_dest->sizes) * num_of);
+        ALLOC_ARRAY(sizes_dest->sizes, num_of, port_size_t, ma_host);
+
+        memcpy(sizes_dest->sizes, sizes_src->sizes, sizeof(*sizes_dest->sizes) * num_of);
         sizes_dest->num_of = num_of;
     }
 
     return true;
 
 failure:
-    port_kargs_free_cstate_sizes(sizes_dest, op_host);
+    port_kargs_free_cstate_sizes(sizes_dest, ma_host);
     return false;
 }
 
@@ -98,13 +93,13 @@ void
 port_kargs_free_cstate_sizes(
         port_kargs_cstate_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.free_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.free_fn != NULL);
 
-    FREE(sizes->sizes, op_host);
+    FREE(sizes->sizes, ma_host);
     sizes->num_of = 0;
 }
 
@@ -113,22 +108,22 @@ port_kargs_alloc_cstate_arrays(
         port_kargs_cstate_ptrs_t *ptrs,
         const port_kargs_cstate_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     assert(ptrs != NULL);
     assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.alloc_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.alloc_fn != NULL);
 
     *ptrs = (port_kargs_cstate_ptrs_t){0};
 
     if (sizes->num_of > 0)
-        ALLOC_ARRAY(ptrs->arrays, sizes->num_of, op_host);
+        ALLOC_ARRAY(ptrs->arrays, sizes->num_of, port_void_ptr_t, ma_host);
 
     return true;
 
 failure:
-    port_kargs_free_cstate_arrays(ptrs, sizes, op_host);
+    port_kargs_free_cstate_arrays(ptrs, sizes, ma_host);
     return false;
 }
 
@@ -137,16 +132,16 @@ port_kargs_free_cstate_arrays(
         port_kargs_cstate_ptrs_t *ptrs,
         const port_kargs_cstate_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     (void) sizes;
 
     assert(ptrs != NULL);
-    assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.free_fn != NULL);
+    // assert(sizes != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.free_fn != NULL);
 
-    FREE(ptrs->arrays, op_host);
+    FREE(ptrs->arrays, ma_host);
 }
 
 port_bool_t
@@ -154,26 +149,26 @@ port_kargs_alloc_cstate_memory(
         port_kargs_cstate_ptrs_t *ptrs,
         const port_kargs_cstate_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_cdev)
+        const port_memory_allocator_t *ma_cdev)
 {
     assert(ptrs != NULL);
     assert(sizes != NULL);
-    assert(op_cdev != NULL);
-    assert(op_cdev->operations.alloc_fn != NULL);
+    assert(ma_cdev != NULL);
+    assert(ma_cdev->operations.alloc_fn != NULL);
 
     if (ptrs->arrays != NULL)
     {
         for (port_size_t i = 0; i < sizes->num_of; i++)
         {
             if (sizes->sizes[i] > 0)
-                ALLOC(ptrs->arrays[i], sizes->sizes[i], 0, op_cdev);
+                ALLOC(ptrs->arrays[i], sizes->sizes[i], 0, ma_cdev);
         }
     }
 
     return true;
 
 failure:
-    port_kargs_free_cstate_memory(ptrs, sizes, op_cdev);
+    port_kargs_free_cstate_memory(ptrs, sizes, ma_cdev);
     return false;
 }
 
@@ -182,17 +177,17 @@ port_kargs_free_cstate_memory(
         port_kargs_cstate_ptrs_t *ptrs,
         const port_kargs_cstate_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_cdev)
+        const port_memory_allocator_t *ma_cdev)
 {
     assert(ptrs != NULL);
     assert(sizes != NULL);
-    assert(op_cdev != NULL);
-    assert(op_cdev->operations.free_fn != NULL);
+    assert(ma_cdev != NULL);
+    assert(ma_cdev->operations.free_fn != NULL);
 
     if (ptrs->arrays != NULL)
     {
         for (port_size_t i = 0; i < sizes->num_of; i++)
-            FREE(ptrs->arrays[i], op_cdev);
+            FREE(ptrs->arrays[i], ma_cdev);
     }
 }
 
@@ -202,18 +197,14 @@ port_kargs_copy_cstate_memory(
         const port_kargs_cstate_ptrs_t *ptrs_src,
         const port_kargs_cstate_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_dest_cdev,
-        const port_memory_operations_with_properties_t *op_src_cdev)
+        const port_memory_allocator_t *ma_cdev_dest,
+        const port_memory_allocator_t *ma_cdev_src)
 {
     assert(ptrs_dest != NULL);
     assert(ptrs_src != NULL);
     assert(sizes != NULL);
-    assert(op_dest_cdev != NULL);
-    assert(op_dest_cdev->operations.map_fn != NULL);
-    assert(op_dest_cdev->operations.unmap_fn != NULL);
-    assert(op_src_cdev != NULL);
-    assert(op_src_cdev->operations.map_fn != NULL);
-    assert(op_src_cdev->operations.unmap_fn != NULL);
+    assert(ma_cdev_dest != NULL);
+    assert(ma_cdev_src != NULL);
 
     if ((sizes->num_of > 0) && (ptrs_dest->arrays != NULL) && (ptrs_src->arrays != NULL))
     {
@@ -224,13 +215,7 @@ port_kargs_copy_cstate_memory(
             port_size_t size = sizes->sizes[i];
 
             if ((size > 0) && (ptrs_dest->arrays[i] != NULL) && (ptrs_src->arrays[i] != NULL))
-            {
-                MAP(ptrs_src->arrays[i], size, op_src_cdev);
-                MAP(ptrs_dest->arrays[i], size, op_dest_cdev);
-                MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size);
-                UNMAP(ptrs_dest->arrays[i], op_dest_cdev);
-                UNMAP(ptrs_src->arrays[i], op_src_cdev);
-            }
+                MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size, ma_cdev_dest, ma_cdev_src);
         }
     }
 
@@ -249,12 +234,12 @@ port_kargs_alloc_copy_cparam_sizes(
         port_kargs_cparam_sizes_t *sizes_dest,
         const port_kargs_cparam_sizes_t *sizes_src,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     assert(sizes_dest != NULL);
     assert(sizes_src != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.alloc_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.alloc_fn != NULL);
 
     *sizes_dest = (port_kargs_cparam_sizes_t){0};
 
@@ -263,10 +248,10 @@ port_kargs_alloc_copy_cparam_sizes(
 
         if (num_of > 0)
         {
-            ALLOC_ARRAY(sizes_dest->structures.sizes, num_of, op_host);
-            MEMCOPY(sizes_dest->structures.sizes, sizes_src->structures.sizes,
-                    sizeof(*sizes_dest->structures.sizes) * num_of);
+            ALLOC_ARRAY(sizes_dest->structures.sizes, num_of, port_size_t, ma_host);
 
+            memcpy(sizes_dest->structures.sizes, sizes_src->structures.sizes,
+                    sizeof(*sizes_dest->structures.sizes) * num_of);
             sizes_dest->structures.num_of = num_of;
         }
     }
@@ -276,10 +261,10 @@ port_kargs_alloc_copy_cparam_sizes(
 
         if (num_of > 0)
         {
-            ALLOC_ARRAY(sizes_dest->arrays.sizes, num_of, op_host);
-            MEMCOPY(sizes_dest->arrays.sizes, sizes_src->arrays.sizes,
-                    sizeof(*sizes_dest->arrays.sizes) * num_of);
+            ALLOC_ARRAY(sizes_dest->arrays.sizes, num_of, port_size_t, ma_host);
 
+            memcpy(sizes_dest->arrays.sizes, sizes_src->arrays.sizes,
+                    sizeof(*sizes_dest->arrays.sizes) * num_of);
             sizes_dest->arrays.num_of = num_of;
         }
     }
@@ -287,7 +272,7 @@ port_kargs_alloc_copy_cparam_sizes(
     return true;
 
 failure:
-    port_kargs_free_cparam_sizes(sizes_dest, op_host);
+    port_kargs_free_cparam_sizes(sizes_dest, ma_host);
     return false;
 }
 
@@ -295,16 +280,16 @@ void
 port_kargs_free_cparam_sizes(
         port_kargs_cparam_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.free_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.free_fn != NULL);
 
-    FREE(sizes->structures.sizes, op_host);
+    FREE(sizes->structures.sizes, ma_host);
     sizes->structures.num_of = 0;
 
-    FREE(sizes->arrays.sizes, op_host);
+    FREE(sizes->arrays.sizes, ma_host);
     sizes->arrays.num_of = 0;
 }
 
@@ -313,25 +298,25 @@ port_kargs_alloc_cparam_arrays(
         port_kargs_cparam_ptrs_t *ptrs,
         const port_kargs_cparam_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     assert(ptrs != NULL);
     assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.alloc_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.alloc_fn != NULL);
 
     *ptrs = (port_kargs_cparam_ptrs_t){0};
 
     if (sizes->structures.num_of > 0)
-        ALLOC_ARRAY(ptrs->structures, sizes->structures.num_of, op_host);
+        ALLOC_ARRAY(ptrs->structures, sizes->structures.num_of, port_void_ptr_t, ma_host);
 
     if (sizes->arrays.num_of > 0)
-        ALLOC_ARRAY(ptrs->arrays, sizes->arrays.num_of, op_host);
+        ALLOC_ARRAY(ptrs->arrays, sizes->arrays.num_of, port_void_ptr_t, ma_host);
 
     return true;
 
 failure:
-    port_kargs_free_cparam_arrays(ptrs, sizes, op_host);
+    port_kargs_free_cparam_arrays(ptrs, sizes, ma_host);
     return false;
 }
 
@@ -340,17 +325,17 @@ port_kargs_free_cparam_arrays(
         port_kargs_cparam_ptrs_t *ptrs,
         const port_kargs_cparam_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     (void) sizes;
 
     assert(ptrs != NULL);
-    assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.free_fn != NULL);
+    // assert(sizes != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.free_fn != NULL);
 
-    FREE(ptrs->structures, op_host);
-    FREE(ptrs->arrays, op_host);
+    FREE(ptrs->structures, ma_host);
+    FREE(ptrs->arrays, ma_host);
 }
 
 port_bool_t
@@ -358,34 +343,34 @@ port_kargs_alloc_cparam_memory(
         port_kargs_cparam_ptrs_t *ptrs,
         const port_kargs_cparam_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host,
-        const port_memory_operations_with_properties_t *op_cdev)
+        const port_memory_allocator_t *ma_host,
+        const port_memory_allocator_t *ma_cdev)
 {
     assert(ptrs != NULL);
     assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.alloc_fn != NULL);
-    assert(op_cdev != NULL);
-    assert(op_cdev->operations.alloc_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.alloc_fn != NULL);
+    assert(ma_cdev != NULL);
+    assert(ma_cdev->operations.alloc_fn != NULL);
 
     if (ptrs->structures != NULL)
     {
         for (port_size_t i = 0; i < sizes->structures.num_of; i++)
             if (sizes->structures.sizes[i] > 0)
-                ALLOC(ptrs->structures[i], sizes->structures.sizes[i], 0, op_host);
+                ALLOC(ptrs->structures[i], sizes->structures.sizes[i], 0, ma_host);
     }
 
     if (ptrs->arrays != NULL)
     {
         for (port_size_t i = 0; i < sizes->arrays.num_of; i++)
             if (sizes->arrays.sizes[i] > 0)
-                ALLOC(ptrs->arrays[i], sizes->arrays.sizes[i], 0, op_cdev);
+                ALLOC(ptrs->arrays[i], sizes->arrays.sizes[i], 0, ma_cdev);
     }
 
     return true;
 
 failure:
-    port_kargs_free_cparam_memory(ptrs, sizes, op_host, op_cdev);
+    port_kargs_free_cparam_memory(ptrs, sizes, ma_host, ma_cdev);
     return false;
 }
 
@@ -394,26 +379,26 @@ port_kargs_free_cparam_memory(
         port_kargs_cparam_ptrs_t *ptrs,
         const port_kargs_cparam_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host,
-        const port_memory_operations_with_properties_t *op_cdev)
+        const port_memory_allocator_t *ma_host,
+        const port_memory_allocator_t *ma_cdev)
 {
     assert(ptrs != NULL);
     assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.free_fn != NULL);
-    assert(op_cdev != NULL);
-    assert(op_cdev->operations.free_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.free_fn != NULL);
+    assert(ma_cdev != NULL);
+    assert(ma_cdev->operations.free_fn != NULL);
 
     if (ptrs->structures != NULL)
     {
         for (port_size_t i = 0; i < sizes->structures.num_of; i++)
-            FREE(ptrs->structures[i], op_host);
+            FREE(ptrs->structures[i], ma_host);
     }
 
     if (ptrs->arrays != NULL)
     {
         for (port_size_t i = 0; i < sizes->arrays.num_of; i++)
-            FREE(ptrs->arrays[i], op_cdev);
+            FREE(ptrs->arrays[i], ma_cdev);
     }
 }
 
@@ -423,26 +408,28 @@ port_kargs_copy_cparam_memory(
         const port_kargs_cparam_ptrs_t *ptrs_src,
         const port_kargs_cparam_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_dest_cdev,
-        const port_memory_operations_with_properties_t *op_src_cdev)
+        const port_memory_allocator_t *ma_host,
+        const port_memory_allocator_t *ma_cdev_dest,
+        const port_memory_allocator_t *ma_cdev_src)
 {
     assert(ptrs_dest != NULL);
     assert(ptrs_src != NULL);
     assert(sizes != NULL);
-    assert(op_dest_cdev != NULL);
-    assert(op_dest_cdev->operations.map_fn != NULL);
-    assert(op_dest_cdev->operations.unmap_fn != NULL);
-    assert(op_src_cdev != NULL);
-    assert(op_src_cdev->operations.map_fn != NULL);
-    assert(op_src_cdev->operations.unmap_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_cdev_dest != NULL);
+    assert(ma_cdev_src != NULL);
 
     if ((sizes->structures.num_of > 0) && (ptrs_dest->structures != NULL) && (ptrs_src->structures != NULL))
     {
         assert(sizes->structures.sizes != NULL);
 
         for (port_size_t i = 0; i < sizes->structures.num_of; i++)
-            if (sizes->structures.sizes[i] > 0)
-                MEMCOPY(ptrs_dest->structures[i], ptrs_src->structures[i], sizes->structures.sizes[i]);
+        {
+            port_size_t size = sizes->structures.sizes[i];
+
+            if ((size > 0) && (ptrs_dest->structures[i] != NULL) && (ptrs_src->structures[i] != NULL))
+                MEMCOPY(ptrs_dest->structures[i], ptrs_src->structures[i], size, ma_host, ma_host);
+        }
     }
 
     if ((sizes->arrays.num_of > 0) && (ptrs_dest->arrays != NULL) && (ptrs_src->arrays != NULL))
@@ -454,13 +441,7 @@ port_kargs_copy_cparam_memory(
             port_size_t size = sizes->arrays.sizes[i];
 
             if ((size > 0) && (ptrs_dest->arrays[i] != NULL) && (ptrs_src->arrays[i] != NULL))
-            {
-                MAP(ptrs_src->arrays[i], size, op_src_cdev);
-                MAP(ptrs_dest->arrays[i], size, op_dest_cdev);
-                MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size);
-                UNMAP(ptrs_dest->arrays[i], op_dest_cdev);
-                UNMAP(ptrs_src->arrays[i], op_src_cdev);
-            }
+                MEMCOPY(ptrs_dest->arrays[i], ptrs_src->arrays[i], size, ma_cdev_dest, ma_cdev_src);
         }
     }
 
@@ -479,12 +460,12 @@ port_kargs_alloc_copy_segmented_memory_sizes(
         port_kargs_segmented_memory_sizes_t *sizes_dest,
         const port_kargs_segmented_memory_sizes_t *sizes_src,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     assert(sizes_dest != NULL);
     assert(sizes_src != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.alloc_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.alloc_fn != NULL);
 
     *sizes_dest = (port_kargs_segmented_memory_sizes_t){0};
 
@@ -492,16 +473,18 @@ port_kargs_alloc_copy_segmented_memory_sizes(
 
     if (num_segments > 0)
     {
-        ALLOC_ARRAY(sizes_dest->segment_sizes, num_segments, op_host);
-        MEMCOPY(sizes_dest->segment_sizes, sizes_src->segment_sizes,
+        ALLOC_ARRAY(sizes_dest->segment_sizes, num_segments, port_size_t, ma_host);
+
+        memcpy(sizes_dest->segment_sizes, sizes_src->segment_sizes,
                 sizeof(*sizes_dest->segment_sizes) * num_segments);
         sizes_dest->num_segments = num_segments;
+        sizes_dest->num_table_entries = sizes_src->num_table_entries;
     }
 
     return true;
 
 failure:
-    port_kargs_free_segmented_memory_sizes(sizes_dest, op_host);
+    port_kargs_free_segmented_memory_sizes(sizes_dest, ma_host);
     return false;
 }
 
@@ -509,56 +492,15 @@ void
 port_kargs_free_segmented_memory_sizes(
         port_kargs_segmented_memory_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.free_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.free_fn != NULL);
 
-    FREE(sizes->segment_sizes, op_host);
+    FREE(sizes->segment_sizes, ma_host);
     sizes->num_segments = 0;
-}
-
-port_kargs_segmented_memory_table_t*
-port_kargs_alloc_copy_segmented_memory_table(
-        const port_kargs_segmented_memory_table_t *table_src,
-
-        const port_memory_operations_with_properties_t *op_host)
-{
-    assert(table_src != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.alloc_fn != NULL);
-
-    port_kargs_segmented_memory_table_t *table_dest = NULL;
-
-    port_size_t num_table_symbols = table_src->num_table_symbols;
-
-    ALLOC(table_dest, sizeof(*table_dest) + sizeof(table_dest->table_symbols[0]) * num_table_symbols,
-            alignof(table_dest->table_symbols[0]), op_host);
-    MEMCOPY(table_dest->table_symbols, table_src->table_symbols,
-            sizeof(*table_dest->table_symbols) * num_table_symbols);
-
-    table_dest->num_table_symbols = num_table_symbols;
-    table_dest->root_symbol = table_src->root_symbol;
-
-    return table_dest;
-
-failure:
-    port_kargs_free_segmented_memory_table(table_dest, op_host);
-    return NULL;
-}
-
-void
-port_kargs_free_segmented_memory_table(
-        port_kargs_segmented_memory_table_t *table,
-
-        const port_memory_operations_with_properties_t *op_host)
-{
-    assert(table != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.free_fn != NULL);
-
-    FREE(table, op_host);
+    sizes->num_table_entries = 0;
 }
 
 port_bool_t
@@ -566,22 +508,22 @@ port_kargs_alloc_segmented_memory_arrays(
         port_kargs_segmented_memory_ptrs_t *ptrs,
         const port_kargs_segmented_memory_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     assert(ptrs != NULL);
     assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.alloc_fn != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.alloc_fn != NULL);
 
     *ptrs = (port_kargs_segmented_memory_ptrs_t){0};
 
     if (sizes->num_segments > 0)
-        ALLOC_ARRAY(ptrs->segments, sizes->num_segments, op_host);
+        ALLOC_ARRAY(ptrs->segments, sizes->num_segments, port_void_ptr_t, ma_host);
 
     return true;
 
 failure:
-    port_kargs_free_segmented_memory_arrays(ptrs, sizes, op_host);
+    port_kargs_free_segmented_memory_arrays(ptrs, sizes, ma_host);
     return false;
 }
 
@@ -590,45 +532,43 @@ port_kargs_free_segmented_memory_arrays(
         port_kargs_segmented_memory_ptrs_t *ptrs,
         const port_kargs_segmented_memory_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_host)
+        const port_memory_allocator_t *ma_host)
 {
     (void) sizes;
 
     assert(ptrs != NULL);
-    assert(sizes != NULL);
-    assert(op_host != NULL);
-    assert(op_host->operations.free_fn != NULL);
+    // assert(sizes != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.free_fn != NULL);
 
-    FREE(ptrs->segments, op_host);
+    FREE(ptrs->segments, ma_host);
 }
 
 port_bool_t
 port_kargs_alloc_segmented_memory_memory(
         port_kargs_segmented_memory_ptrs_t *ptrs,
         const port_kargs_segmented_memory_sizes_t *sizes,
-        const port_kargs_segmented_memory_table_t *table,
 
-        const port_memory_operations_with_properties_t *op_cdev)
+        const port_memory_allocator_t *ma_cdev)
 {
     assert(ptrs != NULL);
     assert(sizes != NULL);
-    assert(table != NULL);
-    assert(op_cdev != NULL);
-    assert(op_cdev->operations.alloc_fn != NULL);
+    assert(ma_cdev != NULL);
+    assert(ma_cdev->operations.alloc_fn != NULL);
 
     if (ptrs->segments != NULL)
     {
         for (port_size_t i = 0; i < sizes->num_segments; i++)
             if (sizes->segment_sizes[i] > 0)
-                ALLOC(ptrs->segments[i], sizes->segment_sizes[i], 0, op_cdev);
+                ALLOC(ptrs->segments[i], sizes->segment_sizes[i], alignof(port_memory_unit_t), ma_cdev);
     }
 
-    ALLOC_ARRAY(ptrs->table, table->num_table_symbols, op_cdev);
+    ALLOC_ARRAY(ptrs->table, sizes->num_table_entries, port_void_ptr_t, ma_cdev);
 
     return true;
 
 failure:
-    port_kargs_free_segmented_memory_memory(ptrs, sizes, table, op_cdev);
+    port_kargs_free_segmented_memory_memory(ptrs, sizes, ma_cdev);
     return false;
 }
 
@@ -636,25 +576,21 @@ void
 port_kargs_free_segmented_memory_memory(
         port_kargs_segmented_memory_ptrs_t *ptrs,
         const port_kargs_segmented_memory_sizes_t *sizes,
-        const port_kargs_segmented_memory_table_t *table,
 
-        const port_memory_operations_with_properties_t *op_cdev)
+        const port_memory_allocator_t *ma_cdev)
 {
-    (void) table;
-
     assert(ptrs != NULL);
     assert(sizes != NULL);
-    assert(table != NULL);
-    assert(op_cdev != NULL);
-    assert(op_cdev->operations.free_fn != NULL);
+    assert(ma_cdev != NULL);
+    assert(ma_cdev->operations.free_fn != NULL);
 
     if (ptrs->segments != NULL)
     {
         for (port_size_t i = 0; i < sizes->num_segments; i++)
-            FREE(ptrs->segments[i], op_cdev);
+            FREE(ptrs->segments[i], ma_cdev);
     }
 
-    FREE(ptrs->table, op_cdev);
+    FREE(ptrs->table, ma_cdev);
     ptrs->root = NULL;
 }
 
@@ -664,18 +600,14 @@ port_kargs_copy_segmented_memory_memory(
         const port_kargs_segmented_memory_ptrs_t *ptrs_src,
         const port_kargs_segmented_memory_sizes_t *sizes,
 
-        const port_memory_operations_with_properties_t *op_dest_cdev,
-        const port_memory_operations_with_properties_t *op_src_cdev)
+        const port_memory_allocator_t *ma_cdev_dest,
+        const port_memory_allocator_t *ma_cdev_src)
 {
     assert(ptrs_dest != NULL);
     assert(ptrs_src != NULL);
     assert(sizes != NULL);
-    assert(op_dest_cdev != NULL);
-    assert(op_dest_cdev->operations.map_fn != NULL);
-    assert(op_dest_cdev->operations.unmap_fn != NULL);
-    assert(op_src_cdev != NULL);
-    assert(op_src_cdev->operations.map_fn != NULL);
-    assert(op_src_cdev->operations.unmap_fn != NULL);
+    assert(ma_cdev_dest != NULL);
+    assert(ma_cdev_src != NULL);
 
     if ((sizes->num_segments > 0) && (ptrs_dest->segments != NULL) && (ptrs_src->segments != NULL))
     {
@@ -686,13 +618,7 @@ port_kargs_copy_segmented_memory_memory(
             port_size_t size = sizes->segment_sizes[i];
 
             if ((size > 0) && (ptrs_dest->segments[i] != NULL) && (ptrs_src->segments[i] != NULL))
-            {
-                MAP(ptrs_src->segments[i], size, op_src_cdev);
-                MAP(ptrs_dest->segments[i], size, op_dest_cdev);
-                MEMCOPY(ptrs_dest->segments[i], ptrs_src->segments[i], size);
-                UNMAP(ptrs_dest->segments[i], op_dest_cdev);
-                UNMAP(ptrs_src->segments[i], op_src_cdev);
-            }
+                MEMCOPY(ptrs_dest->segments[i], ptrs_src->segments[i], size, ma_cdev_dest, ma_cdev_src);
         }
     }
 
@@ -702,39 +628,78 @@ failure:
     return false;
 }
 
+port_kargs_segmented_memory_table_t*
+port_kargs_alloc_copy_segmented_memory_table(
+        const port_kargs_segmented_memory_table_t *table_src,
+
+        port_size_t num_table_symbols,
+
+        const port_memory_allocator_t *ma_host)
+{
+    assert(table_src != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.alloc_fn != NULL);
+
+    port_kargs_segmented_memory_table_t *table_dest = NULL;
+    port_size_t size = sizeof(*table_dest) + sizeof(*table_dest->table_symbols) * num_table_symbols;
+
+    ALLOC(table_dest, size, alignof(port_kargs_segmented_memory_table_t), ma_host);
+    memcpy(table_dest, table_src, size);
+
+    return table_dest;
+
+failure:
+    port_kargs_free_segmented_memory_table(table_dest, ma_host);
+    return NULL;
+}
+
+void
+port_kargs_free_segmented_memory_table(
+        port_kargs_segmented_memory_table_t *table,
+
+        const port_memory_allocator_t *ma_host)
+{
+    assert(table != NULL);
+    assert(ma_host != NULL);
+    assert(ma_host->operations.free_fn != NULL);
+
+    FREE(table, ma_host);
+}
+
 port_bool_t
 port_kargs_write_segmented_memory_table(
         port_kargs_segmented_memory_ptrs_t *ptrs,
         const port_kargs_segmented_memory_sizes_t *sizes,
         const port_kargs_segmented_memory_table_t *table,
 
-        const port_memory_operations_with_properties_t *op_cdev)
+        const port_memory_allocator_t *ma_cdev)
 {
     (void) sizes;
 
     assert(ptrs != NULL);
-    assert(sizes != NULL);
+    // assert(sizes != NULL);
     assert(table != NULL);
-    assert(op_cdev != NULL);
-    assert(op_cdev->operations.map_fn != NULL);
-    assert(op_cdev->operations.unmap_fn != NULL);
+    assert(ma_cdev != NULL);
+    assert(ma_cdev->operations.map_fn != NULL);
+    assert(ma_cdev->operations.unmap_fn != NULL);
 
     // Root symbol
     assert(table->root_symbol.segment_idx < sizes->num_segments);
     assert(table->root_symbol.value <= sizes->segment_sizes[table->root_symbol.segment_idx]);
 
-    ptrs->root = (port_memory_ptr_t)ptrs->segments[table->root_symbol.segment_idx] +
-        table->root_symbol.value;
+    ptrs->root = (char*)ptrs->segments[table->root_symbol.segment_idx] + table->root_symbol.value;
 
     // Table symbols
-    port_size_t num_symbols = table->num_table_symbols;
+    port_size_t num_symbols = sizes->num_table_entries;
 
     if ((num_symbols > 0) && (ptrs->table != NULL))
     {
         assert(sizes->segment_sizes != NULL);
         assert(ptrs->segments != NULL);
 
-        MAP(ptrs->table, sizeof(*ptrs->table) * num_symbols, op_cdev);
+        if (!ma_cdev->operations.map_fn(ptrs->table,
+                    sizeof(*ptrs->table) * num_symbols, ma_cdev->properties.map))
+            return false;
 
         for (port_size_t i = 0; i < num_symbols; i++)
         {
@@ -742,17 +707,15 @@ port_kargs_write_segmented_memory_table(
             assert(table->table_symbols[i].value <=
                     sizes->segment_sizes[table->table_symbols[i].segment_idx]);
 
-            ptrs->table[i] = (port_memory_ptr_t)ptrs->segments[table->table_symbols[i].segment_idx] +
+            ptrs->table[i] = (char*)ptrs->segments[table->table_symbols[i].segment_idx] +
                 table->table_symbols[i].value;
         }
 
-        UNMAP(ptrs->table, op_cdev);
+        if (!ma_cdev->operations.unmap_fn(ptrs->table, ma_cdev->properties.map))
+            return false;
     }
 
     return true;
-
-failure:
-    return false;
 }
 
 port_bool_t
@@ -763,15 +726,15 @@ port_kargs_construct_segmented_memory_from_data_storage(
 
         const port_data_storage_t *storage,
 
-        const port_memory_operations_with_properties_t *op_host,
-        const port_memory_operations_with_properties_t *op_cdev)
+        const port_memory_allocator_t *ma_host,
+        const port_memory_allocator_t *ma_cdev)
 {
     assert(ptrs != NULL);
     assert(sizes != NULL);
     assert(table != NULL);
     assert(storage != NULL);
-    assert(op_host != NULL);
-    assert(op_cdev != NULL);
+    assert(ma_host != NULL);
+    assert(ma_cdev != NULL);
 
     // Allocate temporary memory arrays
     port_uint8_t step = 0;
@@ -791,6 +754,7 @@ port_kargs_construct_segmented_memory_from_data_storage(
     port_kargs_segmented_memory_sizes_t sizes_src = {
         .segment_sizes = malloc(sizeof(*sizes->segment_sizes) * num_segments),
         .num_segments = num_segments,
+        .num_table_entries = num_table_symbols,
     };
     if (sizes_src.segment_sizes == NULL)
         goto cleanup;
@@ -806,8 +770,6 @@ port_kargs_construct_segmented_memory_from_data_storage(
     step++;
 
     // Assign temporary memory pointers and values
-    table_src->num_table_symbols = num_table_symbols;
-
     table_src->root_symbol = (port_kargs_segmented_memory_symbol_t){0};
     for (port_uint_single_t i = 0; i < storage->num.properties; i++)
         if (!strcmp(storage->content.strings[storage->name_str_idx.properties[i]], "root"))
@@ -838,36 +800,36 @@ port_kargs_construct_segmented_memory_from_data_storage(
     }
 
     // Construct segmented memory
-    if (!port_kargs_alloc_copy_segmented_memory_sizes(sizes, &sizes_src, op_host))
+    if (!port_kargs_alloc_copy_segmented_memory_sizes(sizes, &sizes_src, ma_host))
         goto cleanup;
 
     step++;
 
-    *table = port_kargs_alloc_copy_segmented_memory_table(table_src, op_host);
+    *table = port_kargs_alloc_copy_segmented_memory_table(table_src, num_table_symbols, ma_host);
     if (*table == NULL)
         goto cleanup;
 
     step++;
 
-    if (!port_kargs_alloc_segmented_memory_arrays(ptrs, &sizes_src, op_host))
+    if (!port_kargs_alloc_segmented_memory_arrays(ptrs, &sizes_src, ma_host))
         goto cleanup;
 
     step++;
 
-    if (!port_kargs_alloc_segmented_memory_memory(ptrs, &sizes_src, table_src, op_cdev))
+    if (!port_kargs_alloc_segmented_memory_memory(ptrs, &sizes_src, ma_cdev))
         goto cleanup;
 
     step++;
 
     {
-        port_memory_operations_with_properties_t op_src_cdev = {.operations = {
+        port_memory_allocator_t ma_cdev_src = {.operations = {
             .map_fn = port_memory_cpu_map, .unmap_fn = port_memory_cpu_unmap}};
 
-        if (!port_kargs_copy_segmented_memory_memory(ptrs, &ptrs_src, &sizes_src, op_cdev, &op_src_cdev))
+        if (!port_kargs_copy_segmented_memory_memory(ptrs, &ptrs_src, &sizes_src, ma_cdev, &ma_cdev_src))
             goto cleanup;
     }
 
-    if (!port_kargs_write_segmented_memory_table(ptrs, &sizes_src, table_src, op_cdev))
+    if (!port_kargs_write_segmented_memory_table(ptrs, &sizes_src, table_src, ma_cdev))
         goto cleanup;
 
     step = 3; // don't free output resources
@@ -876,13 +838,13 @@ port_kargs_construct_segmented_memory_from_data_storage(
     // Clean up resources
 cleanup:
     if (step >= 7)
-        port_kargs_free_segmented_memory_memory(ptrs, &sizes_src, table_src, op_cdev);
+        port_kargs_free_segmented_memory_memory(ptrs, &sizes_src, ma_cdev);
     if (step >= 6)
-        port_kargs_free_segmented_memory_arrays(ptrs, &sizes_src, op_host);
+        port_kargs_free_segmented_memory_arrays(ptrs, &sizes_src, ma_host);
     if (step >= 5)
-        port_kargs_free_segmented_memory_table(*table, op_host);
+        port_kargs_free_segmented_memory_table(*table, ma_host);
     if (step >= 4)
-        port_kargs_free_segmented_memory_sizes(sizes, op_host);
+        port_kargs_free_segmented_memory_sizes(sizes, ma_host);
 
     if (step >= 3)
         free(ptrs_src.segments);

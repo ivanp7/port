@@ -36,7 +36,7 @@ struct port_kargs_segmented_memory_ptrs;
 struct port_kargs_segmented_memory_sizes;
 struct port_kargs_segmented_memory_table;
 
-struct port_memory_operations_with_properties;
+struct port_memory_allocator;
 
 struct port_data_storage;
 
@@ -54,7 +54,7 @@ port_kargs_alloc_copy_cstate_sizes(
         struct port_kargs_cstate_sizes *sizes_dest, ///< [out] Sizes of computation state data (destination).
         const struct port_kargs_cstate_sizes *sizes_src, ///< [in] Sizes of computation state data (source).
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -64,7 +64,7 @@ void
 port_kargs_free_cstate_sizes(
         struct port_kargs_cstate_sizes *sizes, ///< [in] Sizes of computation state data.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -77,7 +77,7 @@ port_kargs_alloc_cstate_arrays(
         struct port_kargs_cstate_ptrs *ptrs, ///< [out] Pointers to computation state data.
         const struct port_kargs_cstate_sizes *sizes, ///< [in] Sizes of computation state data.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -88,7 +88,7 @@ port_kargs_free_cstate_arrays(
         struct port_kargs_cstate_ptrs *ptrs, ///< [in] Pointers to computation state data.
         const struct port_kargs_cstate_sizes *sizes, ///< [in] Sizes of computation state data.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -101,7 +101,7 @@ port_kargs_alloc_cstate_memory(
         struct port_kargs_cstate_ptrs *ptrs, ///< [out] Pointers to computation state data.
         const struct port_kargs_cstate_sizes *sizes, ///< [in] Sizes of computation state data.
 
-        const struct port_memory_operations_with_properties *op_cdev ///< [in] Compute device memory operations.
+        const struct port_memory_allocator *ma_cdev ///< [in] Compute device memory allocator.
 );
 
 /**
@@ -112,7 +112,7 @@ port_kargs_free_cstate_memory(
         struct port_kargs_cstate_ptrs *ptrs, ///< [in] Pointers to computation state data.
         const struct port_kargs_cstate_sizes *sizes, ///< [in] Sizes of computation state data.
 
-        const struct port_memory_operations_with_properties *op_cdev ///< [in] Compute device memory operations.
+        const struct port_memory_allocator *ma_cdev ///< [in] Compute device memory allocator.
 );
 
 /**
@@ -126,8 +126,8 @@ port_kargs_copy_cstate_memory(
         const struct port_kargs_cstate_ptrs *ptrs_src, ///< [in] Structure storing computation state data (source).
         const struct port_kargs_cstate_sizes *sizes, ///< [in] Sizes of computation state data.
 
-        const struct port_memory_operations_with_properties *op_dest_cdev, ///< [in] Compute device memory operations (destination).
-        const struct port_memory_operations_with_properties *op_src_cdev   ///< [in] Compute device memory operations (source).
+        const struct port_memory_allocator *ma_cdev_dest, ///< [in] Compute device memory allocator (destination).
+        const struct port_memory_allocator *ma_cdev_src   ///< [in] Compute device memory allocator (source).
 );
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -144,7 +144,7 @@ port_kargs_alloc_copy_cparam_sizes(
         struct port_kargs_cparam_sizes *sizes_dest, ///< [out] Sizes of computation parameter data (destination).
         const struct port_kargs_cparam_sizes *sizes_src, ///< [in] Sizes of computation parameter data (source).
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -154,7 +154,7 @@ void
 port_kargs_free_cparam_sizes(
         struct port_kargs_cparam_sizes *sizes, ///< [in] Sizes of computation parameter data.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -167,7 +167,7 @@ port_kargs_alloc_cparam_arrays(
         struct port_kargs_cparam_ptrs *ptrs, ///< [out] Pointers to computation parameter data.
         const struct port_kargs_cparam_sizes *sizes, ///< [in] Sizes of computation parameter data.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -178,7 +178,7 @@ port_kargs_free_cparam_arrays(
         struct port_kargs_cparam_ptrs *ptrs, ///< [in] Pointers to computation parameter data.
         const struct port_kargs_cparam_sizes *sizes, ///< [in] Sizes of computation parameter data.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -191,8 +191,8 @@ port_kargs_alloc_cparam_memory(
         struct port_kargs_cparam_ptrs *ptrs, ///< [out] Pointers to computation parameter data.
         const struct port_kargs_cparam_sizes *sizes, ///< [in] Sizes of computation parameter data.
 
-        const struct port_memory_operations_with_properties *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operations_with_properties *op_cdev  ///< [in] Compute device memory operations.
+        const struct port_memory_allocator *ma_host, ///< [in] Host memory allocator.
+        const struct port_memory_allocator *ma_cdev  ///< [in] Compute device memory allocator.
 );
 
 /**
@@ -203,8 +203,8 @@ port_kargs_free_cparam_memory(
         struct port_kargs_cparam_ptrs *ptrs, ///< [in] Pointers to computation parameter data.
         const struct port_kargs_cparam_sizes *sizes, ///< [in] Sizes of computation parameter data.
 
-        const struct port_memory_operations_with_properties *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operations_with_properties *op_cdev  ///< [in] Compute device memory operations.
+        const struct port_memory_allocator *ma_host, ///< [in] Host memory allocator.
+        const struct port_memory_allocator *ma_cdev  ///< [in] Compute device memory allocator.
 );
 
 /**
@@ -218,8 +218,9 @@ port_kargs_copy_cparam_memory(
         const struct port_kargs_cparam_ptrs *ptrs_src, ///< [in] Structure storing computation parameter data (source).
         const struct port_kargs_cparam_sizes *sizes, ///< [in] Sizes of computation parameter data.
 
-        const struct port_memory_operations_with_properties *op_dest_cdev, ///< [in] Compute device memory operations (destination).
-        const struct port_memory_operations_with_properties *op_src_cdev   ///< [in] Compute device memory operations (source).
+        const struct port_memory_allocator *ma_host,      ///< [in] Host memory allocator.
+        const struct port_memory_allocator *ma_cdev_dest, ///< [in] Compute device memory allocator (destination).
+        const struct port_memory_allocator *ma_cdev_src   ///< [in] Compute device memory allocator (source).
 );
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -236,7 +237,7 @@ port_kargs_alloc_copy_segmented_memory_sizes(
         struct port_kargs_segmented_memory_sizes *sizes_dest, ///< [out] Sizes of segmented memory data (destination).
         const struct port_kargs_segmented_memory_sizes *sizes_src, ///< [in] Sizes of segmented memory data (source).
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -246,31 +247,7 @@ void
 port_kargs_free_segmented_memory_sizes(
         struct port_kargs_segmented_memory_sizes *sizes, ///< [in] Sizes of segmented memory data.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
-);
-
-/**
- * @brief Allocate copy of segmented memory table.
- *
- * @return Pointer to new segmented memory table.
- */
-struct port_kargs_segmented_memory_table*
-port_kargs_alloc_copy_segmented_memory_table(
-        const struct port_kargs_segmented_memory_table *table_src, ///< [in] Segmented memory table (source).
-
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
-);
-
-/**
- * @brief Free segmented memory table.
- *
- * This function invalidates table pointer.
- */
-void
-port_kargs_free_segmented_memory_table(
-        struct port_kargs_segmented_memory_table *table, ///< [in] Segmented memory table.
-
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -283,7 +260,7 @@ port_kargs_alloc_segmented_memory_arrays(
         struct port_kargs_segmented_memory_ptrs *ptrs, ///< [out] Pointers to segmented memory data.
         const struct port_kargs_segmented_memory_sizes *sizes, ///< [in] Sizes of segmented memory data.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -294,7 +271,7 @@ port_kargs_free_segmented_memory_arrays(
         struct port_kargs_segmented_memory_ptrs *ptrs, ///< [in] Pointers to segmented memory data.
         const struct port_kargs_segmented_memory_sizes *sizes, ///< [in] Sizes of segmented memory data.
 
-        const struct port_memory_operations_with_properties *op_host ///< [in] Host memory operations.
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -306,9 +283,8 @@ port_bool_t
 port_kargs_alloc_segmented_memory_memory(
         struct port_kargs_segmented_memory_ptrs *ptrs, ///< [out] Pointers to segmented memory data.
         const struct port_kargs_segmented_memory_sizes *sizes, ///< [in] Sizes of segmented memory data.
-        const struct port_kargs_segmented_memory_table *table, ///< [in] Segmented memory table.
 
-        const struct port_memory_operations_with_properties *op_cdev ///< [in] Compute device memory operations.
+        const struct port_memory_allocator *ma_cdev ///< [in] Compute device memory allocator.
 );
 
 /**
@@ -318,9 +294,8 @@ void
 port_kargs_free_segmented_memory_memory(
         struct port_kargs_segmented_memory_ptrs *ptrs, ///< [in] Pointers to segmented memory data.
         const struct port_kargs_segmented_memory_sizes *sizes, ///< [in] Sizes of segmented memory data.
-        const struct port_kargs_segmented_memory_table *table, ///< [in] Segmented memory table.
 
-        const struct port_memory_operations_with_properties *op_cdev ///< [in] Compute device memory operations.
+        const struct port_memory_allocator *ma_cdev ///< [in] Compute device memory allocator.
 );
 
 /**
@@ -334,8 +309,34 @@ port_kargs_copy_segmented_memory_memory(
         const struct port_kargs_segmented_memory_ptrs *ptrs_src, ///< [in] Structure storing segmented memory data (source).
         const struct port_kargs_segmented_memory_sizes *sizes, ///< [in] Sizes of segmented memory data.
 
-        const struct port_memory_operations_with_properties *op_dest_cdev, ///< [in] Compute device memory operations (destination).
-        const struct port_memory_operations_with_properties *op_src_cdev   ///< [in] Compute device memory operations (source).
+        const struct port_memory_allocator *ma_cdev_dest, ///< [in] Compute device memory allocator (destination).
+        const struct port_memory_allocator *ma_cdev_src   ///< [in] Compute device memory allocator (source).
+);
+
+/**
+ * @brief Allocate copy of segmented memory table.
+ *
+ * @return Pointer to new segmented memory table.
+ */
+struct port_kargs_segmented_memory_table*
+port_kargs_alloc_copy_segmented_memory_table(
+        const struct port_kargs_segmented_memory_table *table_src, ///< [in] Segmented memory table (source).
+
+        port_size_t num_table_symbols, ///< [in] Number of table symbols.
+
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
+);
+
+/**
+ * @brief Free segmented memory table.
+ *
+ * This function invalidates table pointer.
+ */
+void
+port_kargs_free_segmented_memory_table(
+        struct port_kargs_segmented_memory_table *table, ///< [in] Segmented memory table.
+
+        const struct port_memory_allocator *ma_host ///< [in] Host memory allocator.
 );
 
 /**
@@ -349,7 +350,7 @@ port_kargs_write_segmented_memory_table(
         const struct port_kargs_segmented_memory_sizes *sizes, ///< [in] Sizes of segmented memory data.
         const struct port_kargs_segmented_memory_table *table, ///< [in] Segmented memory table.
 
-        const struct port_memory_operations_with_properties *op_cdev ///< [in] Compute device memory operations.
+        const struct port_memory_allocator *ma_cdev ///< [in] Compute device memory allocator.
 );
 
 /**
@@ -367,8 +368,8 @@ port_kargs_construct_segmented_memory_from_data_storage(
 
         const struct port_data_storage *storage, ///< [in] Data storage.
 
-        const struct port_memory_operations_with_properties *op_host, ///< [in] Host memory operations.
-        const struct port_memory_operations_with_properties *op_cdev  ///< [in] Compute device memory operations.
+        const struct port_memory_allocator *ma_host, ///< [in] Host memory allocator.
+        const struct port_memory_allocator *ma_cdev  ///< [in] Compute device memory allocator.
 );
 
 #endif // _PORT_HOST_KERNEL_FUN_H_
