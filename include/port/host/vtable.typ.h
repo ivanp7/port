@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (C) 2020-2024 by Ivan Podmazov                                 *
+ * Copyright (C) 2020-2025 by Ivan Podmazov                                 *
  *                                                                          *
  * This file is part of Port.                                               *
  *                                                                          *
