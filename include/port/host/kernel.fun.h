@@ -26,7 +26,7 @@
 #ifndef _PORT_HOST_KERNEL_FUN_H_
 #define _PORT_HOST_KERNEL_FUN_H_
 
-#include <port/cdev/work.typ.h>
+#include "port/cdev/work.typ.h"
 
 struct port_kargs_cstate_ptrs;
 struct port_kargs_cstate_sizes;

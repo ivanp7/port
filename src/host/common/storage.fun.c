@@ -22,8 +22,8 @@
  * @brief Data storage representation and format.
  */
 
-#include <port/host/storage.fun.h>
-#include <port/host/storage.typ.h>
+#include "port/host/storage.fun.h"
+#include "port/host/storage.typ.h"
 
 #include <stdlib.h>
 #include <string.h>

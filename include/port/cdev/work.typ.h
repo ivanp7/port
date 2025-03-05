@@ -26,7 +26,7 @@
 #ifndef _PORT_CDEV_WORK_TYP_H_
 #define _PORT_CDEV_WORK_TYP_H_
 
-#include <port/cdev/types.typ.h>
+#include "port/cdev/types.typ.h"
 
 /**
  * @brief Index of a work-item.

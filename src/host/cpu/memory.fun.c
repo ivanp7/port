@@ -22,8 +22,8 @@
  * @brief Functions for memory operations.
  */
 
-#include <port/host/cpu/memory.fun.h>
-#include <port/host/memory.def.h>
+#include "port/host/cpu/memory.fun.h"
+#include "port/host/memory.def.h"
 
 #include <stdlib.h>
 

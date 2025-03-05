@@ -26,7 +26,7 @@
 #ifndef _PORT_HOST_OPENCL_EMBEDDED_CDEV_VAR_H_
 #define _PORT_HOST_OPENCL_EMBEDDED_CDEV_VAR_H_
 
-#include <port/host/opencl/program.typ.h>
+#include "port/host/opencl/program.typ.h"
 
 /**
  * @brief Embedded sources for OpenCL program builder.

@@ -26,7 +26,7 @@
 #ifndef _PORT_HOST_CPU_MEMORY_FUN_H_
 #define _PORT_HOST_CPU_MEMORY_FUN_H_
 
-#include <port/cdev/memory.typ.h>
+#include "port/cdev/memory.typ.h"
 
 /**
  * @brief Memory allocator function.
@@ -82,6 +82,16 @@ port_memory_cpu_unmap(
         port_void_ptr_t memory, ///< [in] Memory to unmap.
         port_void_ptr_t properties ///< [in] Memory unmapping properties.
 );
+
+/**
+ * @brief CPU memory operations.
+ */
+#define PORT_MEMORY_ALLOCATOR_OPERATIONS_CPU { \
+    .alloc_fn = port_memory_cpu_alloc,  \
+    .free_fn = port_memory_cpu_free,    \
+    .map_fn = port_memory_cpu_map,      \
+    .unmap_fn = port_memory_cpu_unmap,  \
+}
 
 #endif // _PORT_HOST_CPU_MEMORY_FUN_H_
 

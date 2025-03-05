@@ -22,8 +22,8 @@
  * @brief Pseudorandom number generation.
  */
 
-#include <port/cdev/random.fun.h>
-#include <port/cdev/bit.def.h>
+#include "port/cdev/random.fun.h"
+#include "port/cdev/bit.def.h"
 
 #ifndef __OPENCL_C_VERSION__
 #  include <assert.h>

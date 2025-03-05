@@ -26,7 +26,7 @@
 #ifndef _PORT_CDEV_FLOAT_FUN_H_
 #define _PORT_CDEV_FLOAT_FUN_H_
 
-#include <port/cdev/types.typ.h>
+#include "port/cdev/types.typ.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // float16 -> float32

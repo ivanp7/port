@@ -26,7 +26,7 @@
 #ifndef _PORT_CDEV_WORK_DEF_H_
 #define _PORT_CDEV_WORK_DEF_H_
 
-#include <port/cdev/work.typ.h>
+#include "port/cdev/work.typ.h"
 
 #ifdef __OPENCL_C_VERSION__
 

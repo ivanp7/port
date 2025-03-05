@@ -45,7 +45,7 @@ cat <<  _EOF_ > "$GENERATED_SOURCE"
 // This file is generated automatically by $(basename -- "$0")
 // Do not edit!
 
-#include <port/host/opencl/program.typ.h>
+#include "port/host/opencl/program.typ.h"
 
 _EOF_
 

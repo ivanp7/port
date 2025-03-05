@@ -26,7 +26,7 @@
 #ifndef _PORT_CDEV_KERNEL_DEF_H_
 #define _PORT_CDEV_KERNEL_DEF_H_
 
-#include <port/cdev/keywords.def.h>
+#include "port/cdev/keywords.def.h"
 
 /**
  * @brief Kernel function return type.

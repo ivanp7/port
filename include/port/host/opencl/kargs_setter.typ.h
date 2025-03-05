@@ -26,23 +26,29 @@
 #ifndef _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
 #define _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
 
-#include <port/cdev/memory.typ.h>
+#include "port/cdev/memory.typ.h"
 
 #include <CL/cl.h>
 
 /**
- * @brief Arguments setter function for an OpenCL kernel.
+ * @brief Declare/define an arguments setter for an OpenCL kernel.
  *
  * arg_mask specifies which kernel arguments to set.
+ *
+ * @see port_kargs_setter_t
  *
  * @return CL_SUCCESS or error code returned by clSetKernelArg(),
  * clSetKernelArgSVMPointer(), or clSetKernelExecInfo().
  */
-typedef cl_int (*port_kargs_setter_t)(
-        cl_kernel kernel,  ///< [in] OpenCL kernel.
-        cl_ulong arg_mask, ///< [in] Mask of kernel arguments to set.
-        port_const_void_ptr_t data ///< [in] Data for kernel arguments.
-);
+#define PORT_KARGS_SETTER(name) cl_int name( \
+        cl_kernel kernel, /* [in] OpenCL kernel. */ \
+        cl_ulong arg_mask, /* [in] Mask of kernel arguments to set. */ \
+        port_const_void_ptr_t data) /* [in] Data for kernel arguments. */
+
+/**
+ * @brief Arguments setter function for an OpenCL kernel.
+ */
+typedef PORT_KARGS_SETTER((*port_kargs_setter_t));
 
 #endif // _PORT_HOST_OPENCL_KARGS_SETTER_TYP_H_
 

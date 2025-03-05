@@ -26,7 +26,7 @@
 #ifndef _PORT_HOST_STORAGE_TYP_H_
 #define _PORT_HOST_STORAGE_TYP_H_
 
-#include <port/cdev/memory.typ.h>
+#include "port/cdev/memory.typ.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Storage representation in memory

@@ -26,7 +26,7 @@
 #ifndef _PORT_HOST_OPENCL_MEMORY_FUN_H_
 #define _PORT_HOST_OPENCL_MEMORY_FUN_H_
 
-#include <port/cdev/memory.typ.h>
+#include "port/cdev/memory.typ.h"
 
 /**
  * @brief Memory allocator function.
@@ -83,6 +83,16 @@ port_memory_opencl_unmap(
         port_void_ptr_t memory, ///< [in] Memory to unmap.
         port_void_ptr_t properties ///< [in] Memory unmapping properties.
 );
+
+/**
+ * @brief OpenCL memory operations.
+ */
+#define PORT_MEMORY_ALLOCATOR_OPERATIONS_OPENCL { \
+    .alloc_fn = port_memory_opencl_alloc,   \
+    .free_fn = port_memory_opencl_free,     \
+    .map_fn = port_memory_opencl_map,       \
+    .unmap_fn = port_memory_opencl_unmap,   \
+}
 
 #endif // _PORT_HOST_OPENCL_MEMORY_FUN_H_
 

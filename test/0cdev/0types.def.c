@@ -1,7 +1,7 @@
-#include <test.h>
+#include "test.h"
 
-#include <port/cdev/types.typ.h>
-#include <port/cdev/types.def.h>
+#include "port/cdev/types.typ.h"
+#include "port/cdev/types.def.h"
 
 TEST(PORT_TYPE_NUM_BITS)
 {

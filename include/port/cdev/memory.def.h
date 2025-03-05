@@ -26,8 +26,8 @@
 #ifndef _PORT_CDEV_MEMORY_DEF_H_
 #define _PORT_CDEV_MEMORY_DEF_H_
 
-#include <port/cdev/bit.def.h>
-#include <port/cdev/types.def.h>
+#include "port/cdev/bit.def.h"
+#include "port/cdev/types.def.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Memory reference

@@ -26,7 +26,14 @@
 #ifndef _PORT_HOST_MEMORY_TYP_H_
 #define _PORT_HOST_MEMORY_TYP_H_
 
-#include <port/cdev/memory.typ.h>
+#include "port/cdev/memory.typ.h"
+
+#include <stdalign.h>
+
+/**
+ * @brief Alignment of largest data type supported by OpenCL.
+ */
+#define PORT_ALIGNMENT_MAX alignof(port_uint64_v16_t)
 
 /**
  * @brief Memory allocator function.

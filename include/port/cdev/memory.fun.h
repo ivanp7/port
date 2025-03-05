@@ -26,7 +26,7 @@
 #ifndef _PORT_CDEV_MEMORY_FUN_H_
 #define _PORT_CDEV_MEMORY_FUN_H_
 
-#include <port/cdev/memory.typ.h>
+#include "port/cdev/memory.typ.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Memory reference

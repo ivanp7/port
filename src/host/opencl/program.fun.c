@@ -22,8 +22,8 @@
  * @brief OpenCL program builder.
  */
 
-#include <port/host/opencl/program.fun.h>
-#include <port/host/opencl/program.typ.h>
+#include "port/host/opencl/program.fun.h"
+#include "port/host/opencl/program.typ.h"
 
 #include <stdlib.h>
 #include <string.h>

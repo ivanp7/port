@@ -26,7 +26,12 @@
 #ifndef _PORT_CDEV_RANDOM_FUN_H_
 #define _PORT_CDEV_RANDOM_FUN_H_
 
-#include <port/cdev/memory.typ.h>
+#include "port/cdev/memory.typ.h"
+
+/**
+ * @brief Maximum possible pseudorandom 32-bit integer.
+ */
+#define PORT_RANDOM_UINT32_MAX PORT_UINT32_MAX
 
 /**
  * @brief Generate next pseudorandom 32-bit unsigned integer.

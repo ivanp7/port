@@ -27,7 +27,7 @@
 #define _PORT_CDEV_CONVERT_DEF_H_
 
 #ifndef __OPENCL_C_VERSION__
-#  include <port/cdev/vector.def.h>
+#  include "port/cdev/vector.def.h"
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

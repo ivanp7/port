@@ -22,12 +22,12 @@
  * @brief Functions for processing kernel arguments on host.
  */
 
-#include <port/host/kernel.fun.h>
-#include <port/host/kernel.typ.h>
-#include <port/host/memory.fun.h>
-#include <port/host/memory.typ.h>
-#include <port/host/storage.typ.h>
-#include <port/host/cpu/memory.fun.h>
+#include "port/host/kernel.fun.h"
+#include "port/host/kernel.typ.h"
+#include "port/host/memory.fun.h"
+#include "port/host/memory.typ.h"
+#include "port/host/storage.typ.h"
+#include "port/host/cpu/memory.fun.h"
 
 #include <assert.h>
 #include <stdalign.h>
@@ -737,7 +737,6 @@ port_kargs_construct_segmented_memory_from_data_storage(
     assert(ma_cdev != NULL);
 
     // Allocate temporary memory arrays
-    port_uint8_t step = 0;
     port_bool_t result = false;
 
     port_size_t num_table_symbols = storage->num.symbols;
@@ -745,9 +744,7 @@ port_kargs_construct_segmented_memory_from_data_storage(
     port_kargs_segmented_memory_table_t *table_src = malloc(
             sizeof(*table_src) + sizeof(table_src->table_symbols[0]) * num_table_symbols);
     if (table_src == NULL)
-        goto cleanup;
-
-    step++;
+        goto finish;
 
     port_size_t num_segments = storage->num.sections;
 
@@ -757,17 +754,13 @@ port_kargs_construct_segmented_memory_from_data_storage(
         .num_table_entries = num_table_symbols,
     };
     if (sizes_src.segment_sizes == NULL)
-        goto cleanup;
-
-    step++;
+        goto free_table_src;
 
     port_kargs_segmented_memory_ptrs_t ptrs_src = {
         .segments = malloc(sizeof(*ptrs->segments) * sizes_src.num_segments),
     };
     if (ptrs_src.segments == NULL)
-        goto cleanup;
-
-    step++;
+        goto free_sizes_src_segment_sizes;
 
     // Assign temporary memory pointers and values
     table_src->root_symbol = (port_kargs_segmented_memory_symbol_t){0};
@@ -801,58 +794,55 @@ port_kargs_construct_segmented_memory_from_data_storage(
 
     // Construct segmented memory
     if (!port_kargs_alloc_copy_segmented_memory_sizes(sizes, &sizes_src, ma_host))
-        goto cleanup;
-
-    step++;
+        goto free_ptrs_src_segments;
 
     *table = port_kargs_alloc_copy_segmented_memory_table(table_src, num_table_symbols, ma_host);
     if (*table == NULL)
-        goto cleanup;
-
-    step++;
+        goto free_segmented_memory_sizes;
 
     if (!port_kargs_alloc_segmented_memory_arrays(ptrs, &sizes_src, ma_host))
-        goto cleanup;
-
-    step++;
+        goto free_segmented_memory_table;
 
     if (!port_kargs_alloc_segmented_memory_memory(ptrs, &sizes_src, ma_cdev))
-        goto cleanup;
-
-    step++;
+        goto free_segmented_memory_arrays;
 
     {
         port_memory_allocator_t ma_cdev_src = {.operations = {
             .map_fn = port_memory_cpu_map, .unmap_fn = port_memory_cpu_unmap}};
 
         if (!port_kargs_copy_segmented_memory_memory(ptrs, &ptrs_src, &sizes_src, ma_cdev, &ma_cdev_src))
-            goto cleanup;
+            goto free_segmented_memory_memory;
     }
 
     if (!port_kargs_write_segmented_memory_table(ptrs, &sizes_src, table_src, ma_cdev))
-        goto cleanup;
+        goto free_segmented_memory_memory;
 
-    step = 3; // don't free output resources
     result = true;
+    goto free_ptrs_src_segments; // skip freeing output resources
 
     // Clean up resources
-cleanup:
-    if (step >= 7)
-        port_kargs_free_segmented_memory_memory(ptrs, &sizes_src, ma_cdev);
-    if (step >= 6)
-        port_kargs_free_segmented_memory_arrays(ptrs, &sizes_src, ma_host);
-    if (step >= 5)
-        port_kargs_free_segmented_memory_table(*table, ma_host);
-    if (step >= 4)
-        port_kargs_free_segmented_memory_sizes(sizes, ma_host);
+free_segmented_memory_memory:
+    port_kargs_free_segmented_memory_memory(ptrs, &sizes_src, ma_cdev);
 
-    if (step >= 3)
-        free(ptrs_src.segments);
-    if (step >= 2)
-        free(sizes_src.segment_sizes);
-    if (step >= 1)
-        free(table_src);
+free_segmented_memory_arrays:
+    port_kargs_free_segmented_memory_arrays(ptrs, &sizes_src, ma_host);
 
+free_segmented_memory_table:
+    port_kargs_free_segmented_memory_table(*table, ma_host);
+
+free_segmented_memory_sizes:
+    port_kargs_free_segmented_memory_sizes(sizes, ma_host);
+
+free_ptrs_src_segments:
+    free(ptrs_src.segments);
+
+free_sizes_src_segment_sizes:
+    free(sizes_src.segment_sizes);
+
+free_table_src:
+    free(table_src);
+
+finish:
     return result;
 }
 

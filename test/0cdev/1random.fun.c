@@ -1,9 +1,9 @@
-#include <test.h>
+#include "test.h"
 
-#include <port/cdev/random.fun.h>
-#include <port/cdev/random.def.h>
-#include <port/cdev/types.def.h>
-#include <port/cdev/vector.def.h>
+#include "port/cdev/random.fun.h"
+#include "port/cdev/random.def.h"
+#include "port/cdev/types.def.h"
+#include "port/cdev/vector.def.h"
 
 #include <tgmath.h>
 

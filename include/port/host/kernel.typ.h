@@ -26,8 +26,8 @@
 #ifndef _PORT_HOST_KERNEL_TYP_H_
 #define _PORT_HOST_KERNEL_TYP_H_
 
-#include <port/cdev/memory.typ.h>
-#include <port/cdev/work.typ.h>
+#include "port/cdev/memory.typ.h"
+#include "port/cdev/work.typ.h"
 
 struct port_memory_allocator;
 struct port_memory_allocator_properties;

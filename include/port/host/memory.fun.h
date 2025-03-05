@@ -26,7 +26,7 @@
 #ifndef _PORT_HOST_MEMORY_FUN_H_
 #define _PORT_HOST_MEMORY_FUN_H_
 
-#include <port/cdev/memory.typ.h>
+#include "port/cdev/memory.typ.h"
 
 struct port_memory_allocator;
 

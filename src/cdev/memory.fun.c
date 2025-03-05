@@ -22,14 +22,14 @@
  * @brief Operations on memory.
  */
 
-#include <port/cdev/memory.fun.h>
-#include <port/cdev/memory.def.h>
-#include <port/cdev/bit.def.h>
-#include <port/cdev/types.def.h>
-#include <port/cdev/vector.def.h>
+#include "port/cdev/memory.fun.h"
+#include "port/cdev/memory.def.h"
+#include "port/cdev/bit.def.h"
+#include "port/cdev/types.def.h"
+#include "port/cdev/vector.def.h"
 
 #ifndef __OPENCL_C_VERSION__
-#  include <port/cdev/float.fun.h>
+#  include "port/cdev/float.fun.h"
 #  include <assert.h>
 #  include <string.h>
 #endif

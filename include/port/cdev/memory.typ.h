@@ -26,8 +26,8 @@
 #ifndef _PORT_CDEV_MEMORY_TYP_H_
 #define _PORT_CDEV_MEMORY_TYP_H_
 
-#include <port/cdev/types.typ.h>
-#include <port/cdev/keywords.def.h>
+#include "port/cdev/types.typ.h"
+#include "port/cdev/keywords.def.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Memory reference

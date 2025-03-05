@@ -22,9 +22,9 @@
  * @brief Functions for memory operations.
  */
 
-#include <port/host/opencl/memory.fun.h>
-#include <port/host/opencl/memory.typ.h>
-#include <port/host/memory.def.h>
+#include "port/host/opencl/memory.fun.h"
+#include "port/host/opencl/memory.typ.h"
+#include "port/host/memory.def.h"
 
 #include <CL/cl.h>
 

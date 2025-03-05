@@ -65,5 +65,11 @@ port_opencl_build_program(
         cl_int *error ///< [out] Address to put error code into, or NULL.
 );
 
+#define PORT_OPENCL_CFLAGS_DEFAULT "-cl-std=CL3.0" ///< Default OpenCL compiler flags.
+#define PORT_OPENCL_LFLAGS_DEFAULT ""              ///< Default OpenCL linker flags.
+
+#define PORT_OPENCL_CFLAGS_FEATURE_DEFAULT_INTEGER_64 "-D PORT_FEATURE_DEFAULT_INTEGER_64" ///< Set default integer type size to 64 bits.
+#define PORT_OPENCL_CFLAGS_FEATURE_DEFAULT_FLOAT_64   "-D PORT_FEATURE_DEFAULT_FLOAT_64"   ///< Set default floating-point type size to 64 bits.
+
 #endif // _PORT_HOST_OPENCL_PROGRAM_FUN_H_
 

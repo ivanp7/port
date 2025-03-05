@@ -26,7 +26,7 @@
 #ifndef _PORT_HOST_STORAGE_FUN_H_
 #define _PORT_HOST_STORAGE_FUN_H_
 
-#include <port/cdev/types.typ.h>
+#include "port/cdev/types.typ.h"
 
 #include <stdio.h>
 

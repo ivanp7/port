@@ -26,9 +26,9 @@
 #ifndef _PORT_HOST_VTABLE_TYP_H_
 #define _PORT_HOST_VTABLE_TYP_H_
 
-#include <port/host/kernel.typ.h>
-#include <port/host/cpu/pfunc.typ.h>
-#include <port/host/opencl/kargs_setter.typ.h>
+#include "port/host/kernel.typ.h"
+#include "port/host/cpu/pfunc.typ.h"
+#include "port/host/opencl/kargs_setter.typ.h"
 
 struct port_opencl_program_source;
 
@@ -51,6 +51,15 @@ typedef struct port_vtable_kernel_description {
         cl_ulong arg_mask_out; ///< Mask of kernel output arguments.
     } opencl; ///< Kernel description for OpenCL.
 } port_vtable_kernel_description_t;
+
+/**
+ * @brief Magic number - value uniquely identifying Port vtable structure.
+ */
+#define PORT_VTABLE_MAGIC 0xBEA981E1
+/**
+ * @brief Version - value determining vtable version and compatibility.
+ */
+#define PORT_VTABLE_VERSION 20241030
 
 /**
  * @brief Vtable structure for libraries using Port.

@@ -1,7 +1,7 @@
-#include <test.h>
+#include "test.h"
 
-#include <port/host/memory.fun.h>
-#include <port/host/memory.typ.h>
+#include "port/host/memory.fun.h"
+#include "port/host/memory.typ.h"
 
 struct memory_operation_properties {
     port_size_t bytes_mapped;
