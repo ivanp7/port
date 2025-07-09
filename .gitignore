@@ -3,7 +3,6 @@ _*
 build.ninja
 .ninja*
 
-*.pc
 build
 gmon.out
 .gdb_history
