@@ -3,9 +3,6 @@
 This library provides:
 
 * memory model with references that are data-intrinsic alternatives to pointers;
-* data storage format that is convenient for the proposed memory model;
-* functions for memory allocation/deallocation, mapping/unmapping;
-* OpenCL program builder from embedded code;
 * portable type definitions for general-purpose scalar and vector types that are the part of OpenCL API;
 * portable macro definitions for bit operations;
 * portable macro definitions for operations on vector types;
@@ -14,19 +11,12 @@ This library provides:
 * portable pseudorandom number generator;
 * other!
 
-## Code organization
-
-The code is split into two domains, `cdev` and `host`.
-
-`cdev` (from 'compute device') is for code that is portable between CPU and OpenCL, i.e.
+The code is portable between CPU and OpenCL, i.e.
 it can be compiled using conventional compilers like gcc/clang and executed on CPU, but
 it can also be fed to OpenCL program building functions and executed on other types of devices such as GPU.
 The compute device code requires some amount of care from a programmer not to break the portability.
 One must rely on the limited set of features that is available in both C and OpenCL C.
 As C23 introduces a lot of changes, the latest C standard OpenCL C is somewhat compatible with is C17.
-
-`host` is for the host (CPU) only, it contains code for initialization and other meta purposes.
-There is no restrictions imposed on the host code.
 
 ## Memory model
 
@@ -101,13 +91,10 @@ target_ptr = memory_table[index] + offset;
 
 ## How to build
 
-The project is built using the Ninja build system.
-A `build.ninja` file is generated using `configure` script.
-To see the possible build configuration options, run `configure` without arguments.
-To generate `build.ninja`, run `configure <options>`.
-To build, run `ninja`.
-
-The configuration script also generates `port.pc` (pkg-config file for `libport`).
+0. go to the repository root directory;
+1. (optional) export environmental variables to control behavior of `configure.py` (see accepted environmental variables in the script);
+2. run `configure.py` to generate `build.ninja`;
+3. run `ninja` to build the project.
 
 ## Build dependencies
 
@@ -118,8 +105,6 @@ The configuration script also generates `port.pc` (pkg-config file for `libport`
 ## Dependencies
 
 * OpenCL
-
-* [Station](https://github.com/ivanp7/station) (for applications from `app/`)
 
 ## Documentation
 
