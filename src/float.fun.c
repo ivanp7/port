@@ -96,7 +96,7 @@ port_convert_float16_to_float32_v2(
     return vloada_half2(0, (half*)&value);
 #else
     port_float32_v2_t v;
-    PORT_V2_FUNC1(v, port_convert_float16_to_float32, value);
+    PORT_V2_FUNC1(v, =, port_convert_float16_to_float32, value);
     return v;
 #endif
 }
@@ -109,7 +109,7 @@ port_convert_float16_to_float32_v3(
     return vloada_half3(0, (half*)&value);
 #else
     port_float32_v3_t v;
-    PORT_V3_FUNC1(v, port_convert_float16_to_float32, value);
+    PORT_V3_FUNC1(v, =, port_convert_float16_to_float32, value);
     return v;
 #endif
 }
@@ -122,7 +122,7 @@ port_convert_float16_to_float32_v4(
     return vloada_half4(0, (half*)&value);
 #else
     port_float32_v4_t v;
-    PORT_V4_FUNC1(v, port_convert_float16_to_float32, value);
+    PORT_V4_FUNC1(v, =, port_convert_float16_to_float32, value);
     return v;
 #endif
 }
@@ -135,7 +135,7 @@ port_convert_float16_to_float32_v8(
     return vloada_half8(0, (half*)&value);
 #else
     port_float32_v8_t v;
-    PORT_V8_FUNC1(v, port_convert_float16_to_float32, value);
+    PORT_V8_FUNC1(v, =, port_convert_float16_to_float32, value);
     return v;
 #endif
 }
@@ -148,7 +148,7 @@ port_convert_float16_to_float32_v16(
     return vloada_half16(0, (half*)&value);
 #else
     port_float32_v16_t v;
-    PORT_V16_FUNC1(v, port_convert_float16_to_float32, value);
+    PORT_V16_FUNC1(v, =, port_convert_float16_to_float32, value);
     return v;
 #endif
 }
@@ -250,7 +250,7 @@ port_convert_float32_to_float16_v2(
 #ifdef __OPENCL_C_VERSION__
     vstorea_half2_rte(value, 0, (half*)&v);
 #else
-    PORT_V2_FUNC1(v, port_convert_float32_to_float16, value);
+    PORT_V2_FUNC1(v, =, port_convert_float32_to_float16, value);
 #endif
     return v;
 }
@@ -263,7 +263,7 @@ port_convert_float32_to_float16_v3(
 #ifdef __OPENCL_C_VERSION__
     vstorea_half3_rte(value, 0, (half*)&v);
 #else
-    PORT_V3_FUNC1(v, port_convert_float32_to_float16, value);
+    PORT_V3_FUNC1(v, =, port_convert_float32_to_float16, value);
 #endif
     return v;
 }
@@ -276,7 +276,7 @@ port_convert_float32_to_float16_v4(
 #ifdef __OPENCL_C_VERSION__
     vstorea_half4_rte(value, 0, (half*)&v);
 #else
-    PORT_V4_FUNC1(v, port_convert_float32_to_float16, value);
+    PORT_V4_FUNC1(v, =, port_convert_float32_to_float16, value);
 #endif
     return v;
 }
@@ -289,7 +289,7 @@ port_convert_float32_to_float16_v8(
 #ifdef __OPENCL_C_VERSION__
     vstorea_half8_rte(value, 0, (half*)&v);
 #else
-    PORT_V8_FUNC1(v, port_convert_float32_to_float16, value);
+    PORT_V8_FUNC1(v, =, port_convert_float32_to_float16, value);
 #endif
     return v;
 }
@@ -302,7 +302,7 @@ port_convert_float32_to_float16_v16(
 #ifdef __OPENCL_C_VERSION__
     vstorea_half16_rte(value, 0, (half*)&v);
 #else
-    PORT_V16_FUNC1(v, port_convert_float32_to_float16, value);
+    PORT_V16_FUNC1(v, =, port_convert_float32_to_float16, value);
 #endif
     return v;
 }

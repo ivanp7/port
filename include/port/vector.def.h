@@ -286,7 +286,7 @@
  * @brief 3-vector cyclic element left shift (x <- y, y <- z, z <- x).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V3_LSHIFT(v, ignored) do { \
+#  define PORT_V3_LSHIFT(v, type) do { \
     (v).xyz = (v).yzx;  \
 } while(0)
 #else
@@ -302,7 +302,7 @@
  * @brief 3-vector cyclic element right shift (x -> y, y -> z, z -> x).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V3_RSHIFT(v, ignored) do { \
+#  define PORT_V3_RSHIFT(v, type) do { \
     (v).xyz = (v).zxy;  \
 } while(0)
 #else
@@ -319,82 +319,82 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief 2-vector binary operator (r = a OPERATOR b).
+ * @brief 2-vector binary operator (r ASSIGNMENT a OPERATOR b).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V2_OP2(r, a, op, b) do { \
-    (r).xy = (a).xy op (b).xy; \
+#  define PORT_V2_OP2(r, assign_op, a, op, b) do { \
+    (r).xy assign_op (a).xy op (b).xy; \
 } while(0)
 #else
-#  define PORT_V2_OP2(r, a, op, b) do { \
-    (r).x = (a).x op (b).x; \
-    (r).y = (a).y op (b).y; \
+#  define PORT_V2_OP2(r, assign_op, a, op, b) do { \
+    (r).x assign_op (a).x op (b).x; \
+    (r).y assign_op (a).y op (b).y; \
 } while(0)
 #endif
 
 /**
- * @brief 3-vector binary operator (r = a OPERATOR b).
+ * @brief 3-vector binary operator (r ASSIGNMENT a OPERATOR b).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V3_OP2(r, a, op, b) do { \
-    (r).xyz = (a).xyz op (b).xyz; \
+#  define PORT_V3_OP2(r, assign_op, a, op, b) do { \
+    (r).xyz assign_op (a).xyz op (b).xyz; \
 } while(0)
 #else
-#  define PORT_V3_OP2(r, a, op, b) do { \
-    PORT_V2_OP2((r), (a), op, (b)); \
-    (r).z = (a).z op (b).z;         \
+#  define PORT_V3_OP2(r, assign_op, a, op, b) do { \
+    PORT_V2_OP2((r), assign_op, (a), op, (b));  \
+    (r).z assign_op (a).z op (b).z;             \
 } while(0)
 #endif
 
 /**
- * @brief 4-vector binary operator (r = a OPERATOR b).
+ * @brief 4-vector binary operator (r ASSIGNMENT a OPERATOR b).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V4_OP2(r, a, op, b) do { \
-    (r).xyzw = (a).xyzw op (b).xyzw; \
+#  define PORT_V4_OP2(r, assign_op, a, op, b) do { \
+    (r).xyzw assign_op (a).xyzw op (b).xyzw; \
 } while(0)
 #else
-#  define PORT_V4_OP2(r, a, op, b) do { \
-    PORT_V3_OP2((r), (a), op, (b)); \
-    (r).w = (a).w op (b).w;         \
+#  define PORT_V4_OP2(r, assign_op, a, op, b) do { \
+    PORT_V3_OP2((r), assign_op, (a), op, (b));  \
+    (r).w assign_op (a).w op (b).w;             \
 } while(0)
 #endif
 
 /**
- * @brief 8-vector binary operator (r = a OPERATOR b).
+ * @brief 8-vector binary operator (r ASSIGNMENT a OPERATOR b).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V8_OP2(r, a, op, b) do { \
-    (r).s01234567 = (a).s01234567 op (b).s01234567; \
+#  define PORT_V8_OP2(r, assign_op, a, op, b) do { \
+    (r).s01234567 assign_op (a).s01234567 op (b).s01234567; \
 } while(0)
 #else
-#  define PORT_V8_OP2(r, a, op, b) do { \
-    PORT_V4_OP2((r), (a), op, (b)); \
-    (r).s4 = (a).s4 op (b).s4;      \
-    (r).s5 = (a).s5 op (b).s5;      \
-    (r).s6 = (a).s6 op (b).s6;      \
-    (r).s7 = (a).s7 op (b).s7;      \
+#  define PORT_V8_OP2(r, assign_op, a, op, b) do { \
+    PORT_V4_OP2((r), assign_op, (a), op, (b));  \
+    (r).s4 assign_op (a).s4 op (b).s4;          \
+    (r).s5 assign_op (a).s5 op (b).s5;          \
+    (r).s6 assign_op (a).s6 op (b).s6;          \
+    (r).s7 assign_op (a).s7 op (b).s7;          \
 } while(0)
 #endif
 
 /**
- * @brief 16-vector binary operator (r = a OPERATOR b).
+ * @brief 16-vector binary operator (r ASSIGNMENT a OPERATOR b).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V16_OP2(r, a, op, b) do { \
-    (r).s0123456789ABCDEF = (a).s0123456789ABCDEF op (b).s0123456789ABCDEF; \
+#  define PORT_V16_OP2(r, assign_op, a, op, b) do { \
+    (r).s0123456789ABCDEF assign_op (a).s0123456789ABCDEF op (b).s0123456789ABCDEF; \
 } while(0)
 #else
-#  define PORT_V16_OP2(r, a, op, b) do { \
-    PORT_V8_OP2((r), (a), op, (b)); \
-    (r).s8 = (a).s8 op (b).s8;      \
-    (r).s9 = (a).s9 op (b).s9;      \
-    (r).sA = (a).sA op (b).sA;      \
-    (r).sB = (a).sB op (b).sB;      \
-    (r).sC = (a).sC op (b).sC;      \
-    (r).sD = (a).sD op (b).sD;      \
-    (r).sE = (a).sE op (b).sE;      \
-    (r).sF = (a).sF op (b).sF;      \
+#  define PORT_V16_OP2(r, assign_op, a, op, b) do { \
+    PORT_V8_OP2((r), assign_op, (a), op, (b));  \
+    (r).s8 assign_op (a).s8 op (b).s8;          \
+    (r).s9 assign_op (a).s9 op (b).s9;          \
+    (r).sA assign_op (a).sA op (b).sA;          \
+    (r).sB assign_op (a).sB op (b).sB;          \
+    (r).sC assign_op (a).sC op (b).sC;          \
+    (r).sD assign_op (a).sD op (b).sD;          \
+    (r).sE assign_op (a).sE op (b).sE;          \
+    (r).sF assign_op (a).sF op (b).sF;          \
 } while(0)
 #endif
 
@@ -403,82 +403,82 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief 2-vector binary operator (r = a OPERATOR b, b is scalar).
+ * @brief 2-vector binary operator (r ASSIGNMENT a OPERATOR b, b is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V2_OP2_VS(r, a, op, b) do { \
-    (r).xy = (a).xy op (b); \
+#  define PORT_V2_OP2_VS(r, assign_op, a, op, b) do { \
+    (r).xy assign_op (a).xy op (b); \
 } while(0)
 #else
-#  define PORT_V2_OP2_VS(r, a, op, b) do { \
-    (r).x = (a).x op (b); \
-    (r).y = (a).y op (b); \
+#  define PORT_V2_OP2_VS(r, assign_op, a, op, b) do { \
+    (r).x assign_op (a).x op (b); \
+    (r).y assign_op (a).y op (b); \
 } while(0)
 #endif
 
 /**
- * @brief 3-vector binary operator (r = a OPERATOR b, b is scalar).
+ * @brief 3-vector binary operator (r ASSIGNMENT a OPERATOR b, b is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V3_OP2_VS(r, a, op, b) do { \
-    (r).xyz = (a).xyz op (b); \
+#  define PORT_V3_OP2_VS(r, assign_op, a, op, b) do { \
+    (r).xyz assign_op (a).xyz op (b); \
 } while(0)
 #else
-#  define PORT_V3_OP2_VS(r, a, op, b) do { \
-    PORT_V2_OP2_VS((r), (a), op, (b));  \
-    (r).z = (a).z op (b);               \
+#  define PORT_V3_OP2_VS(r, assign_op, a, op, b) do { \
+    PORT_V2_OP2_VS((r), assign_op, (a), op, (b));   \
+    (r).z assign_op (a).z op (b);                   \
 } while(0)
 #endif
 
 /**
- * @brief 4-vector binary operator (r = a OPERATOR b, b is scalar).
+ * @brief 4-vector binary operator (r ASSIGNMENT a OPERATOR b, b is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V4_OP2_VS(r, a, op, b) do { \
-    (r).xyzw = (a).xyzw op (b); \
+#  define PORT_V4_OP2_VS(r, assign_op, a, op, b) do { \
+    (r).xyzw assign_op (a).xyzw op (b); \
 } while(0)
 #else
-#  define PORT_V4_OP2_VS(r, a, op, b) do { \
-    PORT_V3_OP2_VS((r), (a), op, (b));  \
-    (r).w = (a).w op (b);               \
+#  define PORT_V4_OP2_VS(r, assign_op, a, op, b) do { \
+    PORT_V3_OP2_VS((r), assign_op, (a), op, (b));   \
+    (r).w assign_op (a).w op (b);                   \
 } while(0)
 #endif
 
 /**
- * @brief 8-vector binary operator (r = a OPERATOR b, b is scalar).
+ * @brief 8-vector binary operator (r ASSIGNMENT a OPERATOR b, b is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V8_OP2_VS(r, a, op, b) do { \
-    (r).s01234567 = (a).s01234567 op (b); \
+#  define PORT_V8_OP2_VS(r, assign_op, a, op, b) do { \
+    (r).s01234567 assign_op (a).s01234567 op (b); \
 } while(0)
 #else
-#  define PORT_V8_OP2_VS(r, a, op, b) do { \
-    PORT_V4_OP2_VS((r), (a), op, (b));  \
-    (r).s4 = (a).s4 op (b);             \
-    (r).s5 = (a).s5 op (b);             \
-    (r).s6 = (a).s6 op (b);             \
-    (r).s7 = (a).s7 op (b);             \
+#  define PORT_V8_OP2_VS(r, assign_op, a, op, b) do { \
+    PORT_V4_OP2_VS((r), assign_op, (a), op, (b));   \
+    (r).s4 assign_op (a).s4 op (b);                 \
+    (r).s5 assign_op (a).s5 op (b);                 \
+    (r).s6 assign_op (a).s6 op (b);                 \
+    (r).s7 assign_op (a).s7 op (b);                 \
 } while(0)
 #endif
 
 /**
- * @brief 16-vector binary operator (r = a OPERATOR b, b is scalar).
+ * @brief 16-vector binary operator (r ASSIGNMENT a OPERATOR b, b is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V16_OP2_VS(r, a, op, b) do { \
-    (r).s0123456789ABCDEF = (a).s0123456789ABCDEF op (b); \
+#  define PORT_V16_OP2_VS(r, assign_op, a, op, b) do { \
+    (r).s0123456789ABCDEF assign_op (a).s0123456789ABCDEF op (b); \
 } while(0)
 #else
-#  define PORT_V16_OP2_VS(r, a, op, b) do { \
-    PORT_V8_OP2_VS((r), (a), op, (b));  \
-    (r).s8 = (a).s8 op (b);             \
-    (r).s9 = (a).s9 op (b);             \
-    (r).sA = (a).sA op (b);             \
-    (r).sB = (a).sB op (b);             \
-    (r).sC = (a).sC op (b);             \
-    (r).sD = (a).sD op (b);             \
-    (r).sE = (a).sE op (b);             \
-    (r).sF = (a).sF op (b);             \
+#  define PORT_V16_OP2_VS(r, assign_op, a, op, b) do { \
+    PORT_V8_OP2_VS((r), assign_op, (a), op, (b));   \
+    (r).s8 assign_op (a).s8 op (b);                 \
+    (r).s9 assign_op (a).s9 op (b);                 \
+    (r).sA assign_op (a).sA op (b);                 \
+    (r).sB assign_op (a).sB op (b);                 \
+    (r).sC assign_op (a).sC op (b);                 \
+    (r).sD assign_op (a).sD op (b);                 \
+    (r).sE assign_op (a).sE op (b);                 \
+    (r).sF assign_op (a).sF op (b);                 \
 } while(0)
 #endif
 
@@ -487,82 +487,82 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief 2-vector binary operator (r = a OPERATOR b, a is scalar).
+ * @brief 2-vector binary operator (r ASSIGNMENT a OPERATOR b, a is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V2_OP2_SV(r, a, op, b) do { \
-    (r).xy = (a) op (b).xy; \
+#  define PORT_V2_OP2_SV(r, assign_op, a, op, b) do { \
+    (r).xy assign_op (a) op (b).xy; \
 } while(0)
 #else
-#  define PORT_V2_OP2_SV(r, a, op, b) do { \
-    (r).x = (a) op (b).x; \
-    (r).y = (a) op (b).y; \
+#  define PORT_V2_OP2_SV(r, assign_op, a, op, b) do { \
+    (r).x assign_op (a) op (b).x; \
+    (r).y assign_op (a) op (b).y; \
 } while(0)
 #endif
 
 /**
- * @brief 3-vector binary operator (r = a OPERATOR b, a is scalar).
+ * @brief 3-vector binary operator (r ASSIGNMENT a OPERATOR b, a is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V3_OP2_SV(r, a, op, b) do { \
-    (r).xyz = (a) op (b).xyz; \
+#  define PORT_V3_OP2_SV(r, assign_op, a, op, b) do { \
+    (r).xyz assign_op (a) op (b).xyz; \
 } while(0)
 #else
-#  define PORT_V3_OP2_SV(r, a, op, b) do { \
-    PORT_V2_OP2_SV((r), (a), op, (b));  \
-    (r).z = (a) op (b).z;               \
+#  define PORT_V3_OP2_SV(r, assign_op, a, op, b) do { \
+    PORT_V2_OP2_SV((r), assign_op, (a), op, (b));   \
+    (r).z assign_op (a) op (b).z;                   \
 } while(0)
 #endif
 
 /**
- * @brief 4-vector binary operator (r = a OPERATOR b, a is scalar).
+ * @brief 4-vector binary operator (r ASSIGNMENT a OPERATOR b, a is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V4_OP2_SV(r, a, op, b) do { \
-    (r).xyzw = (a) op (b).xyzw; \
+#  define PORT_V4_OP2_SV(r, assign_op, a, op, b) do { \
+    (r).xyzw assign_op (a) op (b).xyzw; \
 } while(0)
 #else
-#  define PORT_V4_OP2_SV(r, a, op, b) do { \
-    PORT_V3_OP2_SV((r), (a), op, (b));  \
-    (r).w = (a) op (b).w;               \
+#  define PORT_V4_OP2_SV(r, assign_op, a, op, b) do { \
+    PORT_V3_OP2_SV((r), assign_op, (a), op, (b));   \
+    (r).w assign_op (a) op (b).w;                   \
 } while(0)
 #endif
 
 /**
- * @brief 8-vector binary operator (r = a OPERATOR b, a is scalar).
+ * @brief 8-vector binary operator (r ASSIGNMENT a OPERATOR b, a is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V8_OP2_SV(r, a, op, b) do { \
-    (r).s01234567 = (a) op (b).s01234567; \
+#  define PORT_V8_OP2_SV(r, assign_op, a, op, b) do { \
+    (r).s01234567 assign_op (a) op (b).s01234567; \
 } while(0)
 #else
-#  define PORT_V8_OP2_SV(r, a, op, b) do { \
-    PORT_V4_OP2_SV((r), (a), op, (b));  \
-    (r).s4 = (a) op (b).s4;             \
-    (r).s5 = (a) op (b).s5;             \
-    (r).s6 = (a) op (b).s6;             \
-    (r).s7 = (a) op (b).s7;             \
+#  define PORT_V8_OP2_SV(r, assign_op, a, op, b) do { \
+    PORT_V4_OP2_SV((r), assign_op, (a), op, (b));   \
+    (r).s4 assign_op (a) op (b).s4;                 \
+    (r).s5 assign_op (a) op (b).s5;                 \
+    (r).s6 assign_op (a) op (b).s6;                 \
+    (r).s7 assign_op (a) op (b).s7;                 \
 } while(0)
 #endif
 
 /**
- * @brief 16-vector binary operator (r = a OPERATOR b, a is scalar).
+ * @brief 16-vector binary operator (r ASSIGNMENT a OPERATOR b, a is scalar).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V16_OP2_SV(r, a, op, b) do { \
-    (r).s0123456789ABCDEF = (a) op (b).s0123456789ABCDEF; \
+#  define PORT_V16_OP2_SV(r, assign_op, a, op, b) do { \
+    (r).s0123456789ABCDEF assign_op (a) op (b).s0123456789ABCDEF; \
 } while(0)
 #else
-#  define PORT_V16_OP2_SV(r, a, op, b) do { \
-    PORT_V8_OP2_SV((r), (a), op, (b));  \
-    (r).s8 = (a) op (b).s8;             \
-    (r).s9 = (a) op (b).s9;             \
-    (r).sA = (a) op (b).sA;             \
-    (r).sB = (a) op (b).sB;             \
-    (r).sC = (a) op (b).sC;             \
-    (r).sD = (a) op (b).sD;             \
-    (r).sE = (a) op (b).sE;             \
-    (r).sF = (a) op (b).sF;             \
+#  define PORT_V16_OP2_SV(r, assign_op, a, op, b) do { \
+    PORT_V8_OP2_SV((r), assign_op, (a), op, (b));   \
+    (r).s8 assign_op (a) op (b).s8;                 \
+    (r).s9 assign_op (a) op (b).s9;                 \
+    (r).sA assign_op (a) op (b).sA;                 \
+    (r).sB assign_op (a) op (b).sB;                 \
+    (r).sC assign_op (a) op (b).sC;                 \
+    (r).sD assign_op (a) op (b).sD;                 \
+    (r).sE assign_op (a) op (b).sE;                 \
+    (r).sF assign_op (a) op (b).sF;                 \
 } while(0)
 #endif
 
@@ -571,82 +571,82 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief 2-vector unary operator (r = OPERATOR a).
+ * @brief 2-vector unary operator (r ASSIGNMENT OPERATOR a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V2_OP1(r, op, a) do { \
-    (r).xy = op((a).xy); \
+#  define PORT_V2_OP1(r, assign_op, op, a) do { \
+    (r).xy assign_op op((a).xy); \
 } while(0)
 #else
-#  define PORT_V2_OP1(r, op, a) do { \
-    (r).x = op((a).x); \
-    (r).y = op((a).y); \
+#  define PORT_V2_OP1(r, assign_op, op, a) do { \
+    (r).x assign_op op((a).x); \
+    (r).y assign_op op((a).y); \
 } while(0)
 #endif
 
 /**
- * @brief 3-vector unary operator (r = OPERATOR a).
+ * @brief 3-vector unary operator (r ASSIGNMENT OPERATOR a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V3_OP1(r, op, a) do { \
-    (r).xyz = op((a).xyz); \
+#  define PORT_V3_OP1(r, assign_op, op, a) do { \
+    (r).xyz assign_op op((a).xyz); \
 } while(0)
 #else
-#  define PORT_V3_OP1(r, op, a) do { \
-    PORT_V2_OP1((r), op, (a));  \
-    (r).z = op((a).z);          \
+#  define PORT_V3_OP1(r, assign_op, op, a) do { \
+    PORT_V2_OP1((r), assign_op, op, (a));   \
+    (r).z assign_op op((a).z);              \
 } while(0)
 #endif
 
 /**
- * @brief 4-vector unary operator (r = OPERATOR a).
+ * @brief 4-vector unary operator (r ASSIGNMENT OPERATOR a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V4_OP1(r, op, a) do { \
-    (r).xyzw = op((a).xyzw); \
+#  define PORT_V4_OP1(r, assign_op, op, a) do { \
+    (r).xyzw assign_op op((a).xyzw); \
 } while(0)
 #else
-#  define PORT_V4_OP1(r, op, a) do { \
-    PORT_V3_OP1((r), op, (a));  \
-    (r).w = op((a).w);          \
+#  define PORT_V4_OP1(r, assign_op, op, a) do { \
+    PORT_V3_OP1((r), assign_op, op, (a));   \
+    (r).w assign_op op((a).w);              \
 } while(0)
 #endif
 
 /**
- * @brief 8-vector unary operator (r = OPERATOR a).
+ * @brief 8-vector unary operator (r ASSIGNMENT OPERATOR a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V8_OP1(r, op, a) do { \
-    (r).s01234567 = op((a).s01234567); \
+#  define PORT_V8_OP1(r, assign_op, op, a) do { \
+    (r).s01234567 assign_op op((a).s01234567); \
 } while(0)
 #else
-#  define PORT_V8_OP1(r, op, a) do { \
-    PORT_V4_OP1((r), op, (a));  \
-    (r).s4 = op((a).s4);        \
-    (r).s5 = op((a).s5);        \
-    (r).s6 = op((a).s6);        \
-    (r).s7 = op((a).s7);        \
+#  define PORT_V8_OP1(r, assign_op, op, a) do { \
+    PORT_V4_OP1((r), assign_op, op, (a));   \
+    (r).s4 assign_op op((a).s4);            \
+    (r).s5 assign_op op((a).s5);            \
+    (r).s6 assign_op op((a).s6);            \
+    (r).s7 assign_op op((a).s7);            \
 } while(0)
 #endif
 
 /**
- * @brief 16-vector unary operator (r = OPERATOR a).
+ * @brief 16-vector unary operator (r ASSIGNMENT OPERATOR a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V16_OP1(r, op, a) do { \
-    (r).s0123456789ABCDEF = op((a).s0123456789ABCDEF); \
+#  define PORT_V16_OP1(r, assign_op, op, a) do { \
+    (r).s0123456789ABCDEF assign_op op((a).s0123456789ABCDEF); \
 } while(0)
 #else
-#  define PORT_V16_OP1(r, op, a) do { \
-    PORT_V8_OP1((r), op, (a));  \
-    (r).s8 = op((a).s8);        \
-    (r).s9 = op((a).s9);        \
-    (r).sA = op((a).sA);        \
-    (r).sB = op((a).sB);        \
-    (r).sC = op((a).sC);        \
-    (r).sD = op((a).sD);        \
-    (r).sE = op((a).sE);        \
-    (r).sF = op((a).sF);        \
+#  define PORT_V16_OP1(r, assign_op, op, a) do { \
+    PORT_V8_OP1((r), assign_op, op, (a));   \
+    (r).s8 assign_op op((a).s8);            \
+    (r).s9 assign_op op((a).s9);            \
+    (r).sA assign_op op((a).sA);            \
+    (r).sB assign_op op((a).sB);            \
+    (r).sC assign_op op((a).sC);            \
+    (r).sD assign_op op((a).sD);            \
+    (r).sE assign_op op((a).sE);            \
+    (r).sF assign_op op((a).sF);            \
 } while(0)
 #endif
 
@@ -655,82 +655,82 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief 2-vector assignment.
+ * @brief 2-vector assignment (r ASSIGNMENT a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V2_ASSIGN(r, a) do { \
-    (r).xy = (a).xy; \
+#  define PORT_V2_ASSIGN(r, assign_op, a) do { \
+    (r).xy assign_op (a).xy; \
 } while(0)
 #else
-#  define PORT_V2_ASSIGN(r, a) do { \
-    (r).x = (a).x; \
-    (r).y = (a).y; \
+#  define PORT_V2_ASSIGN(r, assign_op, a) do { \
+    (r).x assign_op (a).x; \
+    (r).y assign_op (a).y; \
 } while(0)
 #endif
 
 /**
- * @brief 3-vector assignment.
+ * @brief 3-vector assignment (r ASSIGNMENT a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V3_ASSIGN(r, a) do { \
-    (r).xyz = (a).xyz; \
+#  define PORT_V3_ASSIGN(r, assign_op, a) do { \
+    (r).xyz assign_op (a).xyz; \
 } while(0)
 #else
-#  define PORT_V3_ASSIGN(r, a) do { \
-    PORT_V2_ASSIGN((r), (a));   \
-    (r).z = (a).z;              \
+#  define PORT_V3_ASSIGN(r, assign_op, a) do { \
+    PORT_V2_ASSIGN((r), assign_op, (a));    \
+    (r).z assign_op (a).z;                  \
 } while(0)
 #endif
 
 /**
- * @brief 4-vector assignment.
+ * @brief 4-vector assignment (r ASSIGNMENT a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V4_ASSIGN(r, a) do { \
-    (r).xyzw = (a).xyzw; \
+#  define PORT_V4_ASSIGN(r, assign_op, a) do { \
+    (r).xyzw assign_op (a).xyzw; \
 } while(0)
 #else
-#  define PORT_V4_ASSIGN(r, a) do { \
-    PORT_V3_ASSIGN((r), (a));   \
-    (r).w = (a).w;              \
+#  define PORT_V4_ASSIGN(r, assign_op, a) do { \
+    PORT_V3_ASSIGN((r), assign_op, (a));    \
+    (r).w assign_op (a).w;                  \
 } while(0)
 #endif
 
 /**
- * @brief 8-vector assignment.
+ * @brief 8-vector assignment (r ASSIGNMENT a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V8_ASSIGN(r, a) do { \
-    (r).s01234567 = (a).s01234567; \
+#  define PORT_V8_ASSIGN(r, assign_op, a) do { \
+    (r).s01234567 assign_op (a).s01234567; \
 } while(0)
 #else
-#  define PORT_V8_ASSIGN(r, a) do { \
-    PORT_V4_ASSIGN((r), (a));   \
-    (r).s4 = (a).s4;            \
-    (r).s5 = (a).s5;            \
-    (r).s6 = (a).s6;            \
-    (r).s7 = (a).s7;            \
+#  define PORT_V8_ASSIGN(r, assign_op, a) do { \
+    PORT_V4_ASSIGN((r), assign_op, (a));    \
+    (r).s4 assign_op (a).s4;                \
+    (r).s5 assign_op (a).s5;                \
+    (r).s6 assign_op (a).s6;                \
+    (r).s7 assign_op (a).s7;                \
 } while(0)
 #endif
 
 /**
- * @brief 16-vector assignment.
+ * @brief 16-vector assignment (r ASSIGNMENT a).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V16_ASSIGN(r, a) do { \
-    (r).s0123456789ABCDEF = (a).s0123456789ABCDEF; \
+#  define PORT_V16_ASSIGN(r, assign_op, a) do { \
+    (r).s0123456789ABCDEF assign_op (a).s0123456789ABCDEF; \
 } while(0)
 #else
-#  define PORT_V16_ASSIGN(r, a) do { \
-    PORT_V8_ASSIGN((r), (a));   \
-    (r).s8 = (a).s8;            \
-    (r).s9 = (a).s9;            \
-    (r).sA = (a).sA;            \
-    (r).sB = (a).sB;            \
-    (r).sC = (a).sC;            \
-    (r).sD = (a).sD;            \
-    (r).sE = (a).sE;            \
-    (r).sF = (a).sF;            \
+#  define PORT_V16_ASSIGN(r, assign_op, a) do { \
+    PORT_V8_ASSIGN((r), assign_op, (a));    \
+    (r).s8 assign_op (a).s8;                \
+    (r).s9 assign_op (a).s9;                \
+    (r).sA assign_op (a).sA;                \
+    (r).sB assign_op (a).sB;                \
+    (r).sC assign_op (a).sC;                \
+    (r).sD assign_op (a).sD;                \
+    (r).sE assign_op (a).sE;                \
+    (r).sF assign_op (a).sF;                \
 } while(0)
 #endif
 
@@ -739,111 +739,111 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief 2-vector function taking 1 argument (r = FUNCTION(a)).
+ * @brief 2-vector function taking 1 argument (r ASSIGNMENT FUNCTION(a)).
  */
-#define PORT_V2_FUNC1(r, func, a) PORT_V2_OP1((r), func, (a))
+#define PORT_V2_FUNC1(r, assign_op, func, a) PORT_V2_OP1((r), assign_op, func, (a))
 
 /**
- * @brief 3-vector function taking 1 argument (r = FUNCTION(a)).
+ * @brief 3-vector function taking 1 argument (r ASSIGNMENT FUNCTION(a)).
  */
-#define PORT_V3_FUNC1(r, func, a) PORT_V3_OP1((r), func, (a))
+#define PORT_V3_FUNC1(r, assign_op, func, a) PORT_V3_OP1((r), assign_op, func, (a))
 
 /**
- * @brief 4-vector function taking 1 argument (r = FUNCTION(a)).
+ * @brief 4-vector function taking 1 argument (r ASSIGNMENT FUNCTION(a)).
  */
-#define PORT_V4_FUNC1(r, func, a) PORT_V4_OP1((r), func, (a))
+#define PORT_V4_FUNC1(r, assign_op, func, a) PORT_V4_OP1((r), assign_op, func, (a))
 
 /**
- * @brief 8-vector function taking 1 argument (r = FUNCTION(a)).
+ * @brief 8-vector function taking 1 argument (r ASSIGNMENT FUNCTION(a)).
  */
-#define PORT_V8_FUNC1(r, func, a) PORT_V8_OP1((r), func, (a))
+#define PORT_V8_FUNC1(r, assign_op, func, a) PORT_V8_OP1((r), assign_op, func, (a))
 
 /**
- * @brief 16-vector function taking 1 argument (r = FUNCTION(a)).
+ * @brief 16-vector function taking 1 argument (r ASSIGNMENT FUNCTION(a)).
  */
-#define PORT_V16_FUNC1(r, func, a) PORT_V16_OP1((r), func, (a))
+#define PORT_V16_FUNC1(r, assign_op, func, a) PORT_V16_OP1((r), assign_op, func, (a))
 
 ///////////////////////////////////////////////////////////////////////////////
 // Function taking 2 arguments
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief 2-vector function taking 2 arguments (r = FUNCTION(a, b)).
+ * @brief 2-vector function taking 2 arguments (r ASSIGNMENT FUNCTION(a, b)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V2_FUNC2(r, func, a, b) do { \
-    (r).xy = func((a).xy, (b).xy); \
+#  define PORT_V2_FUNC2(r, assign_op, func, a, b) do { \
+    (r).xy assign_op func((a).xy, (b).xy); \
 } while(0)
 #else
-#  define PORT_V2_FUNC2(r, func, a, b) do { \
-    (r).x = func((a).x, (b).x); \
-    (r).y = func((a).y, (b).y); \
+#  define PORT_V2_FUNC2(r, assign_op, func, a, b) do { \
+    (r).x assign_op func((a).x, (b).x); \
+    (r).y assign_op func((a).y, (b).y); \
 } while(0)
 #endif
 
 /**
- * @brief 3-vector function taking 2 arguments (r = FUNCTION(a, b)).
+ * @brief 3-vector function taking 2 arguments (r ASSIGNMENT FUNCTION(a, b)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V3_FUNC2(r, func, a, b) do { \
-    (r).xyz = func((a).xyz, (b).xyz); \
+#  define PORT_V3_FUNC2(r, assign_op, func, a, b) do { \
+    (r).xyz assign_op func((a).xyz, (b).xyz); \
 } while(0)
 #else
-#  define PORT_V3_FUNC2(r, func, a, b) do { \
-    PORT_V2_FUNC2((r), func, (a), (b)); \
-    (r).z = func((a).z, (b).z);         \
+#  define PORT_V3_FUNC2(r, assign_op, func, a, b) do { \
+    PORT_V2_FUNC2((r), assign_op, func, (a), (b));  \
+    (r).z assign_op func((a).z, (b).z);             \
 } while(0)
 #endif
 
 /**
- * @brief 4-vector function taking 2 arguments (r = FUNCTION(a, b)).
+ * @brief 4-vector function taking 2 arguments (r ASSIGNMENT FUNCTION(a, b)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V4_FUNC2(r, func, a, b) do { \
-    (r).xyzw = func((a).xyzw, (b).xyzw); \
+#  define PORT_V4_FUNC2(r, assign_op, func, a, b) do { \
+    (r).xyzw assign_op func((a).xyzw, (b).xyzw); \
 } while(0)
 #else
-#  define PORT_V4_FUNC2(r, func, a, b) do { \
-    PORT_V3_FUNC2((r), func, (a), (b)); \
-    (r).w = func((a).w, (b).w);         \
+#  define PORT_V4_FUNC2(r, assign_op, func, a, b) do { \
+    PORT_V3_FUNC2((r), assign_op, func, (a), (b));  \
+    (r).w assign_op func((a).w, (b).w);             \
 } while(0)
 #endif
 
 /**
- * @brief 8-vector function taking 2 arguments (r = FUNCTION(a, b)).
+ * @brief 8-vector function taking 2 arguments (r ASSIGNMENT FUNCTION(a, b)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V8_FUNC2(r, func, a, b) do { \
-    (r).s01234567 = func((a).s01234567, (b).s01234567); \
+#  define PORT_V8_FUNC2(r, assign_op, func, a, b) do { \
+    (r).s01234567 assign_op func((a).s01234567, (b).s01234567); \
 } while(0)
 #else
-#  define PORT_V8_FUNC2(r, func, a, b) do { \
-    PORT_V4_FUNC2((r), func, (a), (b)); \
-    (r).s4 = func((a).s4, (b).s4);      \
-    (r).s5 = func((a).s5, (b).s5);      \
-    (r).s6 = func((a).s6, (b).s6);      \
-    (r).s7 = func((a).s7, (b).s7);      \
+#  define PORT_V8_FUNC2(r, assign_op, func, a, b) do { \
+    PORT_V4_FUNC2((r), assign_op, func, (a), (b));  \
+    (r).s4 assign_op func((a).s4, (b).s4);          \
+    (r).s5 assign_op func((a).s5, (b).s5);          \
+    (r).s6 assign_op func((a).s6, (b).s6);          \
+    (r).s7 assign_op func((a).s7, (b).s7);          \
 } while(0)
 #endif
 
 /**
- * @brief 16-vector function taking 2 arguments (r = FUNCTION(a, b)).
+ * @brief 16-vector function taking 2 arguments (r ASSIGNMENT FUNCTION(a, b)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V16_FUNC2(r, func, a, b) do { \
-    (r).s0123456789ABCDEF = func((a).s0123456789ABCDEF, (b).s0123456789ABCDEF); \
+#  define PORT_V16_FUNC2(r, assign_op, func, a, b) do { \
+    (r).s0123456789ABCDEF assign_op func((a).s0123456789ABCDEF, (b).s0123456789ABCDEF); \
 } while(0)
 #else
-#  define PORT_V16_FUNC2(r, func, a, b) do { \
-    PORT_V8_FUNC2((r), func, (a), (b)); \
-    (r).s8 = func((a).s8, (b).s8);      \
-    (r).s9 = func((a).s9, (b).s9);      \
-    (r).sA = func((a).sA, (b).sA);      \
-    (r).sB = func((a).sB, (b).sB);      \
-    (r).sC = func((a).sC, (b).sC);      \
-    (r).sD = func((a).sD, (b).sD);      \
-    (r).sE = func((a).sE, (b).sE);      \
-    (r).sF = func((a).sF, (b).sF);      \
+#  define PORT_V16_FUNC2(r, assign_op, func, a, b) do { \
+    PORT_V8_FUNC2((r), assign_op, func, (a), (b));  \
+    (r).s8 assign_op func((a).s8, (b).s8);          \
+    (r).s9 assign_op func((a).s9, (b).s9);          \
+    (r).sA assign_op func((a).sA, (b).sA);          \
+    (r).sB assign_op func((a).sB, (b).sB);          \
+    (r).sC assign_op func((a).sC, (b).sC);          \
+    (r).sD assign_op func((a).sD, (b).sD);          \
+    (r).sE assign_op func((a).sE, (b).sE);          \
+    (r).sF assign_op func((a).sF, (b).sF);          \
 } while(0)
 #endif
 
@@ -852,83 +852,83 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief 2-vector function taking 3 arguments (r = FUNCTION(a, b, c)).
+ * @brief 2-vector function taking 3 arguments (r ASSIGNMENT FUNCTION(a, b, c)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V2_FUNC3(r, func, a, b, c) do { \
-    (r).xy = func((a).xy, (b).xy, (c).xy); \
+#  define PORT_V2_FUNC3(r, assign_op, func, a, b, c) do { \
+    (r).xy assign_op func((a).xy, (b).xy, (c).xy); \
 } while(0)
 #else
-#  define PORT_V2_FUNC3(r, func, a, b, c) do { \
-    (r).x = func((a).x, (b).x, (c).x); \
-    (r).y = func((a).y, (b).y, (c).y); \
+#  define PORT_V2_FUNC3(r, assign_op, func, a, b, c) do { \
+    (r).x assign_op func((a).x, (b).x, (c).x); \
+    (r).y assign_op func((a).y, (b).y, (c).y); \
 } while(0)
 #endif
 
 /**
- * @brief 3-vector function taking 3 arguments (r = FUNCTION(a, b, c)).
+ * @brief 3-vector function taking 3 arguments (r ASSIGNMENT FUNCTION(a, b, c)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V3_FUNC3(r, func, a, b, c) do { \
-    (r).xyz = func((a).xyz, (b).xyz, (c).xyz); \
+#  define PORT_V3_FUNC3(r, assign_op, func, a, b, c) do { \
+    (r).xyz assign_op func((a).xyz, (b).xyz, (c).xyz); \
 } while(0)
 #else
-#  define PORT_V3_FUNC3(r, func, a, b, c) do { \
-    PORT_V2_FUNC3((r), func, (a), (b), (c));    \
-    (r).z = func((a).z, (b).z, (c).z);          \
+#  define PORT_V3_FUNC3(r, assign_op, func, a, b, c) do { \
+    PORT_V2_FUNC3((r), assign_op, func, (a), (b), (c)); \
+    (r).z assign_op func((a).z, (b).z, (c).z);          \
 } while(0)
 #endif
 
 /**
- * @brief 4-vector function taking 3 arguments (r = FUNCTION(a, b, c)).
+ * @brief 4-vector function taking 3 arguments (r ASSIGNMENT FUNCTION(a, b, c)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V4_FUNC3(r, func, a, b, c) do { \
-    (r).xyzw = func((a).xyzw, (b).xyzw, (c).xyzw); \
+#  define PORT_V4_FUNC3(r, assign_op, func, a, b, c) do { \
+    (r).xyzw assign_op func((a).xyzw, (b).xyzw, (c).xyzw); \
 } while(0)
 #else
-#  define PORT_V4_FUNC3(r, func, a, b, c) do { \
-    PORT_V3_FUNC3((r), func, (a), (b), (c));    \
-    (r).w = func((a).w, (b).w, (c).w);          \
+#  define PORT_V4_FUNC3(r, assign_op, func, a, b, c) do { \
+    PORT_V3_FUNC3((r), assign_op, func, (a), (b), (c)); \
+    (r).w assign_op func((a).w, (b).w, (c).w);          \
 } while(0)
 #endif
 
 /**
- * @brief 8-vector function taking 3 arguments (r = FUNCTION(a, b, c)).
+ * @brief 8-vector function taking 3 arguments (r ASSIGNMENT FUNCTION(a, b, c)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V8_FUNC3(r, func, a, b, c) do { \
-    (r).s01234567 = func((a).s01234567, (b).s01234567, (c).s01234567); \
+#  define PORT_V8_FUNC3(r, assign_op, func, a, b, c) do { \
+    (r).s01234567 assign_op func((a).s01234567, (b).s01234567, (c).s01234567); \
 } while(0)
 #else
-#  define PORT_V8_FUNC3(r, func, a, b, c) do { \
-    PORT_V4_FUNC3((r), func, (a), (b), (c));    \
-    (r).s4 = func((a).s4, (b).s4, (c).s4);      \
-    (r).s5 = func((a).s5, (b).s5, (c).s5);      \
-    (r).s6 = func((a).s6, (b).s6, (c).s6);      \
-    (r).s7 = func((a).s7, (b).s7, (c).s7);      \
+#  define PORT_V8_FUNC3(r, assign_op, func, a, b, c) do { \
+    PORT_V4_FUNC3((r), assign_op, func, (a), (b), (c)); \
+    (r).s4 assign_op func((a).s4, (b).s4, (c).s4);      \
+    (r).s5 assign_op func((a).s5, (b).s5, (c).s5);      \
+    (r).s6 assign_op func((a).s6, (b).s6, (c).s6);      \
+    (r).s7 assign_op func((a).s7, (b).s7, (c).s7);      \
 } while(0)
 #endif
 
 /**
- * @brief 16-vector function taking 3 arguments (r = FUNCTION(a, b, c)).
+ * @brief 16-vector function taking 3 arguments (r ASSIGNMENT FUNCTION(a, b, c)).
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_V16_FUNC3(r, func, a, b, c) do { \
-    (r).s0123456789ABCDEF = func((a).s0123456789ABCDEF, \
+#  define PORT_V16_FUNC3(r, assign_op, func, a, b, c) do { \
+    (r).s0123456789ABCDEF assign_op func((a).s0123456789ABCDEF, \
             (b).s0123456789ABCDEF, (c).s0123456789ABCDEF); \
 } while(0)
 #else
-#  define PORT_V16_FUNC3(r, func, a, b, c) do { \
-    PORT_V8_FUNC3((r), func, (a), (b), (c));    \
-    (r).s8 = func((a).s8, (b).s8, (c).s8);      \
-    (r).s9 = func((a).s9, (b).s9, (c).s9);      \
-    (r).sA = func((a).sA, (b).sA, (c).sA);      \
-    (r).sB = func((a).sB, (b).sB, (c).sB);      \
-    (r).sC = func((a).sC, (b).sC, (c).sC);      \
-    (r).sD = func((a).sD, (b).sD, (c).sD);      \
-    (r).sE = func((a).sE, (b).sE, (c).sE);      \
-    (r).sF = func((a).sF, (b).sF, (c).sF);      \
+#  define PORT_V16_FUNC3(r, assign_op, func, a, b, c) do { \
+    PORT_V8_FUNC3((r), assign_op, func, (a), (b), (c)); \
+    (r).s8 assign_op func((a).s8, (b).s8, (c).s8);      \
+    (r).s9 assign_op func((a).s9, (b).s9, (c).s9);      \
+    (r).sA assign_op func((a).sA, (b).sA, (c).sA);      \
+    (r).sB assign_op func((a).sB, (b).sB, (c).sB);      \
+    (r).sC assign_op func((a).sC, (b).sC, (c).sC);      \
+    (r).sD assign_op func((a).sD, (b).sD, (c).sD);      \
+    (r).sE assign_op func((a).sE, (b).sE, (c).sE);      \
+    (r).sF assign_op func((a).sF, (b).sF, (c).sF);      \
 } while(0)
 #endif
 

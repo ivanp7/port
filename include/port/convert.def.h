@@ -268,207 +268,207 @@
 /**
  * @brief Convert value to 2-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V2(r, value) PORT_V2_OP1(r, (port_uint8_t), value)
+#define PORT_CONVERT_TO_UINT8_V2(r, value) PORT_V2_OP1(r, =, (port_uint8_t), value)
 /**
  * @brief Convert value to 2-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V2(r, value) PORT_V2_OP1(r, (port_sint8_t), value)
+#define PORT_CONVERT_TO_SINT8_V2(r, value) PORT_V2_OP1(r, =, (port_sint8_t), value)
 /**
  * @brief Convert value to 2-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V2(r, value) PORT_V2_OP1(r, (port_uint16_t), value)
+#define PORT_CONVERT_TO_UINT16_V2(r, value) PORT_V2_OP1(r, =, (port_uint16_t), value)
 /**
  * @brief Convert value to 2-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V2(r, value) PORT_V2_OP1(r, (port_sint16_t), value)
+#define PORT_CONVERT_TO_SINT16_V2(r, value) PORT_V2_OP1(r, =, (port_sint16_t), value)
 /**
  * @brief Convert value to 2-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V2(r, value) PORT_V2_OP1(r, (port_uint32_t), value)
+#define PORT_CONVERT_TO_UINT32_V2(r, value) PORT_V2_OP1(r, =, (port_uint32_t), value)
 /**
  * @brief Convert value to 2-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V2(r, value) PORT_V2_OP1(r, (port_sint32_t), value)
+#define PORT_CONVERT_TO_SINT32_V2(r, value) PORT_V2_OP1(r, =, (port_sint32_t), value)
 /**
  * @brief Convert value to 2-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V2(r, value) PORT_V2_OP1(r, (port_uint64_t), value)
+#define PORT_CONVERT_TO_UINT64_V2(r, value) PORT_V2_OP1(r, =, (port_uint64_t), value)
 /**
  * @brief Convert value to 2-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V2(r, value) PORT_V2_OP1(r, (port_sint64_t), value)
+#define PORT_CONVERT_TO_SINT64_V2(r, value) PORT_V2_OP1(r, =, (port_sint64_t), value)
 /**
  * @brief Convert value to 2-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V2(r, value) PORT_V2_OP1(r, (port_float32_t), value)
+#define PORT_CONVERT_TO_FLOAT32_V2(r, value) PORT_V2_OP1(r, =, (port_float32_t), value)
 /**
  * @brief Convert value to 2-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V2(r, value) PORT_V2_OP1(r, (port_float64_t), value)
+#define PORT_CONVERT_TO_FLOAT64_V2(r, value) PORT_V2_OP1(r, =, (port_float64_t), value)
 
 /**
  * @brief Convert value to 3-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V3(r, value) PORT_V3_OP1(r, (port_uint8_t), value)
+#define PORT_CONVERT_TO_UINT8_V3(r, value) PORT_V3_OP1(r, =, (port_uint8_t), value)
 /**
  * @brief Convert value to 3-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V3(r, value) PORT_V3_OP1(r, (port_sint8_t), value)
+#define PORT_CONVERT_TO_SINT8_V3(r, value) PORT_V3_OP1(r, =, (port_sint8_t), value)
 /**
  * @brief Convert value to 3-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V3(r, value) PORT_V3_OP1(r, (port_uint16_t), value)
+#define PORT_CONVERT_TO_UINT16_V3(r, value) PORT_V3_OP1(r, =, (port_uint16_t), value)
 /**
  * @brief Convert value to 3-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V3(r, value) PORT_V3_OP1(r, (port_sint16_t), value)
+#define PORT_CONVERT_TO_SINT16_V3(r, value) PORT_V3_OP1(r, =, (port_sint16_t), value)
 /**
  * @brief Convert value to 3-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V3(r, value) PORT_V3_OP1(r, (port_uint32_t), value)
+#define PORT_CONVERT_TO_UINT32_V3(r, value) PORT_V3_OP1(r, =, (port_uint32_t), value)
 /**
  * @brief Convert value to 3-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V3(r, value) PORT_V3_OP1(r, (port_sint32_t), value)
+#define PORT_CONVERT_TO_SINT32_V3(r, value) PORT_V3_OP1(r, =, (port_sint32_t), value)
 /**
  * @brief Convert value to 3-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V3(r, value) PORT_V3_OP1(r, (port_uint64_t), value)
+#define PORT_CONVERT_TO_UINT64_V3(r, value) PORT_V3_OP1(r, =, (port_uint64_t), value)
 /**
  * @brief Convert value to 3-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V3(r, value) PORT_V3_OP1(r, (port_sint64_t), value)
+#define PORT_CONVERT_TO_SINT64_V3(r, value) PORT_V3_OP1(r, =, (port_sint64_t), value)
 /**
  * @brief Convert value to 3-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V3(r, value) PORT_V3_OP1(r, (port_float32_t), value)
+#define PORT_CONVERT_TO_FLOAT32_V3(r, value) PORT_V3_OP1(r, =, (port_float32_t), value)
 /**
  * @brief Convert value to 3-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V3(r, value) PORT_V3_OP1(r, (port_float64_t), value)
+#define PORT_CONVERT_TO_FLOAT64_V3(r, value) PORT_V3_OP1(r, =, (port_float64_t), value)
 
 /**
  * @brief Convert value to 4-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V4(r, value) PORT_V4_OP1(r, (port_uint8_t), value)
+#define PORT_CONVERT_TO_UINT8_V4(r, value) PORT_V4_OP1(r, =, (port_uint8_t), value)
 /**
  * @brief Convert value to 4-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V4(r, value) PORT_V4_OP1(r, (port_sint8_t), value)
+#define PORT_CONVERT_TO_SINT8_V4(r, value) PORT_V4_OP1(r, =, (port_sint8_t), value)
 /**
  * @brief Convert value to 4-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V4(r, value) PORT_V4_OP1(r, (port_uint16_t), value)
+#define PORT_CONVERT_TO_UINT16_V4(r, value) PORT_V4_OP1(r, =, (port_uint16_t), value)
 /**
  * @brief Convert value to 4-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V4(r, value) PORT_V4_OP1(r, (port_sint16_t), value)
+#define PORT_CONVERT_TO_SINT16_V4(r, value) PORT_V4_OP1(r, =, (port_sint16_t), value)
 /**
  * @brief Convert value to 4-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V4(r, value) PORT_V4_OP1(r, (port_uint32_t), value)
+#define PORT_CONVERT_TO_UINT32_V4(r, value) PORT_V4_OP1(r, =, (port_uint32_t), value)
 /**
  * @brief Convert value to 4-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V4(r, value) PORT_V4_OP1(r, (port_sint32_t), value)
+#define PORT_CONVERT_TO_SINT32_V4(r, value) PORT_V4_OP1(r, =, (port_sint32_t), value)
 /**
  * @brief Convert value to 4-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V4(r, value) PORT_V4_OP1(r, (port_uint64_t), value)
+#define PORT_CONVERT_TO_UINT64_V4(r, value) PORT_V4_OP1(r, =, (port_uint64_t), value)
 /**
  * @brief Convert value to 4-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V4(r, value) PORT_V4_OP1(r, (port_sint64_t), value)
+#define PORT_CONVERT_TO_SINT64_V4(r, value) PORT_V4_OP1(r, =, (port_sint64_t), value)
 /**
  * @brief Convert value to 4-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V4(r, value) PORT_V4_OP1(r, (port_float32_t), value)
+#define PORT_CONVERT_TO_FLOAT32_V4(r, value) PORT_V4_OP1(r, =, (port_float32_t), value)
 /**
  * @brief Convert value to 4-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V4(r, value) PORT_V4_OP1(r, (port_float64_t), value)
+#define PORT_CONVERT_TO_FLOAT64_V4(r, value) PORT_V4_OP1(r, =, (port_float64_t), value)
 
 /**
  * @brief Convert value to 8-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V8(r, value) PORT_V8_OP1(r, (port_uint8_t), value)
+#define PORT_CONVERT_TO_UINT8_V8(r, value) PORT_V8_OP1(r, =, (port_uint8_t), value)
 /**
  * @brief Convert value to 8-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V8(r, value) PORT_V8_OP1(r, (port_sint8_t), value)
+#define PORT_CONVERT_TO_SINT8_V8(r, value) PORT_V8_OP1(r, =, (port_sint8_t), value)
 /**
  * @brief Convert value to 8-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V8(r, value) PORT_V8_OP1(r, (port_uint16_t), value)
+#define PORT_CONVERT_TO_UINT16_V8(r, value) PORT_V8_OP1(r, =, (port_uint16_t), value)
 /**
  * @brief Convert value to 8-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V8(r, value) PORT_V8_OP1(r, (port_sint16_t), value)
+#define PORT_CONVERT_TO_SINT16_V8(r, value) PORT_V8_OP1(r, =, (port_sint16_t), value)
 /**
  * @brief Convert value to 8-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V8(r, value) PORT_V8_OP1(r, (port_uint32_t), value)
+#define PORT_CONVERT_TO_UINT32_V8(r, value) PORT_V8_OP1(r, =, (port_uint32_t), value)
 /**
  * @brief Convert value to 8-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V8(r, value) PORT_V8_OP1(r, (port_sint32_t), value)
+#define PORT_CONVERT_TO_SINT32_V8(r, value) PORT_V8_OP1(r, =, (port_sint32_t), value)
 /**
  * @brief Convert value to 8-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V8(r, value) PORT_V8_OP1(r, (port_uint64_t), value)
+#define PORT_CONVERT_TO_UINT64_V8(r, value) PORT_V8_OP1(r, =, (port_uint64_t), value)
 /**
  * @brief Convert value to 8-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V8(r, value) PORT_V8_OP1(r, (port_sint64_t), value)
+#define PORT_CONVERT_TO_SINT64_V8(r, value) PORT_V8_OP1(r, =, (port_sint64_t), value)
 /**
  * @brief Convert value to 8-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V8(r, value) PORT_V8_OP1(r, (port_float32_t), value)
+#define PORT_CONVERT_TO_FLOAT32_V8(r, value) PORT_V8_OP1(r, =, (port_float32_t), value)
 /**
  * @brief Convert value to 8-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V8(r, value) PORT_V8_OP1(r, (port_float64_t), value)
+#define PORT_CONVERT_TO_FLOAT64_V8(r, value) PORT_V8_OP1(r, =, (port_float64_t), value)
 
 /**
  * @brief Convert value to 16-vector of unsigned 8-bit integers.
  */
-#define PORT_CONVERT_TO_UINT8_V16(r, value) PORT_V16_OP1(r, (port_uint8_t), value)
+#define PORT_CONVERT_TO_UINT8_V16(r, value) PORT_V16_OP1(r, =, (port_uint8_t), value)
 /**
  * @brief Convert value to 16-vector of signed 8-bit integers.
  */
-#define PORT_CONVERT_TO_SINT8_V16(r, value) PORT_V16_OP1(r, (port_sint8_t), value)
+#define PORT_CONVERT_TO_SINT8_V16(r, value) PORT_V16_OP1(r, =, (port_sint8_t), value)
 /**
  * @brief Convert value to 16-vector of unsigned 16-bit integers.
  */
-#define PORT_CONVERT_TO_UINT16_V16(r, value) PORT_V16_OP1(r, (port_uint16_t), value)
+#define PORT_CONVERT_TO_UINT16_V16(r, value) PORT_V16_OP1(r, =, (port_uint16_t), value)
 /**
  * @brief Convert value to 16-vector of signed 16-bit integers.
  */
-#define PORT_CONVERT_TO_SINT16_V16(r, value) PORT_V16_OP1(r, (port_sint16_t), value)
+#define PORT_CONVERT_TO_SINT16_V16(r, value) PORT_V16_OP1(r, =, (port_sint16_t), value)
 /**
  * @brief Convert value to 16-vector of unsigned 32-bit integers.
  */
-#define PORT_CONVERT_TO_UINT32_V16(r, value) PORT_V16_OP1(r, (port_uint32_t), value)
+#define PORT_CONVERT_TO_UINT32_V16(r, value) PORT_V16_OP1(r, =, (port_uint32_t), value)
 /**
  * @brief Convert value to 16-vector of signed 32-bit integers.
  */
-#define PORT_CONVERT_TO_SINT32_V16(r, value) PORT_V16_OP1(r, (port_sint32_t), value)
+#define PORT_CONVERT_TO_SINT32_V16(r, value) PORT_V16_OP1(r, =, (port_sint32_t), value)
 /**
  * @brief Convert value to 16-vector of unsigned 64-bit integers.
  */
-#define PORT_CONVERT_TO_UINT64_V16(r, value) PORT_V16_OP1(r, (port_uint64_t), value)
+#define PORT_CONVERT_TO_UINT64_V16(r, value) PORT_V16_OP1(r, =, (port_uint64_t), value)
 /**
  * @brief Convert value to 16-vector of signed 64-bit integers.
  */
-#define PORT_CONVERT_TO_SINT64_V16(r, value) PORT_V16_OP1(r, (port_sint64_t), value)
+#define PORT_CONVERT_TO_SINT64_V16(r, value) PORT_V16_OP1(r, =, (port_sint64_t), value)
 /**
  * @brief Convert value to 16-vector of 32-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT32_V16(r, value) PORT_V16_OP1(r, (port_float32_t), value)
+#define PORT_CONVERT_TO_FLOAT32_V16(r, value) PORT_V16_OP1(r, =, (port_float32_t), value)
 /**
  * @brief Convert value to 16-vector of 64-bit floating-point numbers.
  */
-#define PORT_CONVERT_TO_FLOAT64_V16(r, value) PORT_V16_OP1(r, (port_float64_t), value)
+#define PORT_CONVERT_TO_FLOAT64_V16(r, value) PORT_V16_OP1(r, =, (port_float64_t), value)
 
 #endif // __OPENCL_C_VERSION__
 
