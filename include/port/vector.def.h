@@ -735,6 +735,90 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
+// Assignment (scalar)
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief 2-vector assignment (r ASSIGNMENT a).
+ */
+#ifdef __OPENCL_C_VERSION__
+#  define PORT_V2_ASSIGN_S(r, assign_op, a) do { \
+    (r).xy assign_op (a); \
+} while(0)
+#else
+#  define PORT_V2_ASSIGN_S(r, assign_op, a) do { \
+    (r).x assign_op (a); \
+    (r).y assign_op (a); \
+} while(0)
+#endif
+
+/**
+ * @brief 3-vector assignment (r ASSIGNMENT a).
+ */
+#ifdef __OPENCL_C_VERSION__
+#  define PORT_V3_ASSIGN_S(r, assign_op, a) do { \
+    (r).xyz assign_op (a); \
+} while(0)
+#else
+#  define PORT_V3_ASSIGN_S(r, assign_op, a) do { \
+    PORT_V2_ASSIGN_S((r), assign_op, (a));  \
+    (r).z assign_op (a);                    \
+} while(0)
+#endif
+
+/**
+ * @brief 4-vector assignment (r ASSIGNMENT a).
+ */
+#ifdef __OPENCL_C_VERSION__
+#  define PORT_V4_ASSIGN_S(r, assign_op, a) do { \
+    (r).xyzw assign_op (a); \
+} while(0)
+#else
+#  define PORT_V4_ASSIGN_S(r, assign_op, a) do { \
+    PORT_V3_ASSIGN_S((r), assign_op, (a));  \
+    (r).w assign_op (a);                    \
+} while(0)
+#endif
+
+/**
+ * @brief 8-vector assignment (r ASSIGNMENT a).
+ */
+#ifdef __OPENCL_C_VERSION__
+#  define PORT_V8_ASSIGN_S(r, assign_op, a) do { \
+    (r).s01234567 assign_op (a); \
+} while(0)
+#else
+#  define PORT_V8_ASSIGN_S(r, assign_op, a) do { \
+    PORT_V4_ASSIGN_S((r), assign_op, (a));  \
+    (r).s4 assign_op (a);                   \
+    (r).s5 assign_op (a);                   \
+    (r).s6 assign_op (a);                   \
+    (r).s7 assign_op (a);                   \
+} while(0)
+#endif
+
+/**
+ * @brief 16-vector assignment (r ASSIGNMENT a).
+ */
+#ifdef __OPENCL_C_VERSION__
+#  define PORT_V16_ASSIGN_S(r, assign_op, a) do { \
+    (r).s0123456789ABCDEF assign_op (a); \
+} while(0)
+#else
+#  define PORT_V16_ASSIGN_S(r, assign_op, a) do { \
+    PORT_V8_ASSIGN_S((r), assign_op, (a));  \
+    (r).s8 assign_op (a);                   \
+    (r).s9 assign_op (a);                   \
+    (r).sA assign_op (a);                   \
+    (r).sB assign_op (a);                   \
+    (r).sC assign_op (a);                   \
+    (r).sD assign_op (a);                   \
+    (r).sE assign_op (a);                   \
+    (r).sF assign_op (a);                   \
+} while(0)
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
 // Function taking 1 argument
 ///////////////////////////////////////////////////////////////////////////////
 
