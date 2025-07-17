@@ -3,14 +3,15 @@
 cd -- "$(dirname -- "$0")"
 
 ARCHI_FILE=$1
-PLATFORM_IDX=$2
-DEVICE_IDX=$3
-shift 3
+shift 1
+
+: ${PLATFORM_IDX:="0"}
+: ${DEVICE_IDX:="0"}
 
 : ${CFLAGS:=""}
 : ${LFLAGS:=""}
 
-: ${OUT_FILE:="port.${PLATFORM_IDX}.${DEVICE_IDX}.bin"}
+: ${OUT_FILE:="port.bin"}
 
 # archipelago/plugin/opencl/scripts/program-builder.py
 program-builder.py \
