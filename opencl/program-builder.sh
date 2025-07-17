@@ -16,9 +16,9 @@ shift 1
 # archipelago/plugin/opencl/scripts/program-builder.py
 program-builder.py \
     --file "${ARCHI_FILE}" \
-    --plt ${PLATFORM_IDX} --dev ${DEVICE_IDX} \
+    --platform ${PLATFORM_IDX} --devices ${DEVICE_IDX} \
     --cflags " $CFLAGS" --lflags " -create-library $LFLAGS" \
     --hdrdir "../include" --hdr $(find "../include" -type f -printf '%P\n' | sort) \
     --srcdir "../src" --src $(find "../src" -type f -printf '%P\n' | sort) \
-    --out "${OUT_FILE}"
+    --out ${OUT_FILE}
 
