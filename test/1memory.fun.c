@@ -13,7 +13,7 @@
 
 typedef void (*memcpy_fn)(port_memory_ptr_t restrict,
         port_const_memory_ptr_t restrict,
-        port_size_t);
+        size_t);
 
 static
 port_uint8_t test_memcpy(memcpy_fn fn)
@@ -84,26 +84,26 @@ TEST(port_memory_reference)
 
     ref = -1;
     ptr = port_memory_reference(ref, 0, 0, &unit2, memory_table);
-    ASSERT_EQ(ptr - &unit2, 1, port_ptrdiff_t, "%ti");
+    ASSERT_EQ(ptr - &unit2, 1, ptrdiff_t, "%ti");
 
     ref = -10;
     ptr = port_memory_reference(ref, 10, 20, NULL, memory_table);
-    ASSERT_EQ(ptr - &unit0, 10, port_ptrdiff_t, "%ti");
+    ASSERT_EQ(ptr - &unit0, 10, ptrdiff_t, "%ti");
 
     port_uint8_t num_idx_bits = 2;
     port_uint8_t offset_shift = 8;
 
     ref = PORT_MEMORY_REF_FAR(port_memory_ref_t, num_idx_bits, 0, 0);
     ptr = port_memory_reference(ref, num_idx_bits, offset_shift, NULL, memory_table);
-    ASSERT_EQ(ptr - &unit0, 0, port_ptrdiff_t, "%ti");
+    ASSERT_EQ(ptr - &unit0, 0, ptrdiff_t, "%ti");
 
     ref = PORT_MEMORY_REF_FAR(port_memory_ref_t, num_idx_bits, 1, 10);
     ptr = port_memory_reference(ref, num_idx_bits, offset_shift, NULL, memory_table + 1);
-    ASSERT_EQ(ptr - &unit2, 10 << offset_shift, port_ptrdiff_t, "%ti");
+    ASSERT_EQ(ptr - &unit2, 10 << offset_shift, ptrdiff_t, "%ti");
 
     ref = PORT_MEMORY_REF_FAR(port_memory_ref_t, num_idx_bits, 0, 5);
     ptr = port_memory_reference(ref, num_idx_bits, offset_shift, NULL, memory_table + 2);
-    ASSERT_EQ(ptr - &unit2, 5 << offset_shift, port_ptrdiff_t, "%ti");
+    ASSERT_EQ(ptr - &unit2, 5 << offset_shift, ptrdiff_t, "%ti");
 }
 
 TEST(port_memory_copy_global_to_private)

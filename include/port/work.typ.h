@@ -31,12 +31,12 @@
 /**
  * @brief Index of a work-item.
  */
-typedef port_size_t port_work_item_index_t;
+typedef size_t port_work_item_index_t;
 
 /**
  * @brief Work size (number of work-items).
  */
-typedef port_size_t port_work_size_t;
+typedef size_t port_work_size_t;
 
 #endif // _PORT_WORK_TYP_H_
 

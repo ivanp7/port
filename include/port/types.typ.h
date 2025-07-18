@@ -28,49 +28,10 @@
 
 #ifndef __OPENCL_C_VERSION__
 #  include <CL/cl.h>
-#  include <stdbool.h>
-#  include <stddef.h>
-#  include <stdint.h>
+#  include <stdbool.h> // for bool
+#  include <stddef.h>  // for size_t, ptrdiff_t
+#  include <stdint.h>  // for uintptr_t, intptr_t
 #endif
-
-///////////////////////////////////////////////////////////////////////////////
-// Special types
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * @brief Boolean type.
- *
- * @note This type cannot be used for a kernel function parameter.
- */
-typedef bool port_bool_t;
-
-/**
- * @brief Size of data (result of sizeof operator).
- *
- * @note This type cannot be used for a kernel function parameter.
- */
-typedef size_t port_size_t;
-
-/**
- * @brief Difference between two pointers (result of subtracting two pointers).
- *
- * @note This type cannot be used for a kernel function parameter.
- */
-typedef ptrdiff_t port_ptrdiff_t;
-
-/**
- * @brief Unsigned pointer address.
- *
- * @note This type cannot be used for a kernel function parameter.
- */
-typedef uintptr_t port_uintptr_t;
-
-/**
- * @brief Signed pointer address.
- *
- * @note This type cannot be used for a kernel function parameter.
- */
-typedef intptr_t port_sintptr_t;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Absolute types

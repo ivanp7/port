@@ -27,6 +27,7 @@
 #define _PORT_CONVERT_DEF_H_
 
 #ifndef __OPENCL_C_VERSION__
+#  include "port/types.typ.h"
 #  include "port/vector.def.h"
 #endif
 

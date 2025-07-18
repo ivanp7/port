@@ -61,7 +61,7 @@ void
 port_memory_copy_global_to_private(
         port_private_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_global_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -71,7 +71,7 @@ void
 port_memory_copy_constant_to_private(
         port_private_memory_ptr_t restrict dest, ///< [out] Destination.
         port_constant_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -81,7 +81,7 @@ void
 port_memory_copy_local_to_private(
         port_private_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_local_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -91,7 +91,7 @@ void
 port_memory_copy_private_to_private(
         port_private_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_private_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -101,7 +101,7 @@ void
 port_memory_copy_global_to_local(
         port_local_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_global_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -111,7 +111,7 @@ void
 port_memory_copy_constant_to_local(
         port_local_memory_ptr_t restrict dest, ///< [out] Destination.
         port_constant_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -121,7 +121,7 @@ void
 port_memory_copy_local_to_local(
         port_local_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_local_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -131,7 +131,7 @@ void
 port_memory_copy_private_to_local(
         port_local_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_private_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -141,7 +141,7 @@ void
 port_memory_copy_global_to_global(
         port_global_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_global_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -151,7 +151,7 @@ void
 port_memory_copy_local_to_global(
         port_global_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_local_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -161,7 +161,7 @@ void
 port_memory_copy_constant_to_global(
         port_global_memory_ptr_t restrict dest, ///< [out] Destination.
         port_constant_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 /**
@@ -171,7 +171,7 @@ void
 port_memory_copy_private_to_global(
         port_global_memory_ptr_t restrict dest, ///< [out] Destination.
         port_const_private_memory_ptr_t restrict src, ///< [in] Source.
-        port_size_t num_units ///< [in] Number of units to copy.
+        size_t num_units ///< [in] Number of units to copy.
 );
 
 ///////////////////////////////////////////////////////////////////////////////

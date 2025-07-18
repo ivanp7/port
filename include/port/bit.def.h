@@ -26,9 +26,7 @@
 #ifndef _PORT_BIT_DEF_H_
 #define _PORT_BIT_DEF_H_
 
-#ifndef __OPENCL_C_VERSION__
-#  include <CL/cl.h>
-#endif
+#include "port/types.typ.h"
 
 /**
  * @brief Number of bits in byte.
@@ -58,10 +56,10 @@
  * @brief Construct a byte from separate bits.
  */
 #define PORT_BYTE(msb, b6, b5, b4, b3, b2, b1, lsb)                 \
-    ((port_uint8_t)((port_bool_t)(lsb) | ((port_bool_t)(b1) << 1) | \
-        ((port_bool_t)(b2) << 2) | ((port_bool_t)(b3) << 3) |       \
-        ((port_bool_t)(b4) << 4) | ((port_bool_t)(b5) << 5) |       \
-        ((port_bool_t)(b6) << 6) | ((port_bool_t)(msb) << 7)))
+    ((port_uint8_t)((bool)(lsb) | ((bool)(b1) << 1) | \
+        ((bool)(b2) << 2) | ((bool)(b3) << 3) |       \
+        ((bool)(b4) << 4) | ((bool)(b5) << 5) |       \
+        ((bool)(b6) << 6) | ((bool)(msb) << 7)))
 
 /**
  * @brief Concatenate bits.

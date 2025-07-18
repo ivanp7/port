@@ -73,9 +73,9 @@
  * If base_ptr is NULL, memory_table[0] is used instead.
  */
 #define PORT_MEMORY_REFERENCE(ref, num_idx_bits, offset_shift, base_ptr, memory_table) \
-    (PORT_MEMORY_REF_IS_FAR(ref) ?                                  \
-     (memory_table)[(ref) & PORT_SINGLE_ZMASK(num_idx_bits)] +      \
-     ((port_size_t)((ref) >> (num_idx_bits)) << (offset_shift)) :   \
+    (PORT_MEMORY_REF_IS_FAR(ref) ?                              \
+     (memory_table)[(ref) & PORT_SINGLE_ZMASK(num_idx_bits)] +  \
+     ((size_t)((ref) >> (num_idx_bits)) << (offset_shift)) :    \
      (((base_ptr) ? (base_ptr) : (memory_table)[0]) - (ref)))
 
 /**

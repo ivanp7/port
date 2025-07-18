@@ -52,8 +52,8 @@ port_memory_reference(
     if (PORT_MEMORY_REF_IS_FAR(ref))
     {
         assert(num_idx_bits < PORT_NUM_BITS(port_memory_ref_t));
-        assert(((port_size_t)(ref >> num_idx_bits) << offset_shift) >> offset_shift ==
-                (port_size_t)(ref >> num_idx_bits));
+        assert(((size_t)(ref >> num_idx_bits) << offset_shift) >> offset_shift ==
+                (size_t)(ref >> num_idx_bits));
     }
     assert(memory_table != NULL);
 #endif
@@ -68,7 +68,7 @@ port_memory_reference(
 #ifdef __OPENCL_C_VERSION__
 
 #  define MEMCPY_IMPL \
-    for (port_size_t i = 0; i < num_units; i++) dest[i] = src[i];
+    for (size_t i = 0; i < num_units; i++) dest[i] = src[i];
 
 #else
 
@@ -83,7 +83,7 @@ void
 port_memory_copy_global_to_private(
         port_private_memory_ptr_t restrict dest,
         port_const_global_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -92,7 +92,7 @@ void
 port_memory_copy_constant_to_private(
         port_private_memory_ptr_t restrict dest,
         port_constant_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -101,7 +101,7 @@ void
 port_memory_copy_local_to_private(
         port_private_memory_ptr_t restrict dest,
         port_const_local_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -110,7 +110,7 @@ void
 port_memory_copy_private_to_private(
         port_private_memory_ptr_t restrict dest,
         port_const_private_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -119,7 +119,7 @@ void
 port_memory_copy_global_to_local(
         port_local_memory_ptr_t restrict dest,
         port_const_global_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -128,7 +128,7 @@ void
 port_memory_copy_constant_to_local(
         port_local_memory_ptr_t restrict dest,
         port_constant_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -137,7 +137,7 @@ void
 port_memory_copy_local_to_local(
         port_local_memory_ptr_t restrict dest,
         port_const_local_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -146,7 +146,7 @@ void
 port_memory_copy_private_to_local(
         port_local_memory_ptr_t restrict dest,
         port_const_private_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -155,7 +155,7 @@ void
 port_memory_copy_global_to_global(
         port_global_memory_ptr_t restrict dest,
         port_const_global_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -164,7 +164,7 @@ void
 port_memory_copy_local_to_global(
         port_global_memory_ptr_t restrict dest,
         port_const_local_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -173,7 +173,7 @@ void
 port_memory_copy_constant_to_global(
         port_global_memory_ptr_t restrict dest,
         port_constant_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
@@ -182,7 +182,7 @@ void
 port_memory_copy_private_to_global(
         port_global_memory_ptr_t restrict dest,
         port_const_private_memory_ptr_t restrict src,
-        port_size_t num_units)
+        size_t num_units)
 {
     MEMCPY_IMPL
 }
