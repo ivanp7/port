@@ -30,23 +30,28 @@
 
 #ifdef __OPENCL_C_VERSION__
 
-#  define PORT_WORK_ITEM_INDEX_PARAMETER(work_item_idx) // nothing
+/**
+ * @brief Declare kernel function parameter for work-item index.
+ */
+#  define PORT_KERNEL_PARAM_WORK_ITEM_INDEX(dimindx) // nothing
 
 /**
- * @brief Define and initialize kernel function local variable for work-item index.
+ * @brief Get work-item index.
  */
-#  define PORT_WORK_ITEM_INDEX_INITIALIZE(work_item_idx) \
-    port_work_item_index_t work_item_idx = get_global_id(0)
+#  define PORT_WORK_ITEM_INDEX(dimindx) get_global_id((dimindx))
 
 #else
 
 /**
  * @brief Declare kernel function parameter for work-item index.
  */
-#  define PORT_WORK_ITEM_INDEX_PARAMETER(work_item_idx) \
-    , port_work_item_index_t work_item_idx
+#  define PORT_KERNEL_PARAM_WORK_ITEM_INDEX(dimindx) \
+    , port_work_item_index_t _port_work_item_idx_##dimindx
 
-#  define PORT_WORK_ITEM_INDEX_INITIALIZE(work_item_idx) // nothing
+/**
+ * @brief Get work-item index.
+ */
+#  define PORT_WORK_ITEM_INDEX(dimindx) _port_work_item_idx_##dimindx
 
 #endif
 
