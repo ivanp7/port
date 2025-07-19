@@ -37,6 +37,14 @@ typedef port_sint_quarter_t port_memory_ref_quarter_t; ///< Memory reference (qu
 typedef port_sint_half_t port_memory_ref_half_t;       ///< Memory reference (half size).
 typedef port_sint_single_t port_memory_ref_t;          ///< Memory reference.
 
+/**
+ * @brief Memory reference format description.
+ */
+typedef struct port_memory_ref_format {
+    port_uint8_t num_tidx_bits; ///< Number of table index bits in far memory references.
+    port_uint8_t offset_shift;  ///< Offset scale (left shift) in far memory references.
+} port_memory_ref_format_t;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Memory unit
 ///////////////////////////////////////////////////////////////////////////////

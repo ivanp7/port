@@ -140,19 +140,19 @@
 // Sizes of relative types
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PORT_NUM_BYTE_BITS_LOG2 3 ///< Log2(bits per byte)
+#define PORT_CHAR_BIT_LOG2  3 ///< Log2(CHAR_BIT).
 
-#define PORT_TYPE_SIZE_QUARTER 0 ///< Log2(size)-3 of quarter type.
-#define PORT_TYPE_SIZE_HALF 1    ///< Log2(size)-3 of half type.
-#define PORT_TYPE_SIZE_SINGLE 2  ///< Log2(size)-3 of single type.
-#define PORT_TYPE_SIZE_DOUBLE 3  ///< Log2(size)-3 of double type.
+#define PORT_TYPE_LOGSIZE_QUARTER  0 ///< Log2(sizeof(quarter)).
+#define PORT_TYPE_LOGSIZE_HALF     1 ///< Log2(sizeof(half)).
+#define PORT_TYPE_LOGSIZE_SINGLE   2 ///< Log2(sizeof(single)).
+#define PORT_TYPE_LOGSIZE_DOUBLE   3 ///< Log2(sizeof(double)).
 
-#define PORT_TYPE_SIZE_NUM_BITS 2 ///< Number of bits required to store log2(size) of a type.
+#define PORT_TYPE_LOGSIZE_NUM_BITS 2 ///< Number of bits required to store log2(size) of a type.
 
 /**
- * @brief Number of bits in a type.
+ * @brief Calculate number of bits in a type from log2(size)-log2(CHAR_BIT).
  */
-#define PORT_TYPE_NUM_BITS(size) ((size_t)1 << (PORT_NUM_BYTE_BITS_LOG2 + (size)))
+#define PORT_TYPE_NUM_BITS(logsize) ((size_t)1 << (PORT_CHAR_BIT_LOG2 + (logsize)))
 
 ///////////////////////////////////////////////////////////////////////////////
 // Relative types
@@ -219,7 +219,7 @@
 #define PORT_UINT(literal) PORT_UINT32(literal) ///< Literal of default unsigned integer.
 #define PORT_SINT(literal) PORT_SINT32(literal) ///< Literal of default signed integer.
 
-#define PORT_INT_SIZE PORT_TYPE_SIZE_SINGLE ///< Log2(size) of default integer.
+#define PORT_INT_LOGSIZE PORT_TYPE_LOGSIZE_SINGLE ///< Log2(size) of default integer.
 
 #else // PORT_FEATURE_DEFAULT_INTEGER_64
 
@@ -230,7 +230,7 @@
 #define PORT_UINT(literal) PORT_UINT64(literal) ///< Literal of default unsigned integer.
 #define PORT_SINT(literal) PORT_SINT64(literal) ///< Literal of default signed integer.
 
-#define PORT_INT_SIZE PORT_TYPE_SIZE_DOUBLE ///< Log2(size) of default integer.
+#define PORT_INT_LOGSIZE PORT_TYPE_LOGSIZE_DOUBLE ///< Log2(size) of default integer.
 
 #endif // PORT_FEATURE_DEFAULT_INTEGER_64
 
@@ -249,7 +249,7 @@
 
 #define PORT_FLOAT(literal) PORT_FLOAT32(literal) ///< Literal of default floating-point number.
 
-#define PORT_FLOAT_SIZE PORT_TYPE_SIZE_SINGLE ///< Log2(size) of default floating-point number.
+#define PORT_FLOAT_LOGSIZE PORT_TYPE_LOGSIZE_SINGLE ///< Log2(size) of default floating-point number.
 
 #else // PORT_FEATURE_DEFAULT_FLOAT_64
 
@@ -266,14 +266,14 @@
 
 #define PORT_FLOAT(literal) PORT_FLOAT64(literal) ///< Literal of default floating-point number.
 
-#define PORT_FLOAT_SIZE PORT_TYPE_SIZE_DOUBLE ///< Log2(size) of default floating-point number.
+#define PORT_FLOAT_LOGSIZE PORT_TYPE_LOGSIZE_DOUBLE ///< Log2(size) of default floating-point number.
 
 #endif // PORT_FEATURE_DEFAULT_FLOAT_64
 
 /**
  * @brief Invalid value of a floating-point number log2(size).
  */
-#define PORT_FLOAT_SIZE_INVALID PORT_TYPE_SIZE_QUARTER
+#define PORT_FLOAT_LOGSIZE_INVALID PORT_TYPE_LOGSIZE_QUARTER
 
 #endif // _PORT_TYPES_DEF_H_
 

@@ -28,6 +28,10 @@
 
 #include "port/types.typ.h"
 
+///////////////////////////////////////////////////////////////////////////////
+// Sizes of types
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * @brief Number of bits in byte.
  */
@@ -42,67 +46,21 @@
  */
 #define PORT_NUM_BITS(type) (sizeof(type) * PORT_CHAR_BIT)
 
-/**
- * @brief Get minumum number of (1 << unit) units the number fits in.
- */
-#define PORT_NUM_UNITS(type, v, unit) (((type)(v) + ((type)1 << (unit)) - (type)1) >> (unit))
-/**
- * @brief Round number up to (1 << unit) unit border.
- */
-#define PORT_ROUND_UP(type, v, unit) (((type)(v) + ((type)1 << (unit)) - (type)1) & \
-        ~(((type)1 << (unit)) - (type)1))
+///////////////////////////////////////////////////////////////////////////////
+// Operations on integers
+///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Construct a byte from separate bits.
+ * @brief Round an integer up to the nearest number divisible by (1 << unit_bits).
  */
-#define PORT_BYTE(msb, b6, b5, b4, b3, b2, b1, lsb)                 \
-    ((port_uint8_t)((bool)(lsb) | ((bool)(b1) << 1) | \
-        ((bool)(b2) << 2) | ((bool)(b3) << 3) |       \
-        ((bool)(b4) << 4) | ((bool)(b5) << 5) |       \
-        ((bool)(b6) << 6) | ((bool)(msb) << 7)))
+#define PORT_INT_ROUND(type, value, unit_bits) \
+    (((type)(value) + ((type)1 << (unit_bits)) - 1) & ~(((type)1 << (unit_bits)) - 1))
 
 /**
- * @brief Concatenate bits.
- *
- * lsval must be no longer than 'shift' bits.
+ * @brief Calculate PORT_INT_ROUND(value, unit_bits) / (1 << unit_bits).
  */
-#define PORT_CONCAT_BITS(type, msval, shift, lsval) \
-    (((type)(msval) << (shift)) | (type)(lsval))
-
-/**
- * @brief Extract most significant bits.
- */
-#define PORT_EXTRACT_MSBITS(type, value, shift) \
-    ((type)((value) >> (shift)))
-/**
- * @brief Extract least significant bits.
- */
-#define PORT_EXTRACT_LSBITS(type, value, length) \
-    ((type)(value) & (((type)1 << (length)) - (type)1))
-/**
- * @brief Extract bits.
- */
-#define PORT_EXTRACT_BITS(type, value, shift, length) \
-    PORT_EXTRACT_LSBITS(type, PORT_EXTRACT_MSBITS(type, (value), (shift)), (length))
-
-/**
- * @brief Extract most significant bits to nullable storage.
- */
-#define PORT_EXTRACT_MSBITS_TO(ptr, type, value, shift) do { \
-    if ((ptr) != NULL) *(type*)(ptr) = PORT_EXTRACT_MSBITS(type, (value), (shift)); \
-} while (0)
-/**
- * @brief Extract least significant bits to nullable storage.
- */
-#define PORT_EXTRACT_LSBITS_TO(ptr, type, value, length) do { \
-    if ((ptr) != NULL) *(type*)(ptr) = PORT_EXTRACT_LSBITS(type, (value), (length)); \
-} while (0)
-/**
- * @brief Extract bits to nullable storage.
- */
-#define PORT_EXTRACT_BITS_TO(ptr, type, value, shift, length) do { \
-    if ((ptr) != NULL) *(type*)(ptr) = PORT_EXTRACT_BITS(type, (value), (shift), (length)); \
-} while (0)
+#define PORT_INT_UNITS(type, value, unit_bits) \
+    (((type)(value) + ((type)1 << (unit_bits)) - 1) >> (unit_bits))
 
 ///////////////////////////////////////////////////////////////////////////////
 // Masks
@@ -113,10 +71,10 @@
 #define PORT_BIT32(n) ((port_uint32_t)1 << (n)) ///< 32-bit mask with nth bit set.
 #define PORT_BIT64(n) ((port_uint64_t)1 << (n)) ///< 64-bit mask with nth bit set.
 
-#define PORT_ZMASK8(n)  (PORT_BIT8(n) - (port_uint8_t)1)   ///< 8-bit mask with 0<=n<8 lower bits set.
-#define PORT_ZMASK16(n) (PORT_BIT16(n) - (port_uint16_t)1) ///< 16-bit mask with 0<=n<16 lower bits set.
-#define PORT_ZMASK32(n) (PORT_BIT32(n) - (port_uint32_t)1) ///< 32-bit mask with 0<=n<32 lower bits set.
-#define PORT_ZMASK64(n) (PORT_BIT64(n) - (port_uint64_t)1) ///< 64-bit mask with 0<=n<64 lower bits set.
+#define PORT_ZMASK8(n)  (PORT_BIT8(n) - 1)   ///< 8-bit mask with 0<=n<8 lower bits set.
+#define PORT_ZMASK16(n) (PORT_BIT16(n) - 1) ///< 16-bit mask with 0<=n<16 lower bits set.
+#define PORT_ZMASK32(n) (PORT_BIT32(n) - 1) ///< 32-bit mask with 0<=n<32 lower bits set.
+#define PORT_ZMASK64(n) (PORT_BIT64(n) - 1) ///< 64-bit mask with 0<=n<64 lower bits set.
 
 #define PORT_NZMASK8(n)  ((port_uint8_t)-1 >> (8 - (n)))   ///< 8-bit mask with 0<n<=8 lower bits set.
 #define PORT_NZMASK16(n) ((port_uint16_t)-1 >> (16 - (n))) ///< 16-bit mask with 0<n<=16 lower bits set.
@@ -151,6 +109,47 @@
 #define PORT_INT_NZMASK(n) PORT_NZMASK64(n) ///< Default size mask with 0<n<=64 lower bits set.
 
 #endif
+
+///////////////////////////////////////////////////////////////////////////////
+// Operations on bits
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Construct a byte from separate bits.
+ */
+#define PORT_BYTE(msb, b6, b5, b4, b3, b2, b1, lsb) \
+    (((port_uint8_t)!!(lsb)) |      \
+     ((port_uint8_t)!!(b1) << 1) |  \
+     ((port_uint8_t)!!(b2) << 2) |  \
+     ((port_uint8_t)!!(b3) << 3) |  \
+     ((port_uint8_t)!!(b4) << 4) |  \
+     ((port_uint8_t)!!(b5) << 5) |  \
+     ((port_uint8_t)!!(b6) << 6) |  \
+     ((port_uint8_t)!!(msb) << 7))
+
+/**
+ * @brief Concatenate bits.
+ *
+ * lsval must be no longer than 'shift' bits.
+ */
+#define PORT_CONCAT_BITS(type, msval, shift, lsval) \
+    (((type)(msval) << (shift)) | (type)(lsval))
+
+/**
+ * @brief Extract most significant bits.
+ */
+#define PORT_EXTRACT_MSBITS(type, value, shift) \
+    ((type)((value) >> (shift)))
+/**
+ * @brief Extract least significant bits.
+ */
+#define PORT_EXTRACT_LSBITS(type, value, length) \
+    ((type)(value) & (((type)1 << (length)) - 1))
+/**
+ * @brief Extract bits.
+ */
+#define PORT_EXTRACT_BITS(type, value, shift, length) \
+    PORT_EXTRACT_LSBITS(type, PORT_EXTRACT_MSBITS(type, (value), (shift)), (length))
 
 ///////////////////////////////////////////////////////////////////////////////
 // upsample()

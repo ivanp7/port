@@ -27,80 +27,81 @@
 #define _PORT_MEMORY_DEF_H_
 
 #include "port/bit.def.h"
-#include "port/types.def.h"
 
-///////////////////////////////////////////////////////////////////////////////
-// Memory reference
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief Check if memory reference is far.
+ *
+ * Meaning of a memory reference value is different depending on its sign.
+ * If reference >= 0, then it is a far reference, otherwise it is a near reference.
+ */
+#define PORT_MEMORY_REF_IS_FAR(ref) ((ref) >= 0)
 
 /**
  * @brief Construct far memory reference.
  *
  * Layout of far memory reference:
  *
- * [...offset|memory_table_index]
- *            ^^^^^^^^^^^^^^^^^^
- *               num_idx_bits
+ * reference = (offset << num_tidx_bits) | table_index
+ *
+ * [...offset|table_index]
+ *            ^^^^^^^^^^^
+ *          <num_tidx_bits>
  */
-#define PORT_MEMORY_REF_FAR(ref_type, num_idx_bits, idx, offset) \
-    PORT_CONCAT_BITS(ref_type, offset, num_idx_bits, idx)
+#define PORT_MEMORY_REF_FAR(ref_type, num_tidx_bits, table_index, offset) \
+    PORT_CONCAT_BITS(ref_type, (offset), (num_tidx_bits), (table_index))
 
 /**
- * @brief Check if memory reference is far.
+ * @brief Extract memory table index from a far reference.
  */
-#define PORT_MEMORY_REF_IS_FAR(ref) ((ref) >= 0)
+#define PORT_MEMORY_REF_FAR__TABLE_INDEX(ref, num_tidx_bits) \
+    PORT_EXTRACT_LSBITS(port_uint_single_t, (ref), (num_tidx_bits))
 
 /**
- * @brief Parse far memory reference.
+ * @brief Extract offset from a far reference.
  */
-#define PORT_MEMORY_REF_FAR_PARSE(ref, ref_type, num_idx_bits, idx_ptr, offset_ptr) do { \
-    PORT_EXTRACT_LSBITS_TO((idx_ptr), ref_type, (ref), (num_idx_bits));                  \
-    PORT_EXTRACT_MSBITS_TO((offset_ptr), ref_type, (ref), (num_idx_bits));               \
-} while (0)
+#define PORT_MEMORY_REF_FAR__OFFSET(ref, num_tidx_bits) \
+    PORT_EXTRACT_MSBITS(size_t, (ref), (num_tidx_bits))
+
+/**
+ * @brief Follow far memory reference.
+ *
+ * address = memory_table[reference.table_index] + (reference.offset << offset_shift).
+ */
+#define PORT_MEMORY_FAR_AT(ref, num_tidx_bits, offset_shift, memory_table) \
+    ((memory_table)[PORT_MEMORY_REF_FAR__TABLE_INDEX((ref), (num_tidx_bits))] \
+     + (PORT_MEMORY_REF_FAR__OFFSET((ref), (num_tidx_bits)) << (offset_shift)))
+
+/**
+ * @brief Follow near memory reference.
+ *
+ * Reference is a local offset in memory units,
+ * so address = base_ptr - reference.
+ *
+ * If base_ptr is NULL, alt_base_ptr is used instead.
+ */
+#define PORT_MEMORY_NEAR_AT(ref, base_ptr, alt_base_ptr) \
+    (((base_ptr) ? (base_ptr) : (alt_base_ptr)) - (ref))
 
 /**
  * @brief Follow memory reference.
- *
- * Meaning of a memory reference value is different depending on its sign.
- *
- * If reference < 0, then it is a local offset in memory units,
- * so address = base_ptr - reference
- *
- * If reference >= 0, then its value is interpreted as
- * reference = (offset << num_idx_bits) | memory_table_index,
- * so address = memory_table[memory_table_index] + (offset << offset_shift).
- *
- * If base_ptr is NULL, memory_table[0] is used instead.
  */
-#define PORT_MEMORY_REFERENCE(ref, num_idx_bits, offset_shift, base_ptr, memory_table) \
-    (PORT_MEMORY_REF_IS_FAR(ref) ?                              \
-     (memory_table)[(ref) & PORT_SINGLE_ZMASK(num_idx_bits)] +  \
-     ((size_t)((ref) >> (num_idx_bits)) << (offset_shift)) :    \
-     (((base_ptr) ? (base_ptr) : (memory_table)[0]) - (ref)))
+#define PORT_MEMORY_AT(ref, num_tidx_bits, offset_shift, base_ptr, memory_table) \
+    (PORT_MEMORY_REF_IS_FAR(ref) ? \
+     PORT_MEMORY_FAR_AT((ref), (num_tidx_bits), (offset_shift), (memory_table)) : \
+     PORT_MEMORY_NEAR_AT((ref), (base_ptr), (memory_table)[0]))
 
 /**
- * @brief Number of bits enough to store any valid memory table index length --
- * number of index bits in far memory references.
- *
- * For 32-bit memory references, the value is 5 (2^5 = 32).
- * For 16-bit memory references, the value is 4 (2^4 = 16).
- * For  8-bit memory references, the value is 3 (2^3 = 8).
+ * @brief Number of bits needed to hold any bit number in port_memory_ref_quarter_t.
  */
-#define PORT_MEMORY_REF_NUM_IDXLEN_BITS(ref_type) \
-    (sizeof(ref_type) / 2 + PORT_NUM_BYTE_BITS_LOG2)
-
+#define PORT_MEMORY_REF_QUARTER_NUM_SIZE_BITS  3
 /**
- * @brief Invalid value of a memory reference log2(size).
+ * @brief Number of bits needed to hold any bit number in port_memory_ref_half_t.
  */
-#define PORT_MEMORY_REF_SIZE_INVALID PORT_TYPE_SIZE_DOUBLE
-
+#define PORT_MEMORY_REF_HALF_NUM_SIZE_BITS     4
 /**
- * @brief Normalize unit-byte pair of indices.
+ * @brief Number of bits needed to hold any bit number in port_memory_ref_t.
  */
-#define PORT_MEMORY_IDX_NORMALIZE(unit_idx, subunit_idx, subunit_size) do {  \
-    (unit_idx) += (subunit_idx) >> (PORT_TYPE_SIZE_SINGLE - (subunit_size)); \
-    (subunit_idx) &= (1 << (PORT_TYPE_SIZE_SINGLE - (subunit_size))) - 1;    \
-} while (0)
+#define PORT_MEMORY_REF_NUM_SIZE_BITS          5
 
 #endif // _PORT_MEMORY_DEF_H_
 

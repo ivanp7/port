@@ -1,6 +1,9 @@
 #include "test.h"
 
 #include "port/memory.fun.h"
+#include "port/memory/copy.fun.h"
+#include "port/memory/read.fun.h"
+#include "port/memory/write.fun.h"
 #include "port/memory.def.h"
 #include "port/float.fun.h"
 #include "port/constants.def.h"
@@ -31,11 +34,11 @@ port_uint8_t test_memcpy(memcpy_fn fn)
     return 1;
 }
 
-TEST(PORT_MEMORY_REF_NUM_IDXLEN_BITS)
+TEST(PORT_MEMORY_REF_IS_FAR)
 {
-    ASSERT_EQ(PORT_MEMORY_REF_NUM_IDXLEN_BITS(port_memory_ref_quarter_t), 3, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_MEMORY_REF_NUM_IDXLEN_BITS(port_memory_ref_half_t), 4, port_uint32_t, "%u");
-    ASSERT_EQ(PORT_MEMORY_REF_NUM_IDXLEN_BITS(port_memory_ref_t), 5, port_uint32_t, "%u");
+    ASSERT_TRUE(PORT_MEMORY_REF_IS_FAR(1));
+    ASSERT_TRUE(PORT_MEMORY_REF_IS_FAR(0));
+    ASSERT_FALSE(PORT_MEMORY_REF_IS_FAR(-1));
 }
 
 TEST(PORT_MEMORY_REF_FAR)
@@ -55,24 +58,21 @@ TEST(PORT_MEMORY_REF_FAR)
     ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 13, 7331, 1337), 0xA73CA3, port_uint_single_t, "%X");
 }
 
-TEST(PORT_MEMORY_REF_FAR_PARSE)
+TEST(PORT_MEMORY_REF_FAR__TABLE_INDEX)
 {
-    port_uint_single_t idx = 0, offset = 0;
-
-    PORT_MEMORY_REF_FAR_PARSE(0xACAB5, port_uint_single_t, 4, &idx, &offset);
-    ASSERT_EQ(idx, 5, port_uint_single_t, "%X");
-    ASSERT_EQ(offset, 0xACAB, port_uint_single_t, "%X");
-
-    PORT_MEMORY_REF_FAR_PARSE(0x4DEADBEE, port_uint_single_t, 30, &idx, &offset);
-    ASSERT_EQ(idx, 0xDEADBEE, port_uint_single_t, "%X");
-    ASSERT_EQ(offset, 1, port_uint_single_t, "%X");
-
-    PORT_MEMORY_REF_FAR_PARSE(0xA73CA3, port_uint_single_t, 13, &idx, &offset);
-    ASSERT_EQ(idx, 7331, port_uint_single_t, "%u");
-    ASSERT_EQ(offset, 1337, port_uint_single_t, "%u");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__TABLE_INDEX(0xACAB5, 4), 5, port_uint_single_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__TABLE_INDEX(0x4DEADBEE, 30), 0xDEADBEE, port_uint_single_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__TABLE_INDEX(0xA73CA3, 13), 7331, port_uint_single_t, "%X");
 }
 
-TEST(port_memory_reference)
+TEST(PORT_MEMORY_REF_FAR__OFFSET)
+{
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__OFFSET(0xACAB5, 4), 0xACAB, port_uint_single_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__OFFSET(0x4DEADBEE, 30), 1, port_uint_single_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__OFFSET(0xA73CA3, 13), 1337, port_uint_single_t, "%X");
+}
+
+TEST(port_memory_at)
 {
     port_memory_unit_t unit0 = {0};
     port_memory_unit_t unit1 = {0};
@@ -83,26 +83,26 @@ TEST(port_memory_reference)
     port_const_memory_ptr_t ptr;
 
     ref = -1;
-    ptr = port_memory_reference(ref, 0, 0, &unit2, memory_table);
+    ptr = port_memory_at(ref, (port_memory_ref_format_t){0, 0}, &unit2, memory_table);
     ASSERT_EQ(ptr - &unit2, 1, ptrdiff_t, "%ti");
 
     ref = -10;
-    ptr = port_memory_reference(ref, 10, 20, NULL, memory_table);
+    ptr = port_memory_at(ref, (port_memory_ref_format_t){10, 20}, NULL, memory_table);
     ASSERT_EQ(ptr - &unit0, 10, ptrdiff_t, "%ti");
 
     port_uint8_t num_idx_bits = 2;
     port_uint8_t offset_shift = 8;
 
     ref = PORT_MEMORY_REF_FAR(port_memory_ref_t, num_idx_bits, 0, 0);
-    ptr = port_memory_reference(ref, num_idx_bits, offset_shift, NULL, memory_table);
+    ptr = port_memory_at(ref, (port_memory_ref_format_t){num_idx_bits, offset_shift}, NULL, memory_table);
     ASSERT_EQ(ptr - &unit0, 0, ptrdiff_t, "%ti");
 
     ref = PORT_MEMORY_REF_FAR(port_memory_ref_t, num_idx_bits, 1, 10);
-    ptr = port_memory_reference(ref, num_idx_bits, offset_shift, NULL, memory_table + 1);
+    ptr = port_memory_at(ref, (port_memory_ref_format_t){num_idx_bits, offset_shift}, NULL, memory_table + 1);
     ASSERT_EQ(ptr - &unit2, 10 << offset_shift, ptrdiff_t, "%ti");
 
     ref = PORT_MEMORY_REF_FAR(port_memory_ref_t, num_idx_bits, 0, 5);
-    ptr = port_memory_reference(ref, num_idx_bits, offset_shift, NULL, memory_table + 2);
+    ptr = port_memory_at(ref, (port_memory_ref_format_t){num_idx_bits, offset_shift}, NULL, memory_table + 2);
     ASSERT_EQ(ptr - &unit2, 5 << offset_shift, ptrdiff_t, "%ti");
 }
 
