@@ -29,7 +29,43 @@
 #include "port/types.typ.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-// float16 -> float32
+// ULP distance between floating-point numbers
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Calculate distance between 32-bit floating-point numbers in ULPs.
+ *
+ * If either of values is infinity or NaN, the maximum value is returned.
+ *
+ * @return ULP distance.
+ */
+port_uint32_t
+port_float32_ulp_distance(
+        port_float32_t value1,
+        port_float32_t value2
+);
+
+/**
+ * @brief Calculate distance between 64-bit floating-point numbers in ULPs.
+ *
+ * If either of values is infinity or NaN, the maximum value is returned.
+ *
+ * @return ULP distance.
+ */
+port_uint64_t
+port_float64_ulp_distance(
+        port_float64_t value1,
+        port_float64_t value2
+);
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_float_ulp_distance port_float32_ulp_distance
+#else
+#  define port_float_ulp_distance port_float64_ulp_distance
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+// float16 -> float32 conversions
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -105,7 +141,7 @@ port_convert_float16_to_float32_v16(
 );
 
 ///////////////////////////////////////////////////////////////////////////////
-// float32 -> float16
+// float32 -> float16 conversions
 ///////////////////////////////////////////////////////////////////////////////
 
 /**

@@ -26,8 +26,91 @@
 #include "port/bit.def.h"
 #include "port/vector.def.h"
 
+#ifndef __OPENCL_C_VERSION__
+#  include <math.h>
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
-// float16 -> float32
+// ULP distance between floating-point numbers
+///////////////////////////////////////////////////////////////////////////////
+
+port_uint32_t
+port_float32_ulp_distance(
+        port_float32_t value1,
+        port_float32_t value2)
+{
+    if (!isfinite(value1) || !isfinite(value2))
+        return -1;
+    else if (value1 == value2)
+        return 0;
+
+    // Ensure value1 >= value2
+    if (value1 < value2)
+    {
+        port_float32_t temp = value1;
+        value1 = value2;
+        value2 = temp;
+    }
+
+    union {
+        port_float32_t as_float;
+        port_uint32_t as_uint;
+    } u1 = {.as_float = value1}, u2 = {.as_float = value2};
+
+    if (u1.as_uint & PORT_BIT32(31)) // float is negative
+    {
+        u1.as_uint &= ~PORT_BIT32(31); // remove the sign bit
+        u1.as_uint = -u1.as_uint; // negate the number
+    }
+
+    if (u2.as_uint & PORT_BIT32(31))
+    {
+        u2.as_uint &= ~PORT_BIT32(31);
+        u2.as_uint = -u2.as_uint;
+    }
+
+    return u1.as_uint - u2.as_uint;
+}
+
+port_uint64_t
+port_float64_ulp_distance(
+        port_float64_t value1,
+        port_float64_t value2)
+{
+    if (!isfinite(value1) || !isfinite(value2))
+        return -1;
+    else if (value1 == value2)
+        return 0;
+
+    if (value1 < value2)
+    {
+        port_float64_t temp = value1;
+        value1 = value2;
+        value2 = temp;
+    }
+
+    union {
+        port_float64_t as_float;
+        port_uint64_t as_uint;
+    } u1 = {.as_float = value1}, u2 = {.as_float = value2};
+
+    if (u1.as_uint & PORT_BIT64(63))
+    {
+        u1.as_uint &= ~PORT_BIT64(63);
+        u1.as_uint = -u1.as_uint;
+    }
+
+    if (u2.as_uint & PORT_BIT64(63))
+    {
+        u2.as_uint &= ~PORT_BIT64(63);
+        u2.as_uint = -u2.as_uint;
+    }
+
+    return u1.as_uint - u2.as_uint;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// float16 -> float32 conversions
 ///////////////////////////////////////////////////////////////////////////////
 
 #define F16_MNT_NBITS 10 // number of mantissa bits
@@ -154,7 +237,7 @@ port_convert_float16_to_float32_v16(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// float32 -> float16
+// float32 -> float16 conversions
 ///////////////////////////////////////////////////////////////////////////////
 
 port_uint16_t

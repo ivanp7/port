@@ -6,6 +6,54 @@
 
 #include <tgmath.h>
 
+TEST(port_float32_ulp_distance)
+{
+    ASSERT_EQ(port_float32_ulp_distance(0.0f, 0.0f), 0, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(0.0f, copysign(0.0f, -1.0f)), 0, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(1.0f, 1.0f), 0, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(-2.5f, -2.5f), 0, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(2.0f, 1.0f), 8388608, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(-2.0f, -1.0f), 8388608, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(2.0f, -1.0f), 2139095040, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(-2.0f, 1.0f), 2139095040, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(0.0f, nextafter(0.0f, +PORT_M_INFINITY)), 1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(0.0f, nextafter(0.0f, -PORT_M_INFINITY)), 1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(1.0f, nextafter(1.0f, +PORT_M_INFINITY)), 1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(1.0f, nextafter(1.0f, -PORT_M_INFINITY)), 1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(-1.0f, nextafter(-1.0f, +PORT_M_INFINITY)), 1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(-1.0f, nextafter(-1.0f, -PORT_M_INFINITY)), 1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(1.0f, PORT_M_INFINITY), (port_uint32_t)-1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(PORT_M_INFINITY, -1.0f), (port_uint32_t)-1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(-1.0f, PORT_M_NAN), (port_uint32_t)-1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(PORT_M_NAN, 1.0f), (port_uint32_t)-1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(PORT_M_INFINITY, PORT_M_INFINITY), (port_uint32_t)-1, port_uint32_t, "%u");
+    ASSERT_EQ(port_float32_ulp_distance(PORT_M_NAN, PORT_M_NAN), (port_uint32_t)-1, port_uint32_t, "%u");
+}
+
+TEST(port_float64_ulp_distance)
+{
+    ASSERT_EQ(port_float64_ulp_distance(0.0, 0.0), 0, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(0.0, copysign(0.0, -1.0)), 0, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(1.0, 1.0), 0, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(-2.5, -2.5), 0, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(2.0, 1.0), 4503599627370496, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(-2.0, -1.0), 4503599627370496, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(2.0, -1.0), 9218868437227405312, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(-2.0, 1.0), 9218868437227405312, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(0.0, nextafter(0.0, +PORT_M_INFINITY)), 1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(0.0, nextafter(0.0, -PORT_M_INFINITY)), 1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(1.0, nextafter(1.0, +PORT_M_INFINITY)), 1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(1.0, nextafter(1.0, -PORT_M_INFINITY)), 1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(-1.0, nextafter(-1.0, +PORT_M_INFINITY)), 1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(-1.0, nextafter(-1.0, -PORT_M_INFINITY)), 1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(1.0, PORT_M_INFINITY), (port_uint64_t)-1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(PORT_M_INFINITY, -1.0), (port_uint64_t)-1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(-1.0, PORT_M_NAN), (port_uint64_t)-1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(PORT_M_NAN, 1.0), (port_uint64_t)-1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(PORT_M_INFINITY, PORT_M_INFINITY), (port_uint64_t)-1, port_uint64_t, "%lu");
+    ASSERT_EQ(port_float64_ulp_distance(PORT_M_NAN, PORT_M_NAN), (port_uint64_t)-1, port_uint64_t, "%lu");
+}
+
 TEST(port_convert_float16_to_float32)
 {
     ASSERT_EQ(port_convert_float16_to_float32(0x0000), 0.0f, port_float32_t, "%g");

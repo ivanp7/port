@@ -47,7 +47,7 @@ CFLAGS += [f'-I{INCLUDE_DIR}']
 CFLAGS += pkgconfig.cflags('OpenCL').split(' ')
 CFLAGS += ['-DCL_TARGET_OPENCL_VERSION=300']
 
-LIBS = []
+LIBS = ['-lm']
 LIBS += pkgconfig.libs('OpenCL').split(' ')
 
 ## }}}
