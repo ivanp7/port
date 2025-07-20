@@ -76,20 +76,20 @@ typedef union port_memory_unit {
     // As floating-point number
     port_float_single_t as_float_single;
 
-    port_uint_half_t as_float_half[2];    // no native float16 type
-    port_uint_half_v2_t as_float_half_v2; // use integers instead
-
     // As memory reference
     port_memory_ref_t as_ref;
     port_memory_ref_half_t as_ref_half[2];
     port_memory_ref_quarter_t as_ref_quarter[4];
 } port_memory_unit_t;
 
+#define PORT_MEMORY_UNIT__AS_FLOAT_HALF     as_uint_half    ///< Field for accesing unit as float_half
+#define PORT_MEMORY_UNIT__AS_FLOAT_HALF_V2  as_uint_half_v2 ///< Field for accesing unit as float_half_v2
+
 /**
  * @brief Type punning union for double size types.
  */
 typedef union port_memory_unit_double {
-    port_memory_unit_t as_units[2];
+    port_memory_unit_t as_unit[2];
 
     port_uint_double_t as_uint_double;
     port_sint_double_t as_sint_double;

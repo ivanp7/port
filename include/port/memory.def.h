@@ -91,17 +91,17 @@
      PORT_MEMORY_NEAR_AT((ref), (base_ptr), (memory_table)[0]))
 
 /**
- * @brief Number of bits needed to hold any bit number in port_memory_ref_quarter_t.
+ * @brief Number of bits enough for storing any bit number in port_memory_ref_quarter_t.
  */
-#define PORT_MEMORY_REF_QUARTER_NUM_SIZE_BITS  3
+#define PORT_MEMORY_REF_QUARTER_LOGBITSIZE  3
 /**
- * @brief Number of bits needed to hold any bit number in port_memory_ref_half_t.
+ * @brief Number of bits enough for storing any bit number in port_memory_ref_half_t.
  */
-#define PORT_MEMORY_REF_HALF_NUM_SIZE_BITS     4
+#define PORT_MEMORY_REF_HALF_LOGBITSIZE     4
 /**
- * @brief Number of bits needed to hold any bit number in port_memory_ref_t.
+ * @brief Number of bits enough for storing any bit number in port_memory_ref_t.
  */
-#define PORT_MEMORY_REF_NUM_SIZE_BITS          5
+#define PORT_MEMORY_REF_LOGBITSIZE          5
 
 #endif // _PORT_MEMORY_DEF_H_
 

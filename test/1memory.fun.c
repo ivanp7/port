@@ -206,8 +206,8 @@ TEST(port_memory_read_private_uint64)
     port_memory_unit_double_t double_units[2] = {{.as_uint_double = 0x00105568AABCEDFFull},
         {.as_uint_double = 0xFEEDDEADABBAACABull}};
 
-    port_memory_unit_t memory[] = {double_units[0].as_units[0], double_units[0].as_units[1],
-        double_units[1].as_units[0], double_units[1].as_units[1]};
+    port_memory_unit_t memory[] = {double_units[0].as_unit[0], double_units[0].as_unit[1],
+        double_units[1].as_unit[0], double_units[1].as_unit[1]};
 
     ASSERT_EQ(port_memory_read_private_uint64(memory, 0), double_units[0].as_uint_double, port_uint64_t, "%lX");
     ASSERT_EQ(port_memory_read_private_uint64(memory, 1), double_units[1].as_uint_double, port_uint64_t, "%lX");
@@ -215,9 +215,9 @@ TEST(port_memory_read_private_uint64)
 
 TEST(port_memory_read_private_float16)
 {
-    port_memory_unit_t memory[] = {{.as_float_half = {port_convert_float32_to_float16(1.0f),
+    port_memory_unit_t memory[] = {{.PORT_MEMORY_UNIT__AS_FLOAT_HALF = {port_convert_float32_to_float16(1.0f),
         port_convert_float32_to_float16(0.5f)}},
-        {.as_float_half = {port_convert_float32_to_float16(PORT_M_NAN),
+        {.PORT_MEMORY_UNIT__AS_FLOAT_HALF = {port_convert_float32_to_float16(PORT_M_NAN),
                               port_convert_float32_to_float16(PORT_M_INFINITY)}}};
 
     ASSERT_EQ(port_memory_read_private_float16(memory, 0), 1.0f, port_float32_t, "%g");
@@ -240,8 +240,8 @@ TEST(port_memory_read_private_float64)
     port_memory_unit_double_t double_units[2] = {{.as_float_double = 1.5625},
         {.as_float_double = 1234.5}};
 
-    port_memory_unit_t memory[] = {double_units[0].as_units[0], double_units[0].as_units[1],
-        double_units[1].as_units[0], double_units[1].as_units[1]};
+    port_memory_unit_t memory[] = {double_units[0].as_unit[0], double_units[0].as_unit[1],
+        double_units[1].as_unit[0], double_units[1].as_unit[1]};
 
     ASSERT_EQ(port_memory_read_private_float64(memory, 0), double_units[0].as_float_double, port_float64_t, "%g");
     ASSERT_EQ(port_memory_read_private_float64(memory, 1), double_units[1].as_float_double, port_float64_t, "%g");
@@ -342,10 +342,10 @@ TEST(port_memory_read_private_uint64_v2)
         {.as_uint_double = 0x1122334455667788ull},
         {.as_uint_double = 0xAABBCCDDEEFF0034ull}};
 
-    port_memory_unit_t memory[] = {double_units[0].as_units[0], double_units[0].as_units[1],
-        double_units[1].as_units[0], double_units[1].as_units[1],
-        double_units[2].as_units[0], double_units[2].as_units[1],
-        double_units[3].as_units[0], double_units[3].as_units[1]};
+    port_memory_unit_t memory[] = {double_units[0].as_unit[0], double_units[0].as_unit[1],
+        double_units[1].as_unit[0], double_units[1].as_unit[1],
+        double_units[2].as_unit[0], double_units[2].as_unit[1],
+        double_units[3].as_unit[0], double_units[3].as_unit[1]};
 
     port_uint64_v2_t vector;
 
@@ -363,7 +363,7 @@ TEST(port_memory_read_private_float16_v4)
     port_memory_unit_t memory[3];
     for (port_uint8_t i = 0; i < 3; i++)
         for (port_uint8_t j = 0; j < 2; j++)
-            memory[i].as_float_half[j] = port_convert_float32_to_float16(i*2 + j);
+            memory[i].PORT_MEMORY_UNIT__AS_FLOAT_HALF[j] = port_convert_float32_to_float16(i*2 + j);
 
     port_float32_v4_t vector;
 
@@ -400,10 +400,10 @@ TEST(port_memory_read_private_float64_v2)
         {.as_float_double = -PORT_M_INFINITY},
         {.as_float_double = 0.1111}};
 
-    port_memory_unit_t memory[] = {double_units[0].as_units[0], double_units[0].as_units[1],
-        double_units[1].as_units[0], double_units[1].as_units[1],
-        double_units[2].as_units[0], double_units[2].as_units[1],
-        double_units[3].as_units[0], double_units[3].as_units[1]};
+    port_memory_unit_t memory[] = {double_units[0].as_unit[0], double_units[0].as_unit[1],
+        double_units[1].as_unit[0], double_units[1].as_unit[1],
+        double_units[2].as_unit[0], double_units[2].as_unit[1],
+        double_units[3].as_unit[0], double_units[3].as_unit[1]};
 
     port_float64_v2_t vector;
 
@@ -475,13 +475,13 @@ TEST(port_memory_write_private_uint64)
     port_memory_write_private_uint64(memory, double_units[0].as_uint_double, 0);
     port_memory_write_private_uint64(memory, double_units[1].as_uint_double, 1);
 
-    ASSERT_EQ(memory[0].as_uint_single, double_units[0].as_units[0].as_uint_single,
+    ASSERT_EQ(memory[0].as_uint_single, double_units[0].as_unit[0].as_uint_single,
             port_uint_single_t, "%X");
-    ASSERT_EQ(memory[1].as_uint_single, double_units[0].as_units[1].as_uint_single,
+    ASSERT_EQ(memory[1].as_uint_single, double_units[0].as_unit[1].as_uint_single,
             port_uint_single_t, "%X");
-    ASSERT_EQ(memory[2].as_uint_single, double_units[1].as_units[0].as_uint_single,
+    ASSERT_EQ(memory[2].as_uint_single, double_units[1].as_unit[0].as_uint_single,
             port_uint_single_t, "%X");
-    ASSERT_EQ(memory[3].as_uint_single, double_units[1].as_units[1].as_uint_single,
+    ASSERT_EQ(memory[3].as_uint_single, double_units[1].as_unit[1].as_uint_single,
             port_uint_single_t, "%X");
 }
 
@@ -494,10 +494,10 @@ TEST(port_memory_write_private_float16)
     port_memory_write_private_float16(memory, PORT_M_NAN, 2);
     port_memory_write_private_float16(memory, PORT_M_INFINITY, 3);
 
-    ASSERT_EQ(memory[0].as_float_half[0], port_convert_float32_to_float16(1.0f), port_float32_t, "%g");
-    ASSERT_EQ(memory[0].as_float_half[1], port_convert_float32_to_float16(0.5f), port_float32_t, "%g");
-    ASSERT_EQ(memory[1].as_float_half[0], port_convert_float32_to_float16(PORT_M_NAN), port_float32_t, "%g");
-    ASSERT_EQ(memory[1].as_float_half[1], port_convert_float32_to_float16(PORT_M_INFINITY), port_float32_t, "%g");
+    ASSERT_EQ(memory[0].PORT_MEMORY_UNIT__AS_FLOAT_HALF[0], port_convert_float32_to_float16(1.0f), port_float32_t, "%g");
+    ASSERT_EQ(memory[0].PORT_MEMORY_UNIT__AS_FLOAT_HALF[1], port_convert_float32_to_float16(0.5f), port_float32_t, "%g");
+    ASSERT_EQ(memory[1].PORT_MEMORY_UNIT__AS_FLOAT_HALF[0], port_convert_float32_to_float16(PORT_M_NAN), port_float32_t, "%g");
+    ASSERT_EQ(memory[1].PORT_MEMORY_UNIT__AS_FLOAT_HALF[1], port_convert_float32_to_float16(PORT_M_INFINITY), port_float32_t, "%g");
 }
 
 TEST(port_memory_write_private_float32)
@@ -521,13 +521,13 @@ TEST(port_memory_write_private_float64)
     port_memory_write_private_float64(memory, double_units[0].as_float_double, 0);
     port_memory_write_private_float64(memory, double_units[1].as_float_double, 1);
 
-    ASSERT_EQ(memory[0].as_uint_single, double_units[0].as_units[0].as_uint_single,
+    ASSERT_EQ(memory[0].as_uint_single, double_units[0].as_unit[0].as_uint_single,
             port_uint_single_t, "%X");
-    ASSERT_EQ(memory[1].as_uint_single, double_units[0].as_units[1].as_uint_single,
+    ASSERT_EQ(memory[1].as_uint_single, double_units[0].as_unit[1].as_uint_single,
             port_uint_single_t, "%X");
-    ASSERT_EQ(memory[2].as_uint_single, double_units[1].as_units[0].as_uint_single,
+    ASSERT_EQ(memory[2].as_uint_single, double_units[1].as_unit[0].as_uint_single,
             port_uint_single_t, "%X");
-    ASSERT_EQ(memory[3].as_uint_single, double_units[1].as_units[1].as_uint_single,
+    ASSERT_EQ(memory[3].as_uint_single, double_units[1].as_unit[1].as_uint_single,
             port_uint_single_t, "%X");
 }
 
@@ -648,9 +648,9 @@ TEST(port_memory_write_private_uint64_v2)
         for (port_uint8_t i = 0; i < 2; i++)
         {
             port_memory_unit_double_t u = {.as_uint_double = vector.s[i]};
-            ASSERT_EQ(memory[(offset + i)*2 + 0].as_uint_single, u.as_units[0].as_uint_single,
+            ASSERT_EQ(memory[(offset + i)*2 + 0].as_uint_single, u.as_unit[0].as_uint_single,
                     port_uint_single_t, "%X");
-            ASSERT_EQ(memory[(offset + i)*2 + 1].as_uint_single, u.as_units[1].as_uint_single,
+            ASSERT_EQ(memory[(offset + i)*2 + 1].as_uint_single, u.as_unit[1].as_uint_single,
                     port_uint_single_t, "%X");
         }
     }
@@ -669,7 +669,7 @@ TEST(port_memory_write_private_float16_v4)
         port_memory_write_private_float16_v4(memory, vector, offset);
 
         for (port_uint8_t i = 0; i < 4; i++)
-            ASSERT_EQ(memory[(offset + i) / 2].as_float_half[(offset + i) % 2],
+            ASSERT_EQ(memory[(offset + i) / 2].PORT_MEMORY_UNIT__AS_FLOAT_HALF[(offset + i) % 2],
                     port_convert_float32_to_float16(i*3.0f - 1.0f), port_float32_t, "%g");
     }
 }
@@ -704,9 +704,9 @@ TEST(port_memory_write_private_float64_v2)
         for (port_uint8_t i = 0; i < 2; i++)
         {
             port_memory_unit_double_t u = {.as_float_double = vector.s[i]};
-            ASSERT_EQ(memory[(offset + i)*2 + 0].as_uint_single, u.as_units[0].as_uint_single,
+            ASSERT_EQ(memory[(offset + i)*2 + 0].as_uint_single, u.as_unit[0].as_uint_single,
                     port_uint_single_t, "%X");
-            ASSERT_EQ(memory[(offset + i)*2 + 1].as_uint_single, u.as_units[1].as_uint_single,
+            ASSERT_EQ(memory[(offset + i)*2 + 1].as_uint_single, u.as_unit[1].as_uint_single,
                     port_uint_single_t, "%X");
         }
     }

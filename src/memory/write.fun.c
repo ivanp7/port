@@ -61,8 +61,8 @@ void name(port_##addrspace##_memory_ptr_t memory, value_type value, port_uint8_t
     memory += offset;                                                   \
     memory += offset;                                                   \
     port_memory_unit_double_t u = {.unit_field = value};                \
-    memory[0] = u.as_units[0];                                          \
-    memory[1] = u.as_units[1]; }
+    memory[0] = u.as_unit[0];                                          \
+    memory[1] = u.as_unit[1]; }
 
 #ifdef __OPENCL_C_VERSION__
 
@@ -79,7 +79,7 @@ void name(port_##addrspace##_memory_ptr_t memory, port_float32_t value, port_uin
     ASSERT_MEMORY;                                                          \
     memory += offset >> 1;                                                  \
     offset &= 1;                                                            \
-    memory->as_float_half[offset] = port_convert_float32_to_float16(value); }
+    memory->PORT_MEMORY_UNIT__AS_FLOAT_HALF[offset] = port_convert_float32_to_float16(value); }
 
 #endif // __OPENCL_C_VERSION__
 
@@ -164,8 +164,8 @@ void name(port_##addrspace##_memory_ptr_t memory, vector_type value, port_uint8_
     else {                                                                          \
         for (port_uint8_t i = 0; i < vector_length; i++) {                          \
             port_memory_unit_double_t u = {.unit_field = PORT_V##vector_length##_ELT(value, i)};   \
-            memory[0] = u.as_units[0];                                              \
-            memory[1] = u.as_units[1];                                              \
+            memory[0] = u.as_unit[0];                                              \
+            memory[1] = u.as_unit[1];                                              \
             memory += 2; } } }                                                      \
 
 #  define PORT_DEFINE_MEMORY_WRITE_FUNCTION_VECTOR_FLOAT16(name, vector_length, addrspace) \
@@ -199,8 +199,8 @@ void name(port_##addrspace##_memory_ptr_t memory, vector_type value, port_uint8_
     memory += offset;                                               \
     for (port_uint8_t i = 0; i < vector_length; i++) {              \
         port_memory_unit_double_t u = {.unit_field = value.s[i]};   \
-        memory[0] = u.as_units[0];                                  \
-        memory[1] = u.as_units[1];                                  \
+        memory[0] = u.as_unit[0];                                  \
+        memory[1] = u.as_unit[1];                                  \
         memory += 2; } }
 
 #  define PORT_DEFINE_MEMORY_WRITE_FUNCTION_VECTOR_FLOAT16(name, vector_length, addrspace) \
@@ -209,7 +209,7 @@ void name(port_##addrspace##_memory_ptr_t memory, port_float32_v##vector_length#
     for (port_uint8_t i = 0; i < vector_length; i++) {                                      \
         memory += offset >> 1;                                                              \
         offset &= 1;                                                                        \
-        memory->as_float_half[offset++] = port_convert_float32_to_float16(value.s[i]); } }
+        memory->PORT_MEMORY_UNIT__AS_FLOAT_HALF[offset++] = port_convert_float32_to_float16(value.s[i]); } }
 
 #endif // __OPENCL_C_VERSION__
 

@@ -54,9 +54,6 @@ typedef union port_memory_unit {
     // As floating-point number
     port_float_single_t as_float_single;
 
-    port_uint_half_t as_float_half[2];    // no native float16 type
-    port_uint_half_v2_t as_float_half_v2; // use integers instead
-
     // As memory reference
     port_memory_ref_t as_ref;
     port_memory_ref_half_t as_ref_half[2];

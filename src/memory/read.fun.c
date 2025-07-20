@@ -62,7 +62,7 @@ value_type name(port_const_##addrspace##_memory_ptr_t memory, port_uint8_t offse
     ASSERT_MEMORY;                                                                      \
     memory += offset;                                                                   \
     memory += offset;                                                                   \
-    port_memory_unit_double_t u = {.as_units = {memory[0], memory[1]}};                 \
+    port_memory_unit_double_t u = {.as_unit = {memory[0], memory[1]}};                 \
     return u.unit_field; }
 
 #ifdef __OPENCL_C_VERSION__
@@ -80,7 +80,7 @@ port_float32_t name(port_const_##addrspace##_memory_ptr_t memory, port_uint8_t o
     ASSERT_MEMORY;                                                                          \
     memory += offset >> 1;                                                                  \
     offset &= 1;                                                                            \
-    return port_convert_float16_to_float32(memory->as_float_half[offset]); }
+    return port_convert_float16_to_float32(memory->PORT_MEMORY_UNIT__AS_FLOAT_HALF[offset]); }
 
 #endif // __OPENCL_C_VERSION__
 
@@ -172,7 +172,7 @@ vector_type name(port_const_##addrspace##_memory_ptr_t memory, port_uint8_t offs
     else {                                                                          \
         vector_type vector;                                                         \
         for (port_uint8_t i = 0; i < vector_length; i++) {                          \
-            port_memory_unit_double_t u = {.as_units = {memory[0], memory[1]}};     \
+            port_memory_unit_double_t u = {.as_unit = {memory[0], memory[1]}};     \
             memory += 2;                                                            \
             PORT_V##vector_length##_SET_ELT(vector, i, u.unit_field); }             \
         return vector; } }
@@ -212,7 +212,7 @@ vector_type name(port_const_##addrspace##_memory_ptr_t memory, port_uint8_t offs
     memory += offset;                                                       \
     vector_type vector;                                                     \
     for (port_uint8_t i = 0; i < vector_length; i++) {                      \
-        port_memory_unit_double_t u = {.as_units = {memory[0], memory[1]}}; \
+        port_memory_unit_double_t u = {.as_unit = {memory[0], memory[1]}}; \
         memory += 2;                                                        \
         vector.s[i] = u.unit_field; }                                       \
     return vector; }
@@ -224,7 +224,7 @@ port_float32_v##vector_length##_t name(port_const_##addrspace##_memory_ptr_t mem
     for (port_uint8_t i = 0; i < vector_length; i++) {                                      \
         memory += offset >> 1;                                                              \
         offset &= 1;                                                                        \
-        vector.s[i] = port_convert_float16_to_float32(memory->as_float_half[offset++]); }   \
+        vector.s[i] = port_convert_float16_to_float32(memory->PORT_MEMORY_UNIT__AS_FLOAT_HALF[offset++]); }   \
     return vector; }
 
 #endif // __OPENCL_C_VERSION__

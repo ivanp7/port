@@ -270,10 +270,5 @@
 
 #endif // PORT_FEATURE_DEFAULT_FLOAT_64
 
-/**
- * @brief Invalid value of a floating-point number log2(size).
- */
-#define PORT_FLOAT_LOGSIZE_INVALID PORT_TYPE_LOGSIZE_QUARTER
-
 #endif // _PORT_TYPES_DEF_H_
 
