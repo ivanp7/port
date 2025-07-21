@@ -112,129 +112,129 @@ port_random_float64(
     return u.as_float64 - 1.0;
 }
 
-port_uint8_t
-port_random_set_bit_quarter(
-        port_uint_single_t mask,
-        port_const_memory_ptr_t thresholds,
-
+port_uint_quarter_t
+port_random_custom_distrib_uint_quarter(
+        port_uint_quarter_t num_outcomes,
+        const port_uint_quarter_t cdf[],
         port_uint32_t *rnd)
 {
 #ifndef __OPENCL_C_VERSION__
+    assert(num_outcomes != 0);
     assert(rnd != NULL);
 #endif
 
-    if (mask == 0)
-        return PORT_NUM_BITS(mask); // lowest invalid bit number
-
-    port_uint8_t num_bits = PORT_POPCOUNT(mask);
+    if (num_outcomes == 1) // no randomness
+        return 0;
 
     port_uint32_t rnd_local = *rnd;
     *rnd = port_random_uint32(rnd_local);
 
-    if (thresholds != NULL)
+    if (cdf == NULL) // uniform distribution
+        return rnd_local % num_outcomes;
+
+    // Ensure the random number is in the CDF range
+    port_uint_quarter_t random_value = rnd_local;
+
+    // Binary search
+    port_uint_quarter_t low = 0, high = num_outcomes - 2; // [0; num_outcomes-1) or [0; num_outcomes-2]
+    while (low < high)
     {
-        port_memory_unit_t unit = {0};
-        port_uint_quarter_t threshold;
-#ifndef __OPENCL_C_VERSION__
-#  ifndef NDEBUG
-        port_uint_quarter_t prev_threshold = 0;
-#  endif
-#endif
+        port_uint_quarter_t mid = low + (high - low) / 2;
 
-        rnd_local &= PORT_NZMASK32(PORT_NUM_BITS(threshold));
-
-        // Iterate unless random number is less than threshold
-        for (port_uint8_t i = 0; i < num_bits-1; i++)
-        {
-            if (i % 4 == 0)
-                unit = thresholds[i / 4];
-
-            threshold = unit.as_uint_quarter[i % 4];
-
-#ifndef __OPENCL_C_VERSION__
-#  ifndef NDEBUG
-            assert(prev_threshold <= threshold);
-            prev_threshold = threshold;
-#  endif
-#endif
-
-            if (rnd_local < threshold)
-                break;
-
-            // Clear least significant 1-bit
-            mask &= mask - 1;
-        }
+        // We want the smallest index for which (cdf[index] > random_value)
+        if (cdf[mid] > random_value) // mid + 1 > index
+            high = mid; // cut [mid + 1; high]
+        else // mid < index
+            low = mid + 1; // cut [low; mid]
     }
+
+    if (cdf[low] > random_value)
+        return low;
     else
-    {
-        // Clear uniformly chosen number of least significant 1-bits
-        for (port_uint8_t i = rnd_local % num_bits; i > 0; i--)
-            mask &= mask - 1;
-    }
-
-    return PORT_CTZ(mask);
+        return low + 1;
 }
 
-port_uint8_t
-port_random_set_bit_half(
-        port_uint_single_t mask,
-        port_const_memory_ptr_t thresholds,
-
+port_uint_half_t
+port_random_custom_distrib_uint_half(
+        port_uint_half_t num_outcomes,
+        const port_uint_half_t cdf[],
         port_uint32_t *rnd)
 {
 #ifndef __OPENCL_C_VERSION__
+    assert(num_outcomes != 0);
     assert(rnd != NULL);
 #endif
 
-    if (mask == 0)
-        return PORT_NUM_BITS(mask); // lowest invalid bit number
-
-    port_uint8_t num_bits = PORT_POPCOUNT(mask);
+    if (num_outcomes == 1) // no randomness
+        return 0;
 
     port_uint32_t rnd_local = *rnd;
     *rnd = port_random_uint32(rnd_local);
 
-    if (thresholds != NULL)
+    if (cdf == NULL) // uniform distribution
+        return rnd_local % num_outcomes;
+
+    // Ensure the random number is in the CDF range
+    port_uint_half_t random_value = rnd_local;
+
+    // Binary search
+    port_uint_half_t low = 0, high = num_outcomes - 2; // [0; num_outcomes-1) or [0; num_outcomes-2]
+    while (low < high)
     {
-        port_memory_unit_t unit = {0};
-        port_uint_half_t threshold;
-#ifndef __OPENCL_C_VERSION__
-#  ifndef NDEBUG
-        port_uint_half_t prev_threshold = 0;
-#  endif
-#endif
+        port_uint_half_t mid = low + (high - low) / 2;
 
-        rnd_local &= PORT_NZMASK32(PORT_NUM_BITS(threshold));
-
-        // Iterate unless random number is less than threshold
-        for (port_uint8_t i = 0; i < num_bits-1; i++)
-        {
-            if (i % 2 == 0)
-                unit = thresholds[i / 2];
-
-            threshold = unit.as_uint_half[i % 2];
-
-#ifndef __OPENCL_C_VERSION__
-#  ifndef NDEBUG
-            assert(prev_threshold <= threshold);
-            prev_threshold = threshold;
-#  endif
-#endif
-
-            if (rnd_local < threshold)
-                break;
-
-            // Clear least significant 1-bit
-            mask &= mask - 1;
-        }
+        // We want the smallest index for which (cdf[index] > random_value)
+        if (cdf[mid] > random_value) // mid + 1 > index
+            high = mid; // cut [mid + 1; high]
+        else // mid < index
+            low = mid + 1; // cut [low; mid]
     }
+
+    if (cdf[low] > random_value)
+        return low;
     else
+        return low + 1;
+}
+
+port_uint_single_t
+port_random_custom_distrib_uint_single(
+        port_uint_single_t num_outcomes,
+        const port_uint_single_t cdf[],
+        port_uint32_t *rnd)
+{
+#ifndef __OPENCL_C_VERSION__
+    assert(num_outcomes != 0);
+    assert(rnd != NULL);
+#endif
+
+    if (num_outcomes == 1) // no randomness
+        return 0;
+
+    port_uint32_t rnd_local = *rnd;
+    *rnd = port_random_uint32(rnd_local);
+
+    if (cdf == NULL) // uniform distribution
+        return rnd_local % num_outcomes;
+
+    // Ensure the random number is in the CDF range
+    port_uint_single_t random_value = rnd_local;
+
+    // Binary search
+    port_uint_single_t low = 0, high = num_outcomes - 2; // [0; num_outcomes-1) or [0; num_outcomes-2]
+    while (low < high)
     {
-        // Clear uniformly chosen number of least significant 1-bits
-        for (port_uint8_t i = rnd_local % num_bits; i > 0; i--)
-            mask &= mask - 1;
+        port_uint_single_t mid = low + (high - low) / 2;
+
+        // We want the smallest index for which (cdf[index] > random_value)
+        if (cdf[mid] > random_value) // mid + 1 > index
+            high = mid; // cut [mid + 1; high]
+        else // mid < index
+            low = mid + 1; // cut [low; mid]
     }
 
-    return PORT_CTZ(mask);
+    if (cdf[low] > random_value)
+        return low;
+    else
+        return low + 1;
 }
 

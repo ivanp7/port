@@ -26,7 +26,7 @@
 #ifndef _PORT_RANDOM_FUN_H_
 #define _PORT_RANDOM_FUN_H_
 
-#include "port/memory.typ.h"
+#include "port/types.typ.h"
 
 /**
  * @brief Maximum possible pseudorandom 32-bit integer.
@@ -90,42 +90,58 @@ port_random_float64(
 #endif
 
 /**
- * @brief Pick a set bit from a mask randomly, using quarter-unit thresholds.
+ * @brief Pick an outcome randomly with custom distribution (quarter-unit CDF values).
  *
- * Each threshold number consumes a quarter of unit (8 bits), so
- * there are 4 thresholds per unit.
- * Number of thresholds is less than number of set bits by 1.
- * Thresholds memory may be set to NULL, in that case bits are picked uniformly.
+ * Each CDF value occupies a unit quarter (8 bits), so there are 4 values per unit.
  *
- * If mask is 0, the lowest invalid bit number is returned.
+ * Number of CDF values must be less than number of outcomes by 1.
+ * Pointer to CDF array may be set to NULL, which enables the uniform distribution.
  *
- * @return Number of selected bit.
+ * CDF must be a monotonic non-decreasing function.
+ * The chosen index is the first one which satisfies the following condition:
+ * cdf[index] > random_number, where 0 <= index < num_outcomes - 1.
+ * If cdf[index] <= random_number for all such index values, then num_outcomes - 1 is returned.
+ *
+ * @warning num_outcomes cannot be 0.
+ *
+ * @return Index of a randomly chosen outcome.
  */
-port_uint8_t
-port_random_set_bit_quarter(
-        port_uint_single_t mask, ///< [in] Mask of allowed bits to pick.
-        port_const_memory_ptr_t thresholds, ///< [in] Sequence of thresholds.
-
+port_uint_quarter_t
+port_random_custom_distrib_uint_quarter(
+        port_uint_quarter_t num_outcomes, ///< [in] Number of outcomes.
+        const port_uint_quarter_t cdf[],  ///< [in] Cumulative distribution function.
         port_uint32_t *rnd ///< [in,out] Pseudorandom integer.
 );
 
 /**
- * @brief Pick a set bit from a mask randomly, using half-unit thresholds.
+ * @brief Pick an outcome randomly with custom distribution (half-unit CDF values).
  *
- * Each threshold number consumes a half of unit (16 bits), so
- * there are 2 thresholds per unit.
- * Number of thresholds is less than number of set bits by 1.
- * Thresholds memory may be set to NULL, in that case bits are picked uniformly.
+ * Each CDF value occupies a unit half (16 bits), so there are 2 values per unit.
  *
- * If mask is 0, the lowest invalid bit number is returned.
+ * @see port_random_custom_distrib_uint_quarter()
  *
- * @return Number of selected bit.
+ * @return Index of a randomly chosen outcome.
  */
-port_uint8_t
-port_random_set_bit_half(
-        port_uint_single_t mask, ///< [in] Mask of allowed bits to pick.
-        port_const_memory_ptr_t thresholds, ///< [in] Sequence of thresholds.
+port_uint_half_t
+port_random_custom_distrib_uint_half(
+        port_uint_half_t num_outcomes, ///< [in] Number of outcomes.
+        const port_uint_half_t cdf[],  ///< [in] Cumulative distribution function.
+        port_uint32_t *rnd ///< [in,out] Pseudorandom integer.
+);
 
+/**
+ * @brief Pick an outcome randomly with custom distribution (single-unit CDF values).
+ *
+ * Each CDF value occupies a whole unit (32 bits), so there is 1 value per unit.
+ *
+ * @see port_random_custom_distrib_uint_quarter()
+ *
+ * @return Index of a randomly chosen outcome.
+ */
+port_uint_single_t
+port_random_custom_distrib_uint_single(
+        port_uint_single_t num_outcomes, ///< [in] Number of outcomes.
+        const port_uint_single_t cdf[],  ///< [in] Cumulative distribution function.
         port_uint32_t *rnd ///< [in,out] Pseudorandom integer.
 );
 
