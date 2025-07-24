@@ -29,20 +29,20 @@
 #include "port/memory.typ.h"
 
 /**
- * @brief Follow memory reference.
+ * @brief Follow memory reference in global memory.
  *
  * See description of PORT_MEMORY_AT().
  *
  * @return Pointer to referenced memory.
  */
 port_const_global_memory_ptr_t
-port_memory_at(
+port_memory_at_global(
         port_memory_ref_t ref, ///< [in] Memory reference.
 
         port_memory_ref_format_t format, ///< [in] Memory reference format.
 
         port_const_global_memory_ptr_t base_ptr, ///< [in] Base address for near memory reference.
-        port_memory_table_t memory_table ///< [in] Table of memory pointers for far memory reference.
+        port_global_memory_table_t memory_table  ///< [in] Table of memory pointers for far memory reference.
 );
 
 #endif // _PORT_MEMORY_FUN_H_

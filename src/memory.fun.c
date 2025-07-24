@@ -31,13 +31,13 @@
 #endif
 
 port_const_global_memory_ptr_t
-port_memory_at(
+port_memory_at_global(
         port_memory_ref_t ref,
 
         port_memory_ref_format_t format,
 
         port_const_global_memory_ptr_t base_ptr,
-        port_memory_table_t memory_table)
+        port_global_memory_table_t memory_table)
 {
 #ifndef __OPENCL_C_VERSION__
     if (PORT_MEMORY_REF_IS_FAR(ref))

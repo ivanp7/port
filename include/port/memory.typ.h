@@ -129,11 +129,6 @@ typedef PORT_KW_LOCAL void* port_local_void_ptr_t;
 typedef const PORT_KW_LOCAL void* port_const_local_void_ptr_t;
 
 /**
- * @brief Pointer to constant void.
- */
-typedef const PORT_KW_CONSTANT void* port_constant_void_ptr_t;
-
-/**
  * @brief Pointer to global non-const void.
  */
 typedef PORT_KW_GLOBAL void* port_global_void_ptr_t;
@@ -141,6 +136,11 @@ typedef PORT_KW_GLOBAL void* port_global_void_ptr_t;
  * @brief Pointer to global const void.
  */
 typedef const PORT_KW_GLOBAL void* port_const_global_void_ptr_t;
+
+/**
+ * @brief Pointer to constant void.
+ */
+typedef const PORT_KW_CONSTANT void* port_constant_void_ptr_t;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Pointers to data
@@ -174,11 +174,6 @@ typedef PORT_KW_LOCAL port_memory_unit_t* port_local_memory_ptr_t;
 typedef const PORT_KW_LOCAL port_memory_unit_t* port_const_local_memory_ptr_t;
 
 /**
- * @brief Pointer to constant memory units.
- */
-typedef const PORT_KW_CONSTANT port_memory_unit_t* port_constant_memory_ptr_t;
-
-/**
  * @brief Pointer to global non-const memory units.
  */
 typedef PORT_KW_GLOBAL port_memory_unit_t* port_global_memory_ptr_t;
@@ -187,6 +182,11 @@ typedef PORT_KW_GLOBAL port_memory_unit_t* port_global_memory_ptr_t;
  */
 typedef const PORT_KW_GLOBAL port_memory_unit_t* port_const_global_memory_ptr_t;
 
+/**
+ * @brief Pointer to constant memory units.
+ */
+typedef const PORT_KW_CONSTANT port_memory_unit_t* port_constant_memory_ptr_t;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Pointers to pointers
 ///////////////////////////////////////////////////////////////////////////////
@@ -194,7 +194,7 @@ typedef const PORT_KW_GLOBAL port_memory_unit_t* port_const_global_memory_ptr_t;
 /**
  * @brief Table of memory pointers for far references.
  */
-typedef const PORT_KW_CONSTANT port_const_global_memory_ptr_t* port_memory_table_t;
+typedef const PORT_KW_CONSTANT port_const_global_memory_ptr_t* port_global_memory_table_t;
 
 #endif // _PORT_MEMORY_TYP_H_
 
