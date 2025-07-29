@@ -26,29 +26,85 @@
 #include "port/memory.def.h"
 
 #ifndef __OPENCL_C_VERSION__
-#  include "port/bit.def.h"
+#  ifndef NDEBUG
+#    include "port/bit.def.h"
+#  endif
+
 #  include <assert.h>
 #endif
 
-port_const_global_memory_ptr_t
-port_memory_at_global(
-        port_memory_ref_t ref,
+#if !defined(__OPENCL_C_VERSION__) && !defined(NDEBUG)
 
-        port_memory_ref_format_t format,
-
-        port_const_global_memory_ptr_t base_ptr,
-        port_global_memory_table_t memory_table)
-{
-#ifndef __OPENCL_C_VERSION__
-    if (PORT_MEMORY_REF_IS_FAR(ref))
-    {
-        assert(format.num_tidx_bits < PORT_NUM_BITS(port_memory_ref_t));
-        assert(((PORT_MEMORY_REF_FAR__OFFSET(ref, format.num_tidx_bits) << format.offset_shift)
-            >> format.offset_shift) == PORT_MEMORY_REF_FAR__OFFSET(ref, format.num_tidx_bits));
-    }
+#  define ASSERTS \
+    assert(format.far.num_tidx_bits < PORT_NUM_BITS(port_memory_ref_t)); \
+    if (PORT_MEMORY_REF_IS_FAR(ref)) { \
+        size_t offset = PORT_MEMORY_REF_FAR__OFFSET(ref, format.far.num_tidx_bits); \
+        assert(((offset << format.far.offset_lshift) >> format.far.offset_lshift) == offset); \
+    } else { \
+        size_t offset = -(size_t)ref; \
+        assert(((offset << format.near.offset_lshift) >> format.near.offset_lshift) == offset); \
+    } \
     assert(memory_table != NULL);
+
+#else
+
+#  define ASSERTS
+
 #endif
 
-    return PORT_MEMORY_AT(ref, format.num_tidx_bits, format.offset_shift, base_ptr, memory_table);
+port_const_void_ptr_t
+port_memory_at(
+        port_memory_ref_t ref,
+        port_memory_ref_format_t format,
+
+        port_const_void_ptr_t base_ptr,
+        const PORT_KW_CONSTANT port_const_void_ptr_t *memory_table)
+{
+    ASSERTS;
+    return PORT_MEMORY_AT(ref, format.far.num_tidx_bits, format.far.offset_lshift, format.near.offset_lshift,
+            (port_const_char_ptr_t)base_ptr, (const PORT_KW_CONSTANT port_const_char_ptr_t*)memory_table);
 }
+
+#ifdef __OPENCL_C_VERSION__
+
+port_const_local_void_ptr_t
+port_memory_at_local(
+        port_memory_ref_t ref,
+        port_memory_ref_format_t format,
+
+        port_const_local_void_ptr_t base_ptr,
+        const PORT_KW_CONSTANT port_const_local_void_ptr_t *memory_table)
+{
+    ASSERTS;
+    return PORT_MEMORY_AT(ref, format.far.num_tidx_bits, format.far.offset_lshift, format.near.offset_lshift,
+            (port_const_local_char_ptr_t)base_ptr, (const PORT_KW_CONSTANT port_const_local_char_ptr_t*)memory_table);
+}
+
+port_const_global_void_ptr_t
+port_memory_at_global(
+        port_memory_ref_t ref,
+        port_memory_ref_format_t format,
+
+        port_const_global_void_ptr_t base_ptr,
+        const PORT_KW_CONSTANT port_const_global_void_ptr_t *memory_table)
+{
+    ASSERTS;
+    return PORT_MEMORY_AT(ref, format.far.num_tidx_bits, format.far.offset_lshift, format.near.offset_lshift,
+            (port_const_global_char_ptr_t)base_ptr, (const PORT_KW_CONSTANT port_const_global_char_ptr_t*)memory_table);
+}
+
+port_constant_void_ptr_t
+port_memory_at_constant(
+        port_memory_ref_t ref,
+        port_memory_ref_format_t format,
+
+        port_constant_void_ptr_t base_ptr,
+        const PORT_KW_CONSTANT port_constant_void_ptr_t *memory_table)
+{
+    ASSERTS;
+    return PORT_MEMORY_AT(ref, format.far.num_tidx_bits, format.far.offset_lshift, format.near.offset_lshift,
+            (port_constant_char_ptr_t)base_ptr, (const PORT_KW_CONSTANT port_constant_char_ptr_t*)memory_table);
+}
+
+#endif // __OPENCL_C_VERSION__
 

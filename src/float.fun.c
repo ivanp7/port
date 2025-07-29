@@ -31,6 +31,36 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
+// Auxiliary functions
+///////////////////////////////////////////////////////////////////////////////
+
+void
+port_float32_swap(
+        port_float32_t *value1,
+        port_float32_t *value2)
+{
+    if ((value1 == NULL) || (value2 == NULL))
+        return;
+
+    port_float32_t temp = *value1;
+    *value1 = *value2;
+    *value2 = temp;
+}
+
+void
+port_float64_swap(
+        port_float64_t *value1,
+        port_float64_t *value2)
+{
+    if ((value1 == NULL) || (value2 == NULL))
+        return;
+
+    port_float64_t temp = *value1;
+    *value1 = *value2;
+    *value2 = temp;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // ULP distance between floating-point numbers
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -46,11 +76,7 @@ port_float32_ulp_distance(
 
     // Ensure value1 >= value2
     if (value1 < value2)
-    {
-        port_float32_t temp = value1;
-        value1 = value2;
-        value2 = temp;
-    }
+        port_float32_swap(&value1, &value2);
 
     union {
         port_float32_t as_float;
@@ -83,11 +109,7 @@ port_float64_ulp_distance(
         return 0;
 
     if (value1 < value2)
-    {
-        port_float64_t temp = value1;
-        value1 = value2;
-        value2 = temp;
-    }
+        port_float64_swap(&value1, &value2);
 
     union {
         port_float64_t as_float;

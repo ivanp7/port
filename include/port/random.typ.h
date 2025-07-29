@@ -19,41 +19,25 @@
 
 /**
  * @file
- * @brief Memory model types.
+ * @brief Pseudorandom number generation.
  */
 
 #pragma once
-#ifndef _PORT_MEMORY_TYP_H_
-#define _PORT_MEMORY_TYP_H_
+#ifndef _PORT_RANDOM_TYP_H_
+#define _PORT_RANDOM_TYP_H_
 
 #include "port/types.typ.h"
+#include "port/types.def.h"
 
 /**
- * @brief Memory reference.
+ * @brief Maximum possible pseudorandom 32-bit integer.
  */
-typedef port_sint_single_t port_memory_ref_t;
-/**
- * @brief Memory reference (half size).
- */
-typedef port_sint_half_t port_memory_ref_half_t;
-/**
- * @brief Memory reference (quarter size).
- */
-typedef port_sint_quarter_t port_memory_ref_quarter_t;
+#define PORT_RANDOM_MAX PORT_UINT32_MAX
 
 /**
- * @brief Memory reference format.
+ * @brief Pseudorandom number generator state.
  */
-typedef struct port_memory_ref_format {
-    struct {
-        port_uint8_t num_tidx_bits; ///< Number of table index bits.
-        port_uint8_t offset_lshift; ///< Offset scale (left shift).
-    } far; ///< Format of far memory references.
+typedef port_uint32_t port_random_t;
 
-    struct {
-        port_uint8_t offset_lshift; ///< Offset scale (left shift).
-    } near; ///< Format of near memory references.
-} port_memory_ref_format_t;
-
-#endif // _PORT_MEMORY_TYP_H_
+#endif // _PORT_RANDOM_TYP_H_
 

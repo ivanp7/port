@@ -19,134 +19,186 @@
 
 /**
  * @file
- * @brief Memory copy operations.
+ * @brief Functions for copying memory.
  */
 
 #pragma once
 #ifndef _PORT_MEMORY_COPY_FUN_H_
 #define _PORT_MEMORY_COPY_FUN_H_
 
-#include "port/memory.typ.h"
+#include "port/pointer.typ.h"
+
+///////////////////////////////////////////////////////////////////////////////
+// Generic memory
+///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Copy memory units from global memory to private memory.
+ * @brief Copy bytes from generic memory to generic memory.
  */
 void
-port_memory_copy_global_to_private(
-        port_private_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_const_global_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
+port_memory_copy(
+        port_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
 );
 
-/**
- * @brief Copy memory units from constant memory to private memory.
- */
-void
-port_memory_copy_constant_to_private(
-        port_private_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_constant_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
-);
+#ifdef __OPENCL_C_VERSION__
+
+///////////////////////////////////////////////////////////////////////////////
+// Private source
+///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Copy memory units from local memory to private memory.
- */
-void
-port_memory_copy_local_to_private(
-        port_private_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_const_local_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
-);
-
-/**
- * @brief Copy memory units from private memory to private memory.
+ * @brief Copy bytes from private memory to private memory.
  */
 void
 port_memory_copy_private_to_private(
-        port_private_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_const_private_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
+        port_private_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_private_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
 );
 
 /**
- * @brief Copy memory units from global memory to local memory.
- */
-void
-port_memory_copy_global_to_local(
-        port_local_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_const_global_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
-);
-
-/**
- * @brief Copy memory units from constant memory to local memory.
- */
-void
-port_memory_copy_constant_to_local(
-        port_local_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_constant_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
-);
-
-/**
- * @brief Copy memory units from local memory to local memory.
- */
-void
-port_memory_copy_local_to_local(
-        port_local_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_const_local_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
-);
-
-/**
- * @brief Copy memory units from private memory to local memory.
+ * @brief Copy bytes from private memory to local memory.
  */
 void
 port_memory_copy_private_to_local(
-        port_local_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_const_private_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
+        port_local_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_private_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
 );
 
 /**
- * @brief Copy memory units from global memory to global memory.
- */
-void
-port_memory_copy_global_to_global(
-        port_global_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_const_global_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
-);
-
-/**
- * @brief Copy memory units from local memory to global memory.
- */
-void
-port_memory_copy_local_to_global(
-        port_global_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_const_local_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
-);
-
-/**
- * @brief Copy memory units from constant memory to global memory.
- */
-void
-port_memory_copy_constant_to_global(
-        port_global_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_constant_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
-);
-
-/**
- * @brief Copy memory units from private memory to global memory.
+ * @brief Copy bytes from private memory to global memory.
  */
 void
 port_memory_copy_private_to_global(
-        port_global_memory_ptr_t restrict dest, ///< [out] Destination.
-        port_const_private_memory_ptr_t restrict src, ///< [in] Source.
-        size_t num_units ///< [in] Number of units to copy.
+        port_global_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_private_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
 );
+
+///////////////////////////////////////////////////////////////////////////////
+// Local source
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Copy bytes from local memory to private memory.
+ */
+void
+port_memory_copy_local_to_private(
+        port_private_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_local_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
+);
+
+/**
+ * @brief Copy bytes from local memory to local memory.
+ */
+void
+port_memory_copy_local_to_local(
+        port_local_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_local_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
+);
+
+/**
+ * @brief Copy bytes from local memory to global memory.
+ */
+void
+port_memory_copy_local_to_global(
+        port_global_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_local_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
+);
+
+///////////////////////////////////////////////////////////////////////////////
+// Global source
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Copy bytes from global memory to private memory.
+ */
+void
+port_memory_copy_global_to_private(
+        port_private_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_global_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
+);
+
+/**
+ * @brief Copy bytes from global memory to local memory.
+ */
+void
+port_memory_copy_global_to_local(
+        port_local_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_global_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
+);
+
+/**
+ * @brief Copy bytes from global memory to global memory.
+ */
+void
+port_memory_copy_global_to_global(
+        port_global_void_ptr_t restrict dest, ///< [in] Destination.
+        port_const_global_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
+);
+
+///////////////////////////////////////////////////////////////////////////////
+// Constant source
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Copy bytes from constant memory to private memory.
+ */
+void
+port_memory_copy_constant_to_private(
+        port_private_void_ptr_t restrict dest, ///< [in] Destination.
+        port_constant_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
+);
+
+/**
+ * @brief Copy bytes from constant memory to local memory.
+ */
+void
+port_memory_copy_constant_to_local(
+        port_local_void_ptr_t restrict dest, ///< [in] Destination.
+        port_constant_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
+);
+
+/**
+ * @brief Copy bytes from constant memory to global memory.
+ */
+void
+port_memory_copy_constant_to_global(
+        port_global_void_ptr_t restrict dest, ///< [in] Destination.
+        port_constant_void_ptr_t restrict src, ///< [in] Source.
+        size_t num_bytes ///< [in] Number of bytes to copy.
+);
+
+#else // __OPENCL_C_VERSION__
+
+#  define port_memory_copy_private_to_private   port_memory_copy
+#  define port_memory_copy_private_to_local     port_memory_copy
+#  define port_memory_copy_private_to_global    port_memory_copy
+
+#  define port_memory_copy_local_to_private     port_memory_copy
+#  define port_memory_copy_local_to_local       port_memory_copy
+#  define port_memory_copy_local_to_global      port_memory_copy
+
+#  define port_memory_copy_global_to_private    port_memory_copy
+#  define port_memory_copy_global_to_local      port_memory_copy
+#  define port_memory_copy_global_to_global     port_memory_copy
+
+#  define port_memory_copy_constant_to_private  port_memory_copy
+#  define port_memory_copy_constant_to_local    port_memory_copy
+#  define port_memory_copy_constant_to_global   port_memory_copy
+
+#endif // __OPENCL_C_VERSION__
 
 #endif // _PORT_MEMORY_COPY_FUN_H_
 

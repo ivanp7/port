@@ -19,7 +19,7 @@ port_float_v2_t random_uint32_fluctuation(port_uint32_t *initial)
     port_uint32_t prev = *initial, curr;
     for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
     {
-        curr = port_random_uint32(prev);
+        curr = port_random_next(prev);
         bins[curr >> (32 - BIN_BITS)]++;
         bins2[curr >> (32 - BIN_BITS)][prev >> (32 - BIN_BITS)]++;
         prev = curr;
@@ -46,31 +46,31 @@ port_float_v2_t random_uint32_fluctuation(port_uint32_t *initial)
     return (port_float_v2_t)PORT_V2(max_fluctuation, max_fluctuation2);
 }
 
-TEST(port_random_uint32)
+TEST(port_random_next)
 {
     // Sequence of values taken from "Numerical recipies in C. The art of scientific computing"
     port_uint32_t rnd = 0;
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0x3C6EF35Fu, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0x47502932u, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0xD1CCF6E9u, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0xAAF95334u, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0x6252E503u, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0x9F2EC686u, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0x57FE6C2Du, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0xA3D95FA8u, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0x81FDBEE7u, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0x94F0AF1Au, port_uint32_t, "%u");
-    rnd = port_random_uint32(rnd);
+    rnd = port_random_next(rnd);
     ASSERT_EQ(rnd, 0xCBF633B1u, port_uint32_t, "%u");
 
     for (port_uint32_t i = 0; i < 100; i++)

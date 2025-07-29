@@ -27,23 +27,81 @@
 #define _PORT_MEMORY_FUN_H_
 
 #include "port/memory.typ.h"
+#include "port/pointer.typ.h"
+
+/**
+ * @brief Follow memory reference in generic memory.
+ *
+ * @see PORT_MEMORY_AT()
+ *
+ * @return Pointer to referenced memory.
+ */
+port_const_void_ptr_t
+port_memory_at(
+        port_memory_ref_t ref, ///< [in] Memory reference.
+        port_memory_ref_format_t format, ///< [in] Memory reference format.
+
+        port_const_void_ptr_t base_ptr, ///< [in] Base address for near memory reference.
+        const PORT_KW_CONSTANT port_const_void_ptr_t *memory_table ///< [in] Table of memory pointers for far memory reference.
+);
+
+#ifdef __OPENCL_C_VERSION__
+
+/**
+ * @brief Follow memory reference in local memory.
+ *
+ * @see port_memory_at()
+ *
+ * @return Pointer to referenced memory.
+ */
+port_const_local_void_ptr_t
+port_memory_at_local(
+        port_memory_ref_t ref, ///< [in] Memory reference.
+        port_memory_ref_format_t format, ///< [in] Memory reference format.
+
+        port_const_local_void_ptr_t base_ptr, ///< [in] Base address for near memory reference.
+        const PORT_KW_CONSTANT port_const_local_void_ptr_t *memory_table ///< [in] Table of memory pointers for far memory reference.
+);
 
 /**
  * @brief Follow memory reference in global memory.
  *
- * See description of PORT_MEMORY_AT().
+ * @see port_memory_at()
  *
  * @return Pointer to referenced memory.
  */
-port_const_global_memory_ptr_t
+port_const_global_void_ptr_t
 port_memory_at_global(
         port_memory_ref_t ref, ///< [in] Memory reference.
-
         port_memory_ref_format_t format, ///< [in] Memory reference format.
 
-        port_const_global_memory_ptr_t base_ptr, ///< [in] Base address for near memory reference.
-        port_global_memory_table_t memory_table  ///< [in] Table of memory pointers for far memory reference.
+        port_const_global_void_ptr_t base_ptr, ///< [in] Base address for near memory reference.
+        const PORT_KW_CONSTANT port_const_global_void_ptr_t *memory_table ///< [in] Table of memory pointers for far memory reference.
 );
+
+/**
+ * @brief Follow memory reference in constant memory.
+ *
+ * @see port_memory_at()
+ *
+ * @return Pointer to referenced memory.
+ */
+port_constant_void_ptr_t
+port_memory_at_constant(
+        port_memory_ref_t ref, ///< [in] Memory reference.
+        port_memory_ref_format_t format, ///< [in] Memory reference format.
+
+        port_constant_void_ptr_t base_ptr, ///< [in] Base address for near memory reference.
+        const PORT_KW_CONSTANT port_constant_void_ptr_t *memory_table ///< [in] Table of memory pointers for far memory reference.
+);
+
+#else // __OPENCL_C_VERSION__
+
+#  define port_memory_at_local      port_memory_at
+#  define port_memory_at_global     port_memory_at
+#  define port_memory_at_constant   port_memory_at
+
+#endif // __OPENCL_C_VERSION__
 
 #endif // _PORT_MEMORY_FUN_H_
 

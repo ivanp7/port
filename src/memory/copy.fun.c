@@ -19,7 +19,7 @@
 
 /**
  * @file
- * @brief Memory copy operations.
+ * @brief Functions for copying memory.
  */
 
 #include "port/memory/copy.fun.h"
@@ -29,125 +29,164 @@
 #  include <assert.h>
 #endif
 
+///////////////////////////////////////////////////////////////////////////////
+// Generic memory
+///////////////////////////////////////////////////////////////////////////////
+
+void
+port_memory_copy(
+        port_void_ptr_t restrict dest,
+        port_const_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+#ifdef __OPENCL_C_VERSION__
+    for (size_t i = 0; i < num_bytes; i++)
+        ((char*)dest)[i] = ((const char*)src)[i];
+#else
+    assert(dest != NULL);
+    assert(src != NULL);
+
+    memcpy(dest, src, num_bytes);
+#endif
+}
+
 #ifdef __OPENCL_C_VERSION__
 
-#  define MEMCPY_IMPL \
-    for (size_t i = 0; i < num_units; i++) dest[i] = src[i];
-
-#else
-
-#  define MEMCPY_IMPL     \
-    assert(dest != NULL); \
-    assert(src != NULL);  \
-    memcpy(dest, src, sizeof(port_memory_unit_t) * num_units);
-
-#endif
-
-void
-port_memory_copy_global_to_private(
-        port_private_memory_ptr_t restrict dest,
-        port_const_global_memory_ptr_t restrict src,
-        size_t num_units)
-{
-    MEMCPY_IMPL
-}
-
-void
-port_memory_copy_constant_to_private(
-        port_private_memory_ptr_t restrict dest,
-        port_constant_memory_ptr_t restrict src,
-        size_t num_units)
-{
-    MEMCPY_IMPL
-}
-
-void
-port_memory_copy_local_to_private(
-        port_private_memory_ptr_t restrict dest,
-        port_const_local_memory_ptr_t restrict src,
-        size_t num_units)
-{
-    MEMCPY_IMPL
-}
+///////////////////////////////////////////////////////////////////////////////
+// Private source
+///////////////////////////////////////////////////////////////////////////////
 
 void
 port_memory_copy_private_to_private(
-        port_private_memory_ptr_t restrict dest,
-        port_const_private_memory_ptr_t restrict src,
-        size_t num_units)
+        port_private_void_ptr_t restrict dest,
+        port_const_private_void_ptr_t restrict src,
+        size_t num_bytes)
 {
-    MEMCPY_IMPL
-}
-
-void
-port_memory_copy_global_to_local(
-        port_local_memory_ptr_t restrict dest,
-        port_const_global_memory_ptr_t restrict src,
-        size_t num_units)
-{
-    MEMCPY_IMPL
-}
-
-void
-port_memory_copy_constant_to_local(
-        port_local_memory_ptr_t restrict dest,
-        port_constant_memory_ptr_t restrict src,
-        size_t num_units)
-{
-    MEMCPY_IMPL
-}
-
-void
-port_memory_copy_local_to_local(
-        port_local_memory_ptr_t restrict dest,
-        port_const_local_memory_ptr_t restrict src,
-        size_t num_units)
-{
-    MEMCPY_IMPL
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__private char*)dest)[i] = ((const __private char*)src)[i];
 }
 
 void
 port_memory_copy_private_to_local(
-        port_local_memory_ptr_t restrict dest,
-        port_const_private_memory_ptr_t restrict src,
-        size_t num_units)
+        port_local_void_ptr_t restrict dest,
+        port_const_private_void_ptr_t restrict src,
+        size_t num_bytes)
 {
-    MEMCPY_IMPL
-}
-
-void
-port_memory_copy_global_to_global(
-        port_global_memory_ptr_t restrict dest,
-        port_const_global_memory_ptr_t restrict src,
-        size_t num_units)
-{
-    MEMCPY_IMPL
-}
-
-void
-port_memory_copy_local_to_global(
-        port_global_memory_ptr_t restrict dest,
-        port_const_local_memory_ptr_t restrict src,
-        size_t num_units)
-{
-    MEMCPY_IMPL
-}
-
-void
-port_memory_copy_constant_to_global(
-        port_global_memory_ptr_t restrict dest,
-        port_constant_memory_ptr_t restrict src,
-        size_t num_units)
-{
-    MEMCPY_IMPL
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__local char*)dest)[i] = ((const __private char*)src)[i];
 }
 
 void
 port_memory_copy_private_to_global(
-        port_global_memory_ptr_t restrict dest,
-        port_const_private_memory_ptr_t restrict src,
-        size_t num_units)
+        port_global_void_ptr_t restrict dest,
+        port_const_private_void_ptr_t restrict src,
+        size_t num_bytes)
 {
-    MEMCPY_IMPL
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__global char*)dest)[i] = ((const __private char*)src)[i];
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// Local source
+///////////////////////////////////////////////////////////////////////////////
+
+void
+port_memory_copy_local_to_private(
+        port_private_void_ptr_t restrict dest,
+        port_const_local_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__private char*)dest)[i] = ((const __local char*)src)[i];
+}
+
+void
+port_memory_copy_local_to_local(
+        port_local_void_ptr_t restrict dest,
+        port_const_local_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__local char*)dest)[i] = ((const __local char*)src)[i];
+}
+
+void
+port_memory_copy_local_to_global(
+        port_global_void_ptr_t restrict dest,
+        port_const_local_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__global char*)dest)[i] = ((const __local char*)src)[i];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Global source
+///////////////////////////////////////////////////////////////////////////////
+
+void
+port_memory_copy_global_to_private(
+        port_private_void_ptr_t restrict dest,
+        port_const_global_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__private char*)dest)[i] = ((const __global char*)src)[i];
+}
+
+void
+port_memory_copy_global_to_local(
+        port_local_void_ptr_t restrict dest,
+        port_const_global_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__local char*)dest)[i] = ((const __global char*)src)[i];
+}
+
+void
+port_memory_copy_global_to_global(
+        port_global_void_ptr_t restrict dest,
+        port_const_global_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__global char*)dest)[i] = ((const __global char*)src)[i];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Constant source
+///////////////////////////////////////////////////////////////////////////////
+
+void
+port_memory_copy_constant_to_private(
+        port_private_void_ptr_t restrict dest,
+        port_constant_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__private char*)dest)[i] = ((const __constant char*)src)[i];
+}
+
+void
+port_memory_copy_constant_to_local(
+        port_local_void_ptr_t restrict dest,
+        port_constant_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__local char*)dest)[i] = ((const __constant char*)src)[i];
+}
+
+void
+port_memory_copy_constant_to_global(
+        port_global_void_ptr_t restrict dest,
+        port_constant_void_ptr_t restrict src,
+        size_t num_bytes)
+{
+    for (size_t i = 0; i < num_bytes; i++)
+        ((__global char*)dest)[i] = ((const __constant char*)src)[i];
+}
+
+#endif // __OPENCL_C_VERSION__
 

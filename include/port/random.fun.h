@@ -26,21 +26,26 @@
 #ifndef _PORT_RANDOM_FUN_H_
 #define _PORT_RANDOM_FUN_H_
 
-#include "port/types.typ.h"
-
-/**
- * @brief Maximum possible pseudorandom 32-bit integer.
- */
-#define PORT_RANDOM_UINT32_MAX PORT_UINT32_MAX
+#include "port/random.typ.h"
 
 /**
  * @brief Generate next pseudorandom 32-bit unsigned integer.
  *
  * @return Next pseudorandom unsigned integer.
  */
+port_random_t
+port_random_next(
+        port_random_t prev ///< [in] Previous pseudorandom unsigned integer.
+);
+
+/**
+ * @brief Generate pseudorandom 32-bit unsigned integer.
+ *
+ * @return 32-bit unsigned integer.
+ */
 port_uint32_t
 port_random_uint32(
-        port_uint32_t prev ///< [in] Previous pseudorandom unsigned integer.
+        port_random_t *rnd ///< [in,out] Pseudorandom number generator state.
 );
 
 /**
@@ -50,18 +55,14 @@ port_random_uint32(
  */
 port_uint64_t
 port_random_uint64(
-        port_uint32_t *rnd ///< [in,out] Pseudorandom number generator state.
+        port_random_t *rnd ///< [in,out] Pseudorandom number generator state.
 );
 
-/**
- * @brief Generate pseudorandom unsigned integer.
- *
- * @return Unsigned integer.
- */
-port_uint_t
-port_random_uint(
-        port_uint32_t *rnd ///< [in,out] Pseudorandom number generator state.
-);
+#ifndef PORT_FEATURE_DEFAULT_INTEGER_64
+#  define port_random_uint port_random_uint32
+#else
+#  define port_random_uint port_random_uint64
+#endif
 
 /**
  * @brief Generate 32-bit floating-point number uniformly distributed over [0; 1).
@@ -70,7 +71,7 @@ port_random_uint(
  */
 port_float32_t
 port_random_float32(
-        port_uint32_t *rnd ///< [in,out] Pseudorandom number generator state.
+        port_random_t *rnd ///< [in,out] Pseudorandom number generator state.
 );
 
 /**
@@ -80,7 +81,7 @@ port_random_float32(
  */
 port_float64_t
 port_random_float64(
-        port_uint32_t *rnd ///< [in,out] Pseudorandom number generator state.
+        port_random_t *rnd ///< [in,out] Pseudorandom number generator state.
 );
 
 #ifndef PORT_FEATURE_DEFAULT_FLOAT_64
@@ -110,7 +111,7 @@ port_uint_quarter_t
 port_random_custom_distrib_uint_quarter(
         port_uint_quarter_t num_outcomes, ///< [in] Number of outcomes.
         const port_uint_quarter_t cdf[],  ///< [in] Cumulative distribution function.
-        port_uint32_t *rnd ///< [in,out] Pseudorandom integer.
+        port_random_t *rnd ///< [in,out] Pseudorandom integer.
 );
 
 /**
@@ -126,7 +127,7 @@ port_uint_half_t
 port_random_custom_distrib_uint_half(
         port_uint_half_t num_outcomes, ///< [in] Number of outcomes.
         const port_uint_half_t cdf[],  ///< [in] Cumulative distribution function.
-        port_uint32_t *rnd ///< [in,out] Pseudorandom integer.
+        port_random_t *rnd ///< [in,out] Pseudorandom integer.
 );
 
 /**
@@ -142,7 +143,7 @@ port_uint_single_t
 port_random_custom_distrib_uint_single(
         port_uint_single_t num_outcomes, ///< [in] Number of outcomes.
         const port_uint_single_t cdf[],  ///< [in] Cumulative distribution function.
-        port_uint32_t *rnd ///< [in,out] Pseudorandom integer.
+        port_random_t *rnd ///< [in,out] Pseudorandom integer.
 );
 
 #endif // _PORT_RANDOM_FUN_H_

@@ -46,19 +46,6 @@
 #  define PORT_KW_PRIVATE __private
 
 /**
- * @brief OpenCL C __read_only keyword.
- */
-#  define PORT_KW_READ_ONLY __read_only
-/**
- * @brief OpenCL C __write_only keyword.
- */
-#  define PORT_KW_WRITE_ONLY __write_only
-/**
- * @brief OpenCL C __read_write keyword.
- */
-#  define PORT_KW_READ_WRITE __read_write
-
-/**
  * @brief OpenCL C __kernel keyword.
  */
 #  define PORT_KW_KERNEL __kernel
@@ -69,10 +56,6 @@
 #  define PORT_KW_CONSTANT
 #  define PORT_KW_LOCAL
 #  define PORT_KW_PRIVATE
-
-#  define PORT_KW_READ_ONLY
-#  define PORT_KW_WRITE_ONLY
-#  define PORT_KW_READ_WRITE
 
 #  define PORT_KW_KERNEL
 

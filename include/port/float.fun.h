@@ -29,6 +29,34 @@
 #include "port/types.typ.h"
 
 ///////////////////////////////////////////////////////////////////////////////
+// Auxiliary functions
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Swap 32-bit floating-point numbers.
+ */
+void
+port_float32_swap(
+        port_float32_t *value1, ///< [in] First number.
+        port_float32_t *value2  ///< [in] Second number.
+);
+
+/**
+ * @brief Swap 64-bit floating-point numbers.
+ */
+void
+port_float64_swap(
+        port_float64_t *value1, ///< [in] First number.
+        port_float64_t *value2  ///< [in] Second number.
+);
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_float_swap port_float32_swap
+#else
+#  define port_float_swap port_float64_swap
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
 // ULP distance between floating-point numbers
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -41,8 +69,8 @@
  */
 port_uint32_t
 port_float32_ulp_distance(
-        port_float32_t value1,
-        port_float32_t value2
+        port_float32_t value1, ///< [in] First number.
+        port_float32_t value2  ///< [in] Second number.
 );
 
 /**
@@ -54,8 +82,8 @@ port_float32_ulp_distance(
  */
 port_uint64_t
 port_float64_ulp_distance(
-        port_float64_t value1,
-        port_float64_t value2
+        port_float64_t value1, ///< [in] First number.
+        port_float64_t value2  ///< [in] Second number.
 );
 
 #ifndef PORT_FEATURE_DEFAULT_FLOAT_64

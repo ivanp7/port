@@ -60,48 +60,38 @@
  * @brief Extract offset from a far reference.
  */
 #define PORT_MEMORY_REF_FAR__OFFSET(ref, num_tidx_bits) \
-    PORT_EXTRACT_MSBITS(size_t, (ref), (num_tidx_bits))
+    PORT_EXTRACT_MSBITS(port_uint_single_t, (ref), (num_tidx_bits))
 
 /**
  * @brief Follow far memory reference.
  *
- * address = memory_table[reference.table_index] + (reference.offset << offset_shift).
+ * address = memory_table[reference.table_index] + (reference.offset << offset_lshift).
  */
-#define PORT_MEMORY_FAR_AT(ref, num_tidx_bits, offset_shift, memory_table) \
+#define PORT_MEMORY_FAR_AT(ref, num_tidx_bits, offset_lshift, memory_table) \
     ((memory_table)[PORT_MEMORY_REF_FAR__TABLE_INDEX((ref), (num_tidx_bits))] \
-     + (PORT_MEMORY_REF_FAR__OFFSET((ref), (num_tidx_bits)) << (offset_shift)))
+     + ((size_t)PORT_MEMORY_REF_FAR__OFFSET((ref), (num_tidx_bits)) \
+         << (offset_lshift)))
 
 /**
  * @brief Follow near memory reference.
  *
  * Reference is a local offset in memory units,
- * so address = base_ptr - reference.
+ * so address = base_ptr + ((-reference) << offset_lshift).
  *
  * If base_ptr is NULL, alt_base_ptr is used instead.
  */
-#define PORT_MEMORY_NEAR_AT(ref, base_ptr, alt_base_ptr) \
-    (((base_ptr) ? (base_ptr) : (alt_base_ptr)) - (ref))
+#define PORT_MEMORY_NEAR_AT(ref, offset_lshift, base_ptr, alt_base_ptr) \
+    (((base_ptr) != NULL ? (base_ptr) : (alt_base_ptr)) \
+     + ((-(size_t)(ref)) \
+         << (offset_lshift)))
 
 /**
  * @brief Follow memory reference.
  */
-#define PORT_MEMORY_AT(ref, num_tidx_bits, offset_shift, base_ptr, memory_table) \
+#define PORT_MEMORY_AT(ref, far_num_tidx_bits, far_offset_lshift, near_offset_lshift, base_ptr, memory_table) \
     (PORT_MEMORY_REF_IS_FAR(ref) ? \
-     PORT_MEMORY_FAR_AT((ref), (num_tidx_bits), (offset_shift), (memory_table)) : \
-     PORT_MEMORY_NEAR_AT((ref), (base_ptr), (memory_table)[0]))
-
-/**
- * @brief Number of bits enough for storing any bit number in port_memory_ref_quarter_t.
- */
-#define PORT_MEMORY_REF_QUARTER_LOGBITSIZE  3
-/**
- * @brief Number of bits enough for storing any bit number in port_memory_ref_half_t.
- */
-#define PORT_MEMORY_REF_HALF_LOGBITSIZE     4
-/**
- * @brief Number of bits enough for storing any bit number in port_memory_ref_t.
- */
-#define PORT_MEMORY_REF_LOGBITSIZE          5
+     PORT_MEMORY_FAR_AT((ref), (far_num_tidx_bits), (far_offset_lshift), (memory_table)) : \
+     PORT_MEMORY_NEAR_AT((ref), (near_offset_lshift), (base_ptr), (memory_table)[0]))
 
 #endif // _PORT_MEMORY_DEF_H_
 
