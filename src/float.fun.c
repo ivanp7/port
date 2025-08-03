@@ -27,7 +27,8 @@
 #include "port/vector.def.h"
 
 #ifndef __OPENCL_C_VERSION__
-#  include <math.h>
+#  include <tgmath.h>
+#  include <assert.h>
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,6 +59,38 @@ port_float64_swap(
     port_float64_t temp = *value1;
     *value1 = *value2;
     *value2 = temp;
+}
+
+port_float32_t
+port_float32_clamp(
+        port_float32_t value,
+
+        port_float32_t minval,
+        port_float32_t maxval)
+{
+#ifdef __OPENCL_C_VERSION__
+    return clamp(value, minval, maxval);
+#else
+    assert(minval <= maxval);
+
+    return fmin(fmax(value, minval), maxval);
+#endif
+}
+
+port_float64_t
+port_float64_clamp(
+        port_float64_t value,
+
+        port_float64_t minval,
+        port_float64_t maxval)
+{
+#ifdef __OPENCL_C_VERSION__
+    return clamp(value, minval, maxval);
+#else
+    assert(minval <= maxval);
+
+    return fmin(fmax(value, minval), maxval);
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////

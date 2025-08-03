@@ -56,6 +56,38 @@ port_float64_swap(
 #  define port_float_swap port_float64_swap
 #endif
 
+/**
+ * @brief Clamp 32-bit floating-point number between minimum and maximum.
+ *
+ * @return Clamped value.
+ */
+port_float32_t
+port_float32_clamp(
+        port_float32_t value, ///< [in] Value to clamp.
+
+        port_float32_t minval, ///< [in] Minimum value.
+        port_float32_t maxval  ///< [in] Maximum value.
+);
+
+/**
+ * @brief Clamp 64-bit floating-point number between minimum and maximum.
+ *
+ * @return Clamped value.
+ */
+port_float64_t
+port_float64_clamp(
+        port_float64_t value, ///< [in] Value to clamp.
+
+        port_float64_t minval, ///< [in] Minimum value.
+        port_float64_t maxval  ///< [in] Maximum value.
+);
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_float_clamp port_float32_clamp
+#else
+#  define port_float_clamp port_float64_clamp
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 // ULP distance between floating-point numbers
 ///////////////////////////////////////////////////////////////////////////////

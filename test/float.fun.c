@@ -6,6 +6,30 @@
 
 #include <tgmath.h>
 
+TEST(port_float32_clamp)
+{
+    ASSERT_EQ(port_float32_clamp(0.5f, 0.0f, 1.0f), 0.5f, port_float32_t, "%g");
+    ASSERT_EQ(port_float32_clamp(-0.5f, 0.0f, 1.0f), 0.0f, port_float32_t, "%g");
+    ASSERT_EQ(port_float32_clamp(1.5f, 0.0f, 1.0f), 1.0f, port_float32_t, "%g");
+    ASSERT_EQ(port_float32_clamp(PORT_M_INFINITY, 0.0f, 1.0f), 1.0f, port_float32_t, "%g");
+    ASSERT_EQ(port_float32_clamp(-1.0f, 0.0f, PORT_M_INFINITY), 0.0f, port_float32_t, "%g");
+    ASSERT_EQ(port_float32_clamp(1.0f, 0.0f, PORT_M_INFINITY), 1.0f, port_float32_t, "%g");
+    ASSERT_EQ(port_float32_clamp(PORT_M_INFINITY, 0.0f, PORT_M_INFINITY), PORT_M_INFINITY, port_float32_t, "%g");
+    ASSERT_EQ(port_float32_clamp(-PORT_M_INFINITY, 0.0f, PORT_M_INFINITY), 0.0f, port_float32_t, "%g");
+}
+
+TEST(port_float64_clamp)
+{
+    ASSERT_EQ(port_float64_clamp(0.5, 0.0, 1.0), 0.5, port_float64_t, "%g");
+    ASSERT_EQ(port_float64_clamp(-0.5, 0.0, 1.0), 0.0, port_float64_t, "%g");
+    ASSERT_EQ(port_float64_clamp(1.5, 0.0, 1.0), 1.0, port_float64_t, "%g");
+    ASSERT_EQ(port_float64_clamp(PORT_M_INFINITY, 0.0, 1.0), 1.0, port_float64_t, "%g");
+    ASSERT_EQ(port_float64_clamp(-1.0, 0.0, PORT_M_INFINITY), 0.0, port_float64_t, "%g");
+    ASSERT_EQ(port_float64_clamp(1.0, 0.0, PORT_M_INFINITY), 1.0, port_float64_t, "%g");
+    ASSERT_EQ(port_float64_clamp(PORT_M_INFINITY, 0.0, PORT_M_INFINITY), PORT_M_INFINITY, port_float64_t, "%g");
+    ASSERT_EQ(port_float64_clamp(-PORT_M_INFINITY, 0.0, PORT_M_INFINITY), 0.0, port_float64_t, "%g");
+}
+
 TEST(port_float32_ulp_distance)
 {
     ASSERT_EQ(port_float32_ulp_distance(0.0f, 0.0f), 0, port_uint32_t, "%u");
