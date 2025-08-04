@@ -24,6 +24,8 @@
 
 #include "port/float.fun.h"
 #include "port/bit.def.h"
+#include "port/util.def.h"
+#include "port/types.def.h"
 #include "port/vector.def.h"
 
 #ifndef __OPENCL_C_VERSION__
@@ -32,34 +34,8 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-// Auxiliary functions
+// Miscellaneous functions
 ///////////////////////////////////////////////////////////////////////////////
-
-void
-port_float32_swap(
-        port_float32_t *value1,
-        port_float32_t *value2)
-{
-    if ((value1 == NULL) || (value2 == NULL))
-        return;
-
-    port_float32_t temp = *value1;
-    *value1 = *value2;
-    *value2 = temp;
-}
-
-void
-port_float64_swap(
-        port_float64_t *value1,
-        port_float64_t *value2)
-{
-    if ((value1 == NULL) || (value2 == NULL))
-        return;
-
-    port_float64_t temp = *value1;
-    *value1 = *value2;
-    *value2 = temp;
-}
 
 port_float32_t
 port_float32_clamp(
@@ -93,10 +69,6 @@ port_float64_clamp(
 #endif
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// ULP distance between floating-point numbers
-///////////////////////////////////////////////////////////////////////////////
-
 port_uint32_t
 port_float32_ulp_distance(
         port_float32_t value1,
@@ -109,7 +81,7 @@ port_float32_ulp_distance(
 
     // Ensure value1 >= value2
     if (value1 < value2)
-        port_float32_swap(&value1, &value2);
+        PORT_SWAP(port_float32_t, value1, value2);
 
     union {
         port_float32_t as_float;
@@ -142,7 +114,7 @@ port_float64_ulp_distance(
         return 0;
 
     if (value1 < value2)
-        port_float64_swap(&value1, &value2);
+        PORT_SWAP(port_float64_t, value1, value2);
 
     union {
         port_float64_t as_float;
@@ -162,6 +134,36 @@ port_float64_ulp_distance(
     }
 
     return u1.as_uint - u2.as_uint;
+}
+
+bool
+port_float32_equal(
+        port_float32_t value1,
+        port_float32_t value2,
+
+        port_uint32_t tolerance)
+{
+    if (value1 == value2)
+        return true;
+    else if ((fabs(value1) <= PORT_FLOAT32(1.0)) || (fabs(value2) <= PORT_FLOAT32(1.0)))
+        return fabs(value1 - value2) <= (PORT_FLOAT32_EPS * tolerance);
+    else
+        return port_float32_ulp_distance(value1, value2) <= tolerance;
+}
+
+bool
+port_float64_equal(
+        port_float64_t value1,
+        port_float64_t value2,
+
+        port_uint64_t tolerance)
+{
+    if (value1 == value2)
+        return true;
+    else if ((fabs(value1) <= PORT_FLOAT64(1.0)) || (fabs(value2) <= PORT_FLOAT64(1.0)))
+        return fabs(value1 - value2) <= (PORT_FLOAT64_EPS * tolerance);
+    else
+        return port_float64_ulp_distance(value1, value2) <= tolerance;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

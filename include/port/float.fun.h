@@ -28,33 +28,13 @@
 
 #include "port/types.typ.h"
 
-///////////////////////////////////////////////////////////////////////////////
-// Auxiliary functions
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * @brief Swap 32-bit floating-point numbers.
- */
-void
-port_float32_swap(
-        port_float32_t *value1, ///< [in] First number.
-        port_float32_t *value2  ///< [in] Second number.
-);
-
-/**
- * @brief Swap 64-bit floating-point numbers.
- */
-void
-port_float64_swap(
-        port_float64_t *value1, ///< [in] First number.
-        port_float64_t *value2  ///< [in] Second number.
-);
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_float_swap port_float32_swap
-#else
-#  define port_float_swap port_float64_swap
+#ifndef __OPENCL_C_VERSION__
+#  include <stdbool.h>
 #endif
+
+///////////////////////////////////////////////////////////////////////////////
+// Miscellaneous functions
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * @brief Clamp 32-bit floating-point number between minimum and maximum.
@@ -82,15 +62,14 @@ port_float64_clamp(
         port_float64_t maxval  ///< [in] Maximum value.
 );
 
+#define port_float_single_clamp port_float32_clamp
+#define port_float_double_clamp port_float64_clamp
+
 #ifndef PORT_FEATURE_DEFAULT_FLOAT_64
 #  define port_float_clamp port_float32_clamp
 #else
 #  define port_float_clamp port_float64_clamp
 #endif
-
-///////////////////////////////////////////////////////////////////////////////
-// ULP distance between floating-point numbers
-///////////////////////////////////////////////////////////////////////////////
 
 /**
  * @brief Calculate distance between 32-bit floating-point numbers in ULPs.
@@ -118,10 +97,54 @@ port_float64_ulp_distance(
         port_float64_t value2  ///< [in] Second number.
 );
 
+#define port_float_single_ulp_distance port_float32_ulp_distance
+#define port_float_double_ulp_distance port_float64_ulp_distance
+
 #ifndef PORT_FEATURE_DEFAULT_FLOAT_64
 #  define port_float_ulp_distance port_float32_ulp_distance
 #else
 #  define port_float_ulp_distance port_float64_ulp_distance
+#endif
+
+/**
+ * @brief Check if 32-bit floating-point numbers are (almost) equal.
+ *
+ * Values in [0; 1) are treated specially, as if ULPs are the same as in [1; 2).
+ * Zero tolerance forces exact equality.
+ *
+ * @return True if number are (almost) equal, otherwise false.
+ */
+bool
+port_float32_equal(
+        port_float32_t value1, ///< [in] First value.
+        port_float32_t value2, ///< [in] Second value.
+
+        port_uint32_t tolerance ///< [in] Inexact equality tolerance.
+);
+
+/**
+ * @brief Check if 64-bit floating-point numbers are (almost) equal.
+ *
+ * Values in [0; 1) are treated specially, as if ULPs are the same as in [1; 2).
+ * Zero tolerance forces exact equality.
+ *
+ * @return True if number are (almost) equal, otherwise false.
+ */
+bool
+port_float64_equal(
+        port_float64_t value1, ///< [in] First value.
+        port_float64_t value2, ///< [in] Second value.
+
+        port_uint64_t tolerance ///< [in] Inexact equality tolerance.
+);
+
+#define port_float_single_equal port_float32_equal
+#define port_float_double_equal port_float64_equal
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_float_equal port_float32_equal
+#else
+#  define port_float_equal port_float64_equal
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -200,6 +223,13 @@ port_convert_float16_to_float32_v16(
         port_uint16_v16_t value ///< [in] Half precision float vector.
 );
 
+#define port_convert_float_half_to_float_single port_convert_float16_to_float32
+#define port_convert_float_half_to_float_single_v2 port_convert_float16_to_float32_v2
+#define port_convert_float_half_to_float_single_v3 port_convert_float16_to_float32_v3
+#define port_convert_float_half_to_float_single_v4 port_convert_float16_to_float32_v4
+#define port_convert_float_half_to_float_single_v8 port_convert_float16_to_float32_v8
+#define port_convert_float_half_to_float_single_v16 port_convert_float16_to_float32_v16
+
 ///////////////////////////////////////////////////////////////////////////////
 // float32 -> float16 conversions
 ///////////////////////////////////////////////////////////////////////////////
@@ -275,6 +305,13 @@ port_uint16_v16_t
 port_convert_float32_to_float16_v16(
         port_float32_v16_t value ///< [in] Single precision float vector.
 );
+
+#define port_convert_float_single_to_float_half port_convert_float32_to_float16
+#define port_convert_float_single_to_float_half_v2 port_convert_float32_to_float16_v2
+#define port_convert_float_single_to_float_half_v3 port_convert_float32_to_float16_v3
+#define port_convert_float_single_to_float_half_v4 port_convert_float32_to_float16_v4
+#define port_convert_float_single_to_float_half_v8 port_convert_float32_to_float16_v8
+#define port_convert_float_single_to_float_half_v16 port_convert_float32_to_float16_v16
 
 #endif // _PORT_FLOAT_FUN_H_
 

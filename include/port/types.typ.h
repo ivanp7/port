@@ -28,9 +28,6 @@
 
 #ifndef __OPENCL_C_VERSION__
 #  include <CL/cl.h>
-#  include <stdbool.h> // for bool
-#  include <stddef.h>  // for size_t, ptrdiff_t
-#  include <stdint.h>  // for uintptr_t, intptr_t
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
