@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend= "setuptools.build_meta"
+
+[project]
+name="port"
+version="0.1.0"
+description="Python bindings for the Port library"
+dependencies=[]
+requires-python=">=3.13"
+
