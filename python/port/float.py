@@ -22,9 +22,11 @@
 # @brief Operations on floating-point numbers.
 #
 
+import port.types as p
+
 
 def to_float16(value):
-    """Convert IEEE754 float32 to float16.
+    """Convert Python float to IEEE754 float16.
     """
     import numpy as np
 
@@ -35,7 +37,7 @@ def to_float16(value):
 
 
 def from_float16(value):
-    """Convert IEEE754 float16 to float32.
+    """Convert IEEE754 float16 to Python float.
     """
     import numpy as np
 
@@ -43,4 +45,40 @@ def from_float16(value):
     float32_val = float16_val.astype(np.float32)
 
     return float(float32_val)
+
+
+def convert_float32_to_float16(vector_or_scalar, /):
+    """Convert Port float32 vector/scalar to float16.
+    """
+    if isinstance(vector_or_scalar, p.port_float32_t):
+        return p.port_uint16_t(to_float16(vector_or_scalar.value))
+    elif isinstance(vector_or_scalar, p.port_float32_v2_t):
+        return p.port_uint16_v2_t([to_float16(cmp) for cmp in vector_or_scalar.s])
+    elif isinstance(vector_or_scalar, p.port_float32_v3_t):
+        return p.port_uint16_v3_t([to_float16(cmp) for cmp in vector_or_scalar.s])
+    elif isinstance(vector_or_scalar, p.port_float32_v4_t):
+        return p.port_uint16_v4_t([to_float16(cmp) for cmp in vector_or_scalar.s])
+    elif isinstance(vector_or_scalar, p.port_float32_v8_t):
+        return p.port_uint16_v8_t([to_float16(cmp) for cmp in vector_or_scalar.s])
+    elif isinstance(vector_or_scalar, p.port_float32_v16_t):
+        return p.port_uint16_v16_t([to_float16(cmp) for cmp in vector_or_scalar.s])
+    else:
+        raise TypeError
+
+
+def convert_float16_to_float32(vector_or_scalar, /):
+    """Convert Port float16 vector/scalar to float32.
+    """
+    if isinstance(vector_or_scalar, p.port_uint16_t):
+        return p.port_float32_t(from_float16(vector_or_scalar.value))
+    elif isinstance(vector_or_scalar, p.port_uint16_v2_t):
+        return p.port_float32_v2_t([from_float16(cmp) for cmp in vector_or_scalar.s])
+    elif isinstance(vector_or_scalar, p.port_uint16_v3_t):
+        return p.port_float32_v3_t([from_float16(cmp) for cmp in vector_or_scalar.s])
+    elif isinstance(vector_or_scalar, p.port_uint16_v4_t):
+        return p.port_float32_v4_t([from_float16(cmp) for cmp in vector_or_scalar.s])
+    elif isinstance(vector_or_scalar, p.port_uint16_v8_t):
+        return p.port_float32_v8_t([from_float16(cmp) for cmp in vector_or_scalar.s])
+    elif isinstance(vector_or_scalar, p.port_uint16_v16_t):
+        return p.port_float32_v16_t([from_float16(cmp) for cmp in vector_or_scalar.s])
 

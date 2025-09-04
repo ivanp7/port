@@ -329,13 +329,5 @@ typedef port_float64_v16_t port_float_v16_t; ///< 16-vector of default floating-
 
 #endif // PORT_FEATURE_DEFAULT_FLOAT_64
 
-///////////////////////////////////////////////////////////////////////////////
-// Largest types
-///////////////////////////////////////////////////////////////////////////////
-
-typedef port_uint64_t port_uint_largest_t; ///< Largest unsigned integer.
-typedef port_sint64_t port_sint_largest_t; ///< Largest signed integer.
-typedef port_float64_t port_float_largest_t; ///< Largest floating-point number.
-
 #endif // _PORT_TYPES_TYP_H_
 

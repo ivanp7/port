@@ -23,10 +23,11 @@
 #
 
 import ctypes as c
+import os
 
 
 def _define_vector_type(basetype, length, actual_length=None):
-    if hasattr(_define_vector_type, "vector_fields"):
+    if hasattr(_define_vector_type, 'vector_fields'):
         vector_fields = _define_vector_type.vector_fields
     else:
         vector_fields = {}
@@ -55,11 +56,12 @@ def _define_vector_type(basetype, length, actual_length=None):
                 [(''.join(fields), define_struct(fields)) for fields in field_groups]
         _align_ = c.sizeof(basetype * actual_length)
 
-        def __init__(self, components=None, /):
+        def __init__(self, *components):
             if components is not None:
                 self.s = (basetype * length)(*components)
 
     return vector
+
 
 def _define_vector_types(basetype):
     return (_define_vector_type(basetype, 2),
@@ -73,15 +75,15 @@ def _define_vector_types(basetype):
 ######################
 
 # Scalars
-port_uint8_t = c.c_ubyte
-port_uint16_t = c.c_ushort
-port_uint32_t = c.c_uint
-port_uint64_t = c.c_ulonglong
+port_uint8_t = c.c_uint8
+port_uint16_t = c.c_uint16
+port_uint32_t = c.c_uint32
+port_uint64_t = c.c_uint64
 
-port_sint8_t = c.c_byte
-port_sint16_t = c.c_short
-port_sint32_t = c.c_int
-port_sint64_t = c.c_longlong
+port_sint8_t = c.c_int8
+port_sint16_t = c.c_int16
+port_sint32_t = c.c_int32
+port_sint64_t = c.c_int64
 
 port_float32_t = c.c_float
 port_float64_t = c.c_double
@@ -195,4 +197,53 @@ port_float_double_v3_t = port_float64_v3_t
 port_float_double_v4_t = port_float64_v4_t
 port_float_double_v8_t = port_float64_v8_t
 port_float_double_v16_t = port_float64_v16_t
+
+#####################
+### Default types ###
+#####################
+
+if 'FEATURE_DEFAULT_INTEGER_64' not in os.environ:
+    port_uint_t = port_uint32_t
+    port_uint_v2_t = port_uint32_v2_t
+    port_uint_v3_t = port_uint32_v3_t
+    port_uint_v4_t = port_uint32_v4_t
+    port_uint_v8_t = port_uint32_v8_t
+    port_uint_v16_t = port_uint32_v16_t
+
+    port_sint_t = port_sint32_t
+    port_sint_v2_t = port_sint32_v2_t
+    port_sint_v3_t = port_sint32_v3_t
+    port_sint_v4_t = port_sint32_v4_t
+    port_sint_v8_t = port_sint32_v8_t
+    port_sint_v16_t = port_sint32_v16_t
+else:
+    port_uint_t = port_uint64_t
+    port_uint_v2_t = port_uint64_v2_t
+    port_uint_v3_t = port_uint64_v3_t
+    port_uint_v4_t = port_uint64_v4_t
+    port_uint_v8_t = port_uint64_v8_t
+    port_uint_v16_t = port_uint64_v16_t
+
+    port_sint_t = port_sint64_t
+    port_sint_v2_t = port_sint64_v2_t
+    port_sint_v3_t = port_sint64_v3_t
+    port_sint_v4_t = port_sint64_v4_t
+    port_sint_v8_t = port_sint64_v8_t
+    port_sint_v16_t = port_sint64_v16_t
+
+
+if 'FEATURE_DEFAULT_FLOAT_64' not in os.environ:
+    port_float_t = port_float32_t
+    port_float_v2_t = port_float32_v2_t
+    port_float_v3_t = port_float32_v3_t
+    port_float_v4_t = port_float32_v4_t
+    port_float_v8_t = port_float32_v8_t
+    port_float_v16_t = port_float32_v16_t
+else:
+    port_float_t = port_float64_t
+    port_float_v2_t = port_float64_v2_t
+    port_float_v3_t = port_float64_v3_t
+    port_float_v4_t = port_float64_v4_t
+    port_float_v8_t = port_float64_v8_t
+    port_float_v16_t = port_float64_v16_t
 
