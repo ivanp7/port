@@ -28,10 +28,23 @@
 
 #include "port/keywords.def.h"
 
+#ifndef __OPENCL_C_VERSION__
+#  include "archi/res_thread/api/work.typ.h" // for ARCHI_THREAD_GROUP_WORK_FUNC()
+#endif
+
 /**
  * @brief Kernel function return type.
  */
-#define PORT_KERNEL PORT_KW_KERNEL void
+#define PORT_KERNEL  PORT_KW_KERNEL void
+
+#ifndef __OPENCL_C_VERSION__
+
+/**
+ * @brief Kernel wrapper function for concurrent processing on CPU.
+ */
+#  define PORT_KERNEL_WRAPPER_FUNC(name)  ARCHI_THREAD_GROUP_WORK_FUNC(name)
+
+#endif
 
 #endif // _PORT_KERNEL_DEF_H_
 
