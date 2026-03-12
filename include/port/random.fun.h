@@ -28,6 +28,7 @@
 
 #include "port/random.typ.h"
 
+
 /**
  * @brief Generate next pseudorandom 32-bit unsigned integer.
  *

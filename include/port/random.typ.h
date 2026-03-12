@@ -29,6 +29,7 @@
 #include "port/types.typ.h"
 #include "port/types.def.h"
 
+
 /**
  * @brief Maximum possible pseudorandom 32-bit integer.
  */

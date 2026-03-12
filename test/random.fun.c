@@ -6,6 +6,7 @@
 
 #include <tgmath.h>
 
+
 #define BIN_BITS 5
 #define NUM_BINS (1 << BIN_BITS)
 #define NUM_SAMPLES (1 << 20)

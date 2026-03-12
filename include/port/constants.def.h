@@ -30,6 +30,7 @@
 #  include <CL/cl.h>
 #endif
 
+
 #ifdef __OPENCL_C_VERSION__
 
 #define PORT_M1_E M_E_F ///< e (2.71828), single precision

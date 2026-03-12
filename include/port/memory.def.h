@@ -28,6 +28,7 @@
 
 #include "port/bit.def.h"
 
+
 /**
  * @brief Check if memory reference is far.
  *

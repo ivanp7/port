@@ -7,6 +7,7 @@
 
 #include <tgmath.h>
 
+
 TEST(port_float32_clamp)
 {
     ASSERT_EQ(port_float32_clamp(0.5f, 0.0f, 1.0f), 0.5f, port_float32_t, "%g");

@@ -29,6 +29,7 @@
 #  include <assert.h>
 #endif
 
+
 port_random_t
 port_random_next(
         port_random_t prev)

@@ -30,6 +30,7 @@
 #  include <assert.h>
 #endif
 
+
 #ifdef __OPENCL_C_VERSION__
 #  define ASSERT_MEMORY(type)
 #else

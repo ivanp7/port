@@ -3,6 +3,7 @@
 #include "port/types.typ.h"
 #include "port/types.def.h"
 
+
 TEST(PORT_TYPE_NUM_BITS)
 {
     ASSERT_EQ(PORT_TYPE_NUM_BITS(PORT_TYPE_LOGSIZE_QUARTER), 8, port_uint32_t, "%u");

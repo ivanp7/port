@@ -29,6 +29,7 @@
 #include "port/memory.typ.h"
 #include "port/pointer.typ.h"
 
+
 /**
  * @brief Follow memory reference in generic memory.
  *

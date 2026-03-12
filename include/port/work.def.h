@@ -28,6 +28,7 @@
 
 #include "port/work.typ.h"
 
+
 #ifdef __OPENCL_C_VERSION__
 
 /**

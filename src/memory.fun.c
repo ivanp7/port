@@ -33,6 +33,7 @@
 #  include <assert.h>
 #endif
 
+
 #if !defined(__OPENCL_C_VERSION__) && !defined(NDEBUG)
 
 #  define ASSERTS \

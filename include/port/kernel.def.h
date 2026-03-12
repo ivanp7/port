@@ -29,8 +29,9 @@
 #include "port/keywords.def.h"
 
 #ifndef __OPENCL_C_VERSION__
-#  include "archi/res_thread/api/work.typ.h" // for ARCHI_THREAD_GROUP_WORK_FUNC()
+#  include "archi/thread/api/work.typ.h" // for ARCHI_THREAD_GROUP_WORK_FUNC()
 #endif
+
 
 /**
  * @brief Kernel function return type.

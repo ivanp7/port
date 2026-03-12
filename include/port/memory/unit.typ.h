@@ -28,6 +28,7 @@
 
 #include "port/types.typ.h"
 
+
 /**
  * @brief Standard memory unit.
  */
