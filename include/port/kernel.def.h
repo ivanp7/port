@@ -28,10 +28,6 @@
 
 #include "port/keywords.def.h"
 
-#ifndef __OPENCL_C_VERSION__
-#  include "archi/thread/api/work.typ.h" // for ARCHI_THREAD_GROUP_WORK_FUNC()
-#endif
-
 
 /**
  * @brief Kernel function return type.
@@ -42,8 +38,13 @@
 
 /**
  * @brief Kernel wrapper function for concurrent processing on CPU.
+ *
+ * This signature is compatible to ARCHI_THREAD_GROUP_WORK_FUNC from the Archipelago project.
  */
-#  define PORT_KERNEL_WRAPPER_FUNC(name)  ARCHI_THREAD_GROUP_WORK_FUNC(name)
+#  define PORT_KERNEL_WRAPPER_FUNC(func_name)     void func_name(           \
+        void *data, /* [in] Work data. */                                   \
+        size_t work_item_idx, /* [in] Index of the current work item. */    \
+        size_t thread_idx) /* [in] Index of the calling thread. */
 
 #endif
 
