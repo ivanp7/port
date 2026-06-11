@@ -160,6 +160,106 @@ TEST(port_float64_equal)
 #undef TOLERANCE
 }
 
+TEST(port_float32_two_sum)
+{
+    port_float32_v2_t sum;
+
+    sum = port_float32_two_sum(PORT_FLOAT32(1e10), PORT_FLOAT32(1e-10));
+    ASSERT_EQ(sum.s0, PORT_FLOAT32(1e10), port_float32_t, "%g");
+    ASSERT_EQ(sum.s1, PORT_FLOAT32(1e-10), port_float32_t, "%g");
+
+    sum = port_float32_two_sum(PORT_FLOAT32(1e-20), PORT_FLOAT32(1e20));
+    ASSERT_EQ(sum.s0, PORT_FLOAT32(1e20), port_float32_t, "%g");
+    ASSERT_EQ(sum.s1, PORT_FLOAT32(1e-20), port_float32_t, "%g");
+
+    sum = port_float32_two_sum(PORT_FLOAT32(1e30), PORT_FLOAT32(-1e30));
+    ASSERT_EQ(sum.s0, PORT_FLOAT32(0.0), port_float32_t, "%g");
+    ASSERT_EQ(sum.s1, PORT_FLOAT32(0.0), port_float32_t, "%g");
+}
+
+TEST(port_float64_two_sum)
+{
+    port_float64_v2_t sum;
+
+    sum = port_float64_two_sum(PORT_FLOAT64(1e100), PORT_FLOAT64(1e-100));
+    ASSERT_EQ(sum.s0, PORT_FLOAT64(1e100), port_float64_t, "%g");
+    ASSERT_EQ(sum.s1, PORT_FLOAT64(1e-100), port_float64_t, "%g");
+
+    sum = port_float64_two_sum(PORT_FLOAT64(1e-200), PORT_FLOAT64(1e200));
+    ASSERT_EQ(sum.s0, PORT_FLOAT64(1e200), port_float64_t, "%g");
+    ASSERT_EQ(sum.s1, PORT_FLOAT64(1e-200), port_float64_t, "%g");
+
+    sum = port_float64_two_sum(PORT_FLOAT64(1e300), PORT_FLOAT64(-1e300));
+    ASSERT_EQ(sum.s0, PORT_FLOAT64(0.0), port_float64_t, "%g");
+    ASSERT_EQ(sum.s1, PORT_FLOAT64(0.0), port_float64_t, "%g");
+}
+
+TEST(port_float32_neumaier_sum)
+{
+    {
+        port_float32_t values[] = {PORT_FLOAT32(1e30), PORT_FLOAT32(1e30), PORT_FLOAT32(1e-30), PORT_FLOAT32(-2e30)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
+
+        ASSERT_EQ(port_float32_neumaier_sum(values, num_values), PORT_FLOAT32(1e-30), port_float32_t, "%g");
+    }
+    {
+        port_float32_t values[] = {PORT_FLOAT32(1.0), PORT_FLOAT32(1e30), PORT_FLOAT32(1.0), PORT_FLOAT32(-1e30)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
+
+        ASSERT_EQ(port_float32_neumaier_sum(values, num_values), PORT_FLOAT32(2.0), port_float32_t, "%g");
+    }
+}
+
+TEST(port_float64_neumaier_sum)
+{
+    {
+        port_float64_t values[] = {PORT_FLOAT64(1e100), PORT_FLOAT64(1e100), PORT_FLOAT64(1e-100), PORT_FLOAT64(-2e100)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
+
+        ASSERT_EQ(port_float64_neumaier_sum(values, num_values), PORT_FLOAT64(1e-100), port_float64_t, "%g");
+    }
+    {
+        port_float64_t values[] = {PORT_FLOAT64(1.0), PORT_FLOAT64(1e100), PORT_FLOAT64(1.0), PORT_FLOAT64(-1e100)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
+
+        ASSERT_EQ(port_float64_neumaier_sum(values, num_values), PORT_FLOAT64(2.0), port_float64_t, "%g");
+    }
+}
+
+TEST(port_float32_shewchuk16_sum)
+{
+    port_float32_t values[] = {PORT_FLOAT32(1e-30), PORT_FLOAT32(2e30), PORT_FLOAT32(1e20), PORT_FLOAT32(1e20),
+        PORT_FLOAT32(1e10), PORT_FLOAT32(1e0), PORT_FLOAT32(1e-10), PORT_FLOAT32(1e-20), PORT_FLOAT32(1e-30),
+        PORT_FLOAT32(-1e-20), PORT_FLOAT32(-1e-10), PORT_FLOAT32(-1e0),
+        PORT_FLOAT32(-1e10), PORT_FLOAT32(-2e20), PORT_FLOAT32(-1e30), PORT_FLOAT32(-1e30)};
+    size_t num_values = sizeof(values) / sizeof(values[0]);
+
+    ASSERT_EQ(port_float32_shewchuk16_sum(values, num_values), PORT_FLOAT32(2e-30), port_float32_t, "%g");
+}
+
+TEST(port_float64_shewchuk16_sum)
+{
+    {
+        port_float64_t values[] = {PORT_FLOAT64(1e-300), PORT_FLOAT64(2e300), PORT_FLOAT64(1e200), PORT_FLOAT64(1e200),
+            PORT_FLOAT64(1e100), PORT_FLOAT64(1e0), PORT_FLOAT64(1e-100), PORT_FLOAT64(1e-200), PORT_FLOAT64(1e-300),
+            PORT_FLOAT64(-1e-200), PORT_FLOAT64(-1e-100), PORT_FLOAT64(-1e0),
+            PORT_FLOAT64(-1e100), PORT_FLOAT64(-2e200), PORT_FLOAT64(-1e300), PORT_FLOAT64(-1e300)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
+
+        ASSERT_EQ(port_float64_shewchuk16_sum(values, num_values), PORT_FLOAT64(2e-300), port_float64_t, "%g");
+    }
+    {
+        port_float64_t values[20];
+        for (int i = 0; i < 20; i++)
+            if (i < 10)
+                values[i] = pow(PORT_FLOAT64(10.0), PORT_FLOAT64(1.0) * (i - 5));
+            else
+                values[i] = -pow(PORT_FLOAT64(10.0), PORT_FLOAT64(1.0) * (i - 15));
+
+        ASSERT_EQ(port_float64_shewchuk16_sum(values, 20), PORT_FLOAT64(0.0), port_float64_t, "%g");
+    }
+}
+
 TEST(port_convert_float16_to_float32)
 {
     ASSERT_EQ(port_convert_float16_to_float32(0x0000), 0.0f, port_float32_t, "%g");

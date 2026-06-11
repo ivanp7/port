@@ -168,6 +168,208 @@ port_float64_equal(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Summation algorithms
+///////////////////////////////////////////////////////////////////////////////
+
+port_float32_v2_t
+port_float32_two_sum(
+        port_float32_t a,
+        port_float32_t b)
+{
+    port_float32_t hi = a + b;
+    port_float32_t a2 = hi - b;
+    return (port_float32_v2_t)PORT_V2(hi, a2 - hi + b + (a - a2));
+}
+
+port_float64_v2_t
+port_float64_two_sum(
+        port_float64_t a,
+        port_float64_t b)
+{
+    port_float64_t hi = a + b;
+    port_float64_t a2 = hi - b;
+    return (port_float64_v2_t)PORT_V2(hi, a2 - hi + b + (a - a2));
+}
+
+port_float32_t
+port_float32_neumaier_sum(
+        const port_float32_t values[],
+        size_t num_values)
+{
+    port_float32_t sum = PORT_FLOAT32(0.0);
+    port_float32_t comp = PORT_FLOAT32(0.0);
+
+    for (size_t i = 0; i < num_values; i++)
+    {
+        port_float32_v2_t s = port_float32_two_sum(sum, values[i]);
+        sum = s.s0;
+        comp += s.s1;
+    }
+
+    return sum + comp;
+}
+
+port_float64_t
+port_float64_neumaier_sum(
+        const port_float64_t values[],
+        size_t num_values)
+{
+    port_float64_t sum = PORT_FLOAT64(0.0);
+    port_float64_t comp = PORT_FLOAT64(0.0);
+
+    for (size_t i = 0; i < num_values; i++)
+    {
+        port_float64_v2_t s = port_float64_two_sum(sum, values[i]);
+        sum = s.s0;
+        comp += s.s1;
+    }
+
+    return sum + comp;
+}
+
+port_float32_t
+port_float32_shewchuk16_sum(
+        const port_float32_t values[],
+        size_t num_values)
+{
+#define MAX_PARTIALS 16
+
+    port_float32_t hi = PORT_FLOAT32(0.0), lo = PORT_FLOAT32(0.0);
+    port_float32_t partial[MAX_PARTIALS];
+    int num_partials = 0;
+
+    for (size_t i = 0; i < num_values; i++)
+    {
+        port_float32_t intermediate;
+        {
+            port_float32_v2_t sum = port_float32_two_sum(values[i], lo);
+            intermediate = sum.s0;
+            lo = sum.s1;
+        }
+
+        int num_partials_new = 0;
+        for (int j = 0; j < num_partials; j++)
+        {
+            port_float32_v2_t sum = port_float32_two_sum(intermediate, partial[j]);
+            intermediate = sum.s0;
+
+            if (sum.s1 != PORT_FLOAT32(0.0))
+                partial[num_partials_new++] = sum.s1;
+        }
+
+        {
+            port_float32_v2_t sum = port_float32_two_sum(hi, intermediate);
+            hi = sum.s0;
+            intermediate = sum.s1;
+        }
+
+        if (intermediate != PORT_FLOAT32(0.0))
+        {
+            if (num_partials_new < MAX_PARTIALS)
+                partial[num_partials_new++] = intermediate;
+            else
+            {
+                // Find the closest partial number to the intermediate
+                port_uint32_t min_ulp_distance = -1;
+                int j_closest = 0;
+                for (int j = 0; j < MAX_PARTIALS; j++)
+                {
+                    port_uint32_t ulp_distance = port_float32_ulp_distance(partial[j], intermediate);
+                    if (ulp_distance < min_ulp_distance)
+                    {
+                        min_ulp_distance = ulp_distance;
+                        j_closest = j;
+                    }
+                }
+
+                // Add the intermediate to the closest partial number
+                partial[j_closest] += intermediate;
+            }
+        }
+
+        num_partials = num_partials_new;
+    }
+
+    for (int j = 0; j < num_partials; j++)
+        lo += partial[j];
+
+    return hi + lo;
+
+#undef MAX_PARTIALS
+}
+
+port_float64_t
+port_float64_shewchuk16_sum(
+        const port_float64_t values[],
+        size_t num_values)
+{
+#define MAX_PARTIALS 16
+
+    port_float64_t hi = PORT_FLOAT64(0.0), lo = PORT_FLOAT64(0.0);
+    port_float64_t partial[MAX_PARTIALS];
+    int num_partials = 0;
+
+    for (size_t i = 0; i < num_values; i++)
+    {
+        port_float64_t intermediate;
+        {
+            port_float64_v2_t sum = port_float64_two_sum(values[i], lo);
+            intermediate = sum.s0;
+            lo = sum.s1;
+        }
+
+        int num_partials_new = 0;
+        for (int j = 0; j < num_partials; j++)
+        {
+            port_float64_v2_t sum = port_float64_two_sum(intermediate, partial[j]);
+            intermediate = sum.s0;
+
+            if (sum.s1 != PORT_FLOAT64(0.0))
+                partial[num_partials_new++] = sum.s1;
+        }
+
+        {
+            port_float64_v2_t sum = port_float64_two_sum(hi, intermediate);
+            hi = sum.s0;
+            intermediate = sum.s1;
+        }
+
+        if (intermediate != PORT_FLOAT64(0.0))
+        {
+            if (num_partials_new < MAX_PARTIALS)
+                partial[num_partials_new++] = intermediate;
+            else
+            {
+                // Find the closest partial number to the intermediate
+                port_uint64_t min_ulp_distance = -1;
+                int j_closest = 0;
+                for (int j = 0; j < MAX_PARTIALS; j++)
+                {
+                    port_uint64_t ulp_distance = port_float64_ulp_distance(partial[j], intermediate);
+                    if (ulp_distance < min_ulp_distance)
+                    {
+                        min_ulp_distance = ulp_distance;
+                        j_closest = j;
+                    }
+                }
+
+                // Add the intermediate to the closest partial number
+                partial[j_closest] += intermediate;
+            }
+        }
+
+        num_partials = num_partials_new;
+    }
+
+    for (int j = 0; j < num_partials; j++)
+        lo += partial[j];
+
+    return hi + lo;
+
+#undef MAX_PARTIALS
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // float16 -> float32 conversions
 ///////////////////////////////////////////////////////////////////////////////
 

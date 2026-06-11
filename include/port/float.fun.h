@@ -149,6 +149,103 @@ port_float64_equal(
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
+// Summation algorithms
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Sum two 32-bit floating-point numbers with a round-off error.
+ *
+ * @return Sum and a round-off error.
+ */
+port_float32_v2_t
+port_float32_two_sum(
+        port_float32_t a, ///< [in] First value.
+        port_float32_t b  ///< [in] Second value.
+);
+
+/**
+ * @brief Sum two 64-bit floating-point numbers with a round-off error.
+ *
+ * @return Sum and a round-off error.
+ */
+port_float64_v2_t
+port_float64_two_sum(
+        port_float64_t a, ///< [in] First value.
+        port_float64_t b  ///< [in] Second value.
+);
+
+#define port_float_single_two_sum port_float32_two_sum
+#define port_float_double_two_sum port_float64_two_sum
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_float_two_sum port_float32_two_sum
+#else
+#  define port_float_two_sum port_float64_two_sum
+#endif
+
+/**
+ * @brief Sum 32-bit floating-point numbers using the Neumaier algorithm.
+ *
+ * @return Sum of input values.
+ */
+port_float32_t
+port_float32_neumaier_sum(
+        const port_float32_t values[], ///< [in] Array of values to sum.
+        size_t num_values ///< [in] Size of the array of values.
+);
+
+/**
+ * @brief Sum 64-bit floating-point numbers using the Neumaier algorithm.
+ *
+ * @return Sum of input values.
+ */
+port_float64_t
+port_float64_neumaier_sum(
+        const port_float64_t values[], ///< [in] Array of values to sum.
+        size_t num_values ///< [in] Size of the array of values.
+);
+
+#define port_float_single_neumaier_sum port_float32_neumaier_sum
+#define port_float_double_neumaier_sum port_float64_neumaier_sum
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_float_neumaier_sum port_float32_neumaier_sum
+#else
+#  define port_float_neumaier_sum port_float64_neumaier_sum
+#endif
+
+/**
+ * @brief Sum 32-bit floating-point numbers using the Shewchuk algorithm (with at most 16 partial sums).
+ *
+ * @return Sum of input values.
+ */
+port_float32_t
+port_float32_shewchuk16_sum(
+        const port_float32_t values[], ///< [in] Array of values to sum.
+        size_t num_values ///< [in] Size of the array of values.
+);
+
+/**
+ * @brief Sum 64-bit floating-point numbers using the Shewchuk algorithm (with at most 16 partial sums).
+ *
+ * @return Sum of input values.
+ */
+port_float64_t
+port_float64_shewchuk16_sum(
+        const port_float64_t values[], ///< [in] Array of values to sum.
+        size_t num_values ///< [in] Size of the array of values.
+);
+
+#define port_float_single_shewchuk16_sum port_float32_shewchuk16_sum
+#define port_float_double_shewchuk16_sum port_float64_shewchuk16_sum
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_float_shewchuk16_sum port_float32_shewchuk16_sum
+#else
+#  define port_float_shewchuk16_sum port_float64_shewchuk16_sum
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
 // float16 -> float32 conversions
 ///////////////////////////////////////////////////////////////////////////////
 
