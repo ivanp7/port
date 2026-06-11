@@ -808,75 +808,100 @@
 // Relative types
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PORT_CONVERT_TO_UINT_QUARTER(value) PORT_CONVERT_TO_UINT8(value) ///< Convert value to unsigned integer (quarter size).
-#define PORT_CONVERT_TO_UINT_QUARTER_V2(value) PORT_CONVERT_TO_UINT8_V2(value) ///< Convert value to 2-vector of unsigned integers (quarter size).
-#define PORT_CONVERT_TO_UINT_QUARTER_V3(value) PORT_CONVERT_TO_UINT8_V3(value) ///< Convert value to 3-vector of unsigned integers (quarter size).
-#define PORT_CONVERT_TO_UINT_QUARTER_V4(value) PORT_CONVERT_TO_UINT8_V4(value) ///< Convert value to 4-vector of unsigned integers (quarter size).
-#define PORT_CONVERT_TO_UINT_QUARTER_V8(value) PORT_CONVERT_TO_UINT8_V8(value) ///< Convert value to 8-vector of unsigned integers (quarter size).
-#define PORT_CONVERT_TO_UINT_QUARTER_V16(value) PORT_CONVERT_TO_UINT8_V16(value) ///< Convert value to 16-vector of unsigned integers (quarter size).
+#define PORT_CONVERT_TO_UINT_QUARTER(value) PORT_CONVERT_TO_UINT8(value) ///< Convert value to unsigned integer (quarter width).
+#define PORT_CONVERT_TO_UINT_QUARTER_V2(value) PORT_CONVERT_TO_UINT8_V2(value) ///< Convert value to 2-vector of unsigned integers (quarter width).
+#define PORT_CONVERT_TO_UINT_QUARTER_V3(value) PORT_CONVERT_TO_UINT8_V3(value) ///< Convert value to 3-vector of unsigned integers (quarter width).
+#define PORT_CONVERT_TO_UINT_QUARTER_V4(value) PORT_CONVERT_TO_UINT8_V4(value) ///< Convert value to 4-vector of unsigned integers (quarter width).
+#define PORT_CONVERT_TO_UINT_QUARTER_V8(value) PORT_CONVERT_TO_UINT8_V8(value) ///< Convert value to 8-vector of unsigned integers (quarter width).
+#define PORT_CONVERT_TO_UINT_QUARTER_V16(value) PORT_CONVERT_TO_UINT8_V16(value) ///< Convert value to 16-vector of unsigned integers (quarter width).
 
-#define PORT_CONVERT_TO_SINT_QUARTER(value) PORT_CONVERT_TO_SINT8(value) ///< Convert value to signed integer (quarter size).
-#define PORT_CONVERT_TO_SINT_QUARTER_V2(value) PORT_CONVERT_TO_SINT8_V2(value) ///< Convert value to 2-vector of signed integers (quarter size).
-#define PORT_CONVERT_TO_SINT_QUARTER_V3(value) PORT_CONVERT_TO_SINT8_V3(value) ///< Convert value to 3-vector of signed integers (quarter size).
-#define PORT_CONVERT_TO_SINT_QUARTER_V4(value) PORT_CONVERT_TO_SINT8_V4(value) ///< Convert value to 4-vector of signed integers (quarter size).
-#define PORT_CONVERT_TO_SINT_QUARTER_V8(value) PORT_CONVERT_TO_SINT8_V8(value) ///< Convert value to 8-vector of signed integers (quarter size).
-#define PORT_CONVERT_TO_SINT_QUARTER_V16(value) PORT_CONVERT_TO_SINT8_V16(value) ///< Convert value to 16-vector of signed integers (quarter size).
+#define PORT_CONVERT_TO_SINT_QUARTER(value) PORT_CONVERT_TO_SINT8(value) ///< Convert value to signed integer (quarter width).
+#define PORT_CONVERT_TO_SINT_QUARTER_V2(value) PORT_CONVERT_TO_SINT8_V2(value) ///< Convert value to 2-vector of signed integers (quarter width).
+#define PORT_CONVERT_TO_SINT_QUARTER_V3(value) PORT_CONVERT_TO_SINT8_V3(value) ///< Convert value to 3-vector of signed integers (quarter width).
+#define PORT_CONVERT_TO_SINT_QUARTER_V4(value) PORT_CONVERT_TO_SINT8_V4(value) ///< Convert value to 4-vector of signed integers (quarter width).
+#define PORT_CONVERT_TO_SINT_QUARTER_V8(value) PORT_CONVERT_TO_SINT8_V8(value) ///< Convert value to 8-vector of signed integers (quarter width).
+#define PORT_CONVERT_TO_SINT_QUARTER_V16(value) PORT_CONVERT_TO_SINT8_V16(value) ///< Convert value to 16-vector of signed integers (quarter width).
 
-#define PORT_CONVERT_TO_UINT_HALF(value) PORT_CONVERT_TO_UINT16(value) ///< Convert value to unsigned integer (half size).
-#define PORT_CONVERT_TO_UINT_HALF_V2(value) PORT_CONVERT_TO_UINT16_V2(value) ///< Convert value to 2-vector of unsigned integers (half size).
-#define PORT_CONVERT_TO_UINT_HALF_V3(value) PORT_CONVERT_TO_UINT16_V3(value) ///< Convert value to 3-vector of unsigned integers (half size).
-#define PORT_CONVERT_TO_UINT_HALF_V4(value) PORT_CONVERT_TO_UINT16_V4(value) ///< Convert value to 4-vector of unsigned integers (half size).
-#define PORT_CONVERT_TO_UINT_HALF_V8(value) PORT_CONVERT_TO_UINT16_V8(value) ///< Convert value to 8-vector of unsigned integers (half size).
-#define PORT_CONVERT_TO_UINT_HALF_V16(value) PORT_CONVERT_TO_UINT16_V16(value) ///< Convert value to 16-vector of unsigned integers (half size).
+#define PORT_CONVERT_TO_UINT_HALF(value) PORT_CONVERT_TO_UINT16(value) ///< Convert value to unsigned integer (half width).
+#define PORT_CONVERT_TO_UINT_HALF_V2(value) PORT_CONVERT_TO_UINT16_V2(value) ///< Convert value to 2-vector of unsigned integers (half width).
+#define PORT_CONVERT_TO_UINT_HALF_V3(value) PORT_CONVERT_TO_UINT16_V3(value) ///< Convert value to 3-vector of unsigned integers (half width).
+#define PORT_CONVERT_TO_UINT_HALF_V4(value) PORT_CONVERT_TO_UINT16_V4(value) ///< Convert value to 4-vector of unsigned integers (half width).
+#define PORT_CONVERT_TO_UINT_HALF_V8(value) PORT_CONVERT_TO_UINT16_V8(value) ///< Convert value to 8-vector of unsigned integers (half width).
+#define PORT_CONVERT_TO_UINT_HALF_V16(value) PORT_CONVERT_TO_UINT16_V16(value) ///< Convert value to 16-vector of unsigned integers (half width).
 
-#define PORT_CONVERT_TO_SINT_HALF(value) PORT_CONVERT_TO_SINT16(value) ///< Convert value to signed integer (half size).
-#define PORT_CONVERT_TO_SINT_HALF_V2(value) PORT_CONVERT_TO_SINT16_V2(value) ///< Convert value to 2-vector of signed integers (half size).
-#define PORT_CONVERT_TO_SINT_HALF_V3(value) PORT_CONVERT_TO_SINT16_V3(value) ///< Convert value to 3-vector of signed integers (half size).
-#define PORT_CONVERT_TO_SINT_HALF_V4(value) PORT_CONVERT_TO_SINT16_V4(value) ///< Convert value to 4-vector of signed integers (half size).
-#define PORT_CONVERT_TO_SINT_HALF_V8(value) PORT_CONVERT_TO_SINT16_V8(value) ///< Convert value to 8-vector of signed integers (half size).
-#define PORT_CONVERT_TO_SINT_HALF_V16(value) PORT_CONVERT_TO_SINT16_V16(value) ///< Convert value to 16-vector of signed integers (half size).
+#define PORT_CONVERT_TO_SINT_HALF(value) PORT_CONVERT_TO_SINT16(value) ///< Convert value to signed integer (half width).
+#define PORT_CONVERT_TO_SINT_HALF_V2(value) PORT_CONVERT_TO_SINT16_V2(value) ///< Convert value to 2-vector of signed integers (half width).
+#define PORT_CONVERT_TO_SINT_HALF_V3(value) PORT_CONVERT_TO_SINT16_V3(value) ///< Convert value to 3-vector of signed integers (half width).
+#define PORT_CONVERT_TO_SINT_HALF_V4(value) PORT_CONVERT_TO_SINT16_V4(value) ///< Convert value to 4-vector of signed integers (half width).
+#define PORT_CONVERT_TO_SINT_HALF_V8(value) PORT_CONVERT_TO_SINT16_V8(value) ///< Convert value to 8-vector of signed integers (half width).
+#define PORT_CONVERT_TO_SINT_HALF_V16(value) PORT_CONVERT_TO_SINT16_V16(value) ///< Convert value to 16-vector of signed integers (half width).
 
-#define PORT_CONVERT_TO_UINT_SINGLE(value) PORT_CONVERT_TO_UINT32(value) ///< Convert value to unsigned integer (single size).
-#define PORT_CONVERT_TO_UINT_SINGLE_V2(value) PORT_CONVERT_TO_UINT32_V2(value) ///< Convert value to 2-vector of unsigned integers (single size).
-#define PORT_CONVERT_TO_UINT_SINGLE_V3(value) PORT_CONVERT_TO_UINT32_V3(value) ///< Convert value to 3-vector of unsigned integers (single size).
-#define PORT_CONVERT_TO_UINT_SINGLE_V4(value) PORT_CONVERT_TO_UINT32_V4(value) ///< Convert value to 4-vector of unsigned integers (single size).
-#define PORT_CONVERT_TO_UINT_SINGLE_V8(value) PORT_CONVERT_TO_UINT32_V8(value) ///< Convert value to 8-vector of unsigned integers (single size).
-#define PORT_CONVERT_TO_UINT_SINGLE_V16(value) PORT_CONVERT_TO_UINT32_V16(value) ///< Convert value to 16-vector of unsigned integers (single size).
+#define PORT_CONVERT_TO_UINT_SINGLE(value) PORT_CONVERT_TO_UINT32(value) ///< Convert value to unsigned integer (single width).
+#define PORT_CONVERT_TO_UINT_SINGLE_V2(value) PORT_CONVERT_TO_UINT32_V2(value) ///< Convert value to 2-vector of unsigned integers (single width).
+#define PORT_CONVERT_TO_UINT_SINGLE_V3(value) PORT_CONVERT_TO_UINT32_V3(value) ///< Convert value to 3-vector of unsigned integers (single width).
+#define PORT_CONVERT_TO_UINT_SINGLE_V4(value) PORT_CONVERT_TO_UINT32_V4(value) ///< Convert value to 4-vector of unsigned integers (single width).
+#define PORT_CONVERT_TO_UINT_SINGLE_V8(value) PORT_CONVERT_TO_UINT32_V8(value) ///< Convert value to 8-vector of unsigned integers (single width).
+#define PORT_CONVERT_TO_UINT_SINGLE_V16(value) PORT_CONVERT_TO_UINT32_V16(value) ///< Convert value to 16-vector of unsigned integers (single width).
 
-#define PORT_CONVERT_TO_SINT_SINGLE(value) PORT_CONVERT_TO_SINT32(value) ///< Convert value to signed integer (single size).
-#define PORT_CONVERT_TO_SINT_SINGLE_V2(value) PORT_CONVERT_TO_SINT32_V2(value) ///< Convert value to 2-vector of signed integers (single size).
-#define PORT_CONVERT_TO_SINT_SINGLE_V3(value) PORT_CONVERT_TO_SINT32_V3(value) ///< Convert value to 3-vector of signed integers (single size).
-#define PORT_CONVERT_TO_SINT_SINGLE_V4(value) PORT_CONVERT_TO_SINT32_V4(value) ///< Convert value to 4-vector of signed integers (single size).
-#define PORT_CONVERT_TO_SINT_SINGLE_V8(value) PORT_CONVERT_TO_SINT32_V8(value) ///< Convert value to 8-vector of signed integers (single size).
-#define PORT_CONVERT_TO_SINT_SINGLE_V16(value) PORT_CONVERT_TO_SINT32_V16(value) ///< Convert value to 16-vector of signed integers (single size).
+#define PORT_CONVERT_TO_SINT_SINGLE(value) PORT_CONVERT_TO_SINT32(value) ///< Convert value to signed integer (single width).
+#define PORT_CONVERT_TO_SINT_SINGLE_V2(value) PORT_CONVERT_TO_SINT32_V2(value) ///< Convert value to 2-vector of signed integers (single width).
+#define PORT_CONVERT_TO_SINT_SINGLE_V3(value) PORT_CONVERT_TO_SINT32_V3(value) ///< Convert value to 3-vector of signed integers (single width).
+#define PORT_CONVERT_TO_SINT_SINGLE_V4(value) PORT_CONVERT_TO_SINT32_V4(value) ///< Convert value to 4-vector of signed integers (single width).
+#define PORT_CONVERT_TO_SINT_SINGLE_V8(value) PORT_CONVERT_TO_SINT32_V8(value) ///< Convert value to 8-vector of signed integers (single width).
+#define PORT_CONVERT_TO_SINT_SINGLE_V16(value) PORT_CONVERT_TO_SINT32_V16(value) ///< Convert value to 16-vector of signed integers (single width).
 
-#define PORT_CONVERT_TO_UINT_DOUBLE(value) PORT_CONVERT_TO_UINT64(value) ///< Convert value to unsigned integer (double size).
-#define PORT_CONVERT_TO_UINT_DOUBLE_V2(value) PORT_CONVERT_TO_UINT64_V2(value) ///< Convert value to 2-vector of unsigned integers (double size).
-#define PORT_CONVERT_TO_UINT_DOUBLE_V3(value) PORT_CONVERT_TO_UINT64_V3(value) ///< Convert value to 3-vector of unsigned integers (double size).
-#define PORT_CONVERT_TO_UINT_DOUBLE_V4(value) PORT_CONVERT_TO_UINT64_V4(value) ///< Convert value to 4-vector of unsigned integers (double size).
-#define PORT_CONVERT_TO_UINT_DOUBLE_V8(value) PORT_CONVERT_TO_UINT64_V8(value) ///< Convert value to 8-vector of unsigned integers (double size).
-#define PORT_CONVERT_TO_UINT_DOUBLE_V16(value) PORT_CONVERT_TO_UINT64_V16(value) ///< Convert value to 16-vector of unsigned integers (double size).
+#define PORT_CONVERT_TO_UINT_DOUBLE(value) PORT_CONVERT_TO_UINT64(value) ///< Convert value to unsigned integer (double width).
+#define PORT_CONVERT_TO_UINT_DOUBLE_V2(value) PORT_CONVERT_TO_UINT64_V2(value) ///< Convert value to 2-vector of unsigned integers (double width).
+#define PORT_CONVERT_TO_UINT_DOUBLE_V3(value) PORT_CONVERT_TO_UINT64_V3(value) ///< Convert value to 3-vector of unsigned integers (double width).
+#define PORT_CONVERT_TO_UINT_DOUBLE_V4(value) PORT_CONVERT_TO_UINT64_V4(value) ///< Convert value to 4-vector of unsigned integers (double width).
+#define PORT_CONVERT_TO_UINT_DOUBLE_V8(value) PORT_CONVERT_TO_UINT64_V8(value) ///< Convert value to 8-vector of unsigned integers (double width).
+#define PORT_CONVERT_TO_UINT_DOUBLE_V16(value) PORT_CONVERT_TO_UINT64_V16(value) ///< Convert value to 16-vector of unsigned integers (double width).
 
-#define PORT_CONVERT_TO_SINT_DOUBLE(value) PORT_CONVERT_TO_SINT64(value) ///< Convert value to signed integer (double size).
-#define PORT_CONVERT_TO_SINT_DOUBLE_V2(value) PORT_CONVERT_TO_SINT64_V2(value) ///< Convert value to 2-vector of signed integers (double size).
-#define PORT_CONVERT_TO_SINT_DOUBLE_V3(value) PORT_CONVERT_TO_SINT64_V3(value) ///< Convert value to 3-vector of signed integers (double size).
-#define PORT_CONVERT_TO_SINT_DOUBLE_V4(value) PORT_CONVERT_TO_SINT64_V4(value) ///< Convert value to 4-vector of signed integers (double size).
-#define PORT_CONVERT_TO_SINT_DOUBLE_V8(value) PORT_CONVERT_TO_SINT64_V8(value) ///< Convert value to 8-vector of signed integers (double size).
-#define PORT_CONVERT_TO_SINT_DOUBLE_V16(value) PORT_CONVERT_TO_SINT64_V16(value) ///< Convert value to 16-vector of signed integers (double size).
+#define PORT_CONVERT_TO_SINT_DOUBLE(value) PORT_CONVERT_TO_SINT64(value) ///< Convert value to signed integer (double width).
+#define PORT_CONVERT_TO_SINT_DOUBLE_V2(value) PORT_CONVERT_TO_SINT64_V2(value) ///< Convert value to 2-vector of signed integers (double width).
+#define PORT_CONVERT_TO_SINT_DOUBLE_V3(value) PORT_CONVERT_TO_SINT64_V3(value) ///< Convert value to 3-vector of signed integers (double width).
+#define PORT_CONVERT_TO_SINT_DOUBLE_V4(value) PORT_CONVERT_TO_SINT64_V4(value) ///< Convert value to 4-vector of signed integers (double width).
+#define PORT_CONVERT_TO_SINT_DOUBLE_V8(value) PORT_CONVERT_TO_SINT64_V8(value) ///< Convert value to 8-vector of signed integers (double width).
+#define PORT_CONVERT_TO_SINT_DOUBLE_V16(value) PORT_CONVERT_TO_SINT64_V16(value) ///< Convert value to 16-vector of signed integers (double width).
 
-#define PORT_CONVERT_TO_FLOAT_SINGLE(value) PORT_CONVERT_TO_FLOAT32(value) ///< Convert value to floating-point number (single size).
-#define PORT_CONVERT_TO_FLOAT_SINGLE_V2(value) PORT_CONVERT_TO_FLOAT32_V2(value) ///< Convert value to 2-vector of floating-point numbers (single size).
-#define PORT_CONVERT_TO_FLOAT_SINGLE_V3(value) PORT_CONVERT_TO_FLOAT32_V3(value) ///< Convert value to 3-vector of floating-point numbers (single size).
-#define PORT_CONVERT_TO_FLOAT_SINGLE_V4(value) PORT_CONVERT_TO_FLOAT32_V4(value) ///< Convert value to 4-vector of floating-point numbers (single size).
-#define PORT_CONVERT_TO_FLOAT_SINGLE_V8(value) PORT_CONVERT_TO_FLOAT32_V8(value) ///< Convert value to 8-vector of floating-point numbers (single size).
-#define PORT_CONVERT_TO_FLOAT_SINGLE_V16(value) PORT_CONVERT_TO_FLOAT32_V16(value) ///< Convert value to 16-vector of floating-point numbers (single size).
+#define PORT_CONVERT_TO_FLOAT_SINGLE(value) PORT_CONVERT_TO_FLOAT32(value) ///< Convert value to floating-point number (single width).
+#define PORT_CONVERT_TO_FLOAT_SINGLE_V2(value) PORT_CONVERT_TO_FLOAT32_V2(value) ///< Convert value to 2-vector of floating-point numbers (single width).
+#define PORT_CONVERT_TO_FLOAT_SINGLE_V3(value) PORT_CONVERT_TO_FLOAT32_V3(value) ///< Convert value to 3-vector of floating-point numbers (single width).
+#define PORT_CONVERT_TO_FLOAT_SINGLE_V4(value) PORT_CONVERT_TO_FLOAT32_V4(value) ///< Convert value to 4-vector of floating-point numbers (single width).
+#define PORT_CONVERT_TO_FLOAT_SINGLE_V8(value) PORT_CONVERT_TO_FLOAT32_V8(value) ///< Convert value to 8-vector of floating-point numbers (single width).
+#define PORT_CONVERT_TO_FLOAT_SINGLE_V16(value) PORT_CONVERT_TO_FLOAT32_V16(value) ///< Convert value to 16-vector of floating-point numbers (single width).
 
-#define PORT_CONVERT_TO_FLOAT_DOUBLE(value) PORT_CONVERT_TO_FLOAT64(value) ///< Convert value to floating-point number (double size).
-#define PORT_CONVERT_TO_FLOAT_DOUBLE_V2(value) PORT_CONVERT_TO_FLOAT64_V2(value) ///< Convert value to 2-vector of floating-point numbers (double size).
-#define PORT_CONVERT_TO_FLOAT_DOUBLE_V3(value) PORT_CONVERT_TO_FLOAT64_V3(value) ///< Convert value to 3-vector of floating-point numbers (double size).
-#define PORT_CONVERT_TO_FLOAT_DOUBLE_V4(value) PORT_CONVERT_TO_FLOAT64_V4(value) ///< Convert value to 4-vector of floating-point numbers (double size).
-#define PORT_CONVERT_TO_FLOAT_DOUBLE_V8(value) PORT_CONVERT_TO_FLOAT64_V8(value) ///< Convert value to 8-vector of floating-point numbers (double size).
-#define PORT_CONVERT_TO_FLOAT_DOUBLE_V16(value) PORT_CONVERT_TO_FLOAT64_V16(value) ///< Convert value to 16-vector of floating-point numbers (double size).
+#define PORT_CONVERT_TO_FLOAT_DOUBLE(value) PORT_CONVERT_TO_FLOAT64(value) ///< Convert value to floating-point number (double width).
+#define PORT_CONVERT_TO_FLOAT_DOUBLE_V2(value) PORT_CONVERT_TO_FLOAT64_V2(value) ///< Convert value to 2-vector of floating-point numbers (double width).
+#define PORT_CONVERT_TO_FLOAT_DOUBLE_V3(value) PORT_CONVERT_TO_FLOAT64_V3(value) ///< Convert value to 3-vector of floating-point numbers (double width).
+#define PORT_CONVERT_TO_FLOAT_DOUBLE_V4(value) PORT_CONVERT_TO_FLOAT64_V4(value) ///< Convert value to 4-vector of floating-point numbers (double width).
+#define PORT_CONVERT_TO_FLOAT_DOUBLE_V8(value) PORT_CONVERT_TO_FLOAT64_V8(value) ///< Convert value to 8-vector of floating-point numbers (double width).
+#define PORT_CONVERT_TO_FLOAT_DOUBLE_V16(value) PORT_CONVERT_TO_FLOAT64_V16(value) ///< Convert value to 16-vector of floating-point numbers (double width).
+
+///////////////////////////////////////////////////////////////////////////////
+// Maximum-width types
+///////////////////////////////////////////////////////////////////////////////
+
+#define PORT_CONVERT_TO_UINT_WIDEST(value) PORT_CONVERT_TO_UINT64(value) ///< Convert value to unsigned integer (maximum width).
+#define PORT_CONVERT_TO_UINT_WIDEST_V2(value) PORT_CONVERT_TO_UINT64_V2(value) ///< Convert value to 2-vector of unsigned integers (maximum width).
+#define PORT_CONVERT_TO_UINT_WIDEST_V3(value) PORT_CONVERT_TO_UINT64_V3(value) ///< Convert value to 3-vector of unsigned integers (maximum width).
+#define PORT_CONVERT_TO_UINT_WIDEST_V4(value) PORT_CONVERT_TO_UINT64_V4(value) ///< Convert value to 4-vector of unsigned integers (maximum width).
+#define PORT_CONVERT_TO_UINT_WIDEST_V8(value) PORT_CONVERT_TO_UINT64_V8(value) ///< Convert value to 8-vector of unsigned integers (maximum width).
+#define PORT_CONVERT_TO_UINT_WIDEST_V16(value) PORT_CONVERT_TO_UINT64_V16(value) ///< Convert value to 16-vector of unsigned integers (maximum width).
+
+#define PORT_CONVERT_TO_SINT_WIDEST(value) PORT_CONVERT_TO_SINT64(value) ///< Convert value to signed integer (maximum width).
+#define PORT_CONVERT_TO_SINT_WIDEST_V2(value) PORT_CONVERT_TO_SINT64_V2(value) ///< Convert value to 2-vector of signed integers (maximum width).
+#define PORT_CONVERT_TO_SINT_WIDEST_V3(value) PORT_CONVERT_TO_SINT64_V3(value) ///< Convert value to 3-vector of signed integers (maximum width).
+#define PORT_CONVERT_TO_SINT_WIDEST_V4(value) PORT_CONVERT_TO_SINT64_V4(value) ///< Convert value to 4-vector of signed integers (maximum width).
+#define PORT_CONVERT_TO_SINT_WIDEST_V8(value) PORT_CONVERT_TO_SINT64_V8(value) ///< Convert value to 8-vector of signed integers (maximum width).
+#define PORT_CONVERT_TO_SINT_WIDEST_V16(value) PORT_CONVERT_TO_SINT64_V16(value) ///< Convert value to 16-vector of signed integers (maximum width).
+
+#define PORT_CONVERT_TO_FLOAT_WIDEST(value) PORT_CONVERT_TO_FLOAT64(value) ///< Convert value to floating-point number (maximum width).
+#define PORT_CONVERT_TO_FLOAT_WIDEST_V2(value) PORT_CONVERT_TO_FLOAT64_V2(value) ///< Convert value to 2-vector of floating-point numbers (maximum width).
+#define PORT_CONVERT_TO_FLOAT_WIDEST_V3(value) PORT_CONVERT_TO_FLOAT64_V3(value) ///< Convert value to 3-vector of floating-point numbers (maximum width).
+#define PORT_CONVERT_TO_FLOAT_WIDEST_V4(value) PORT_CONVERT_TO_FLOAT64_V4(value) ///< Convert value to 4-vector of floating-point numbers (maximum width).
+#define PORT_CONVERT_TO_FLOAT_WIDEST_V8(value) PORT_CONVERT_TO_FLOAT64_V8(value) ///< Convert value to 8-vector of floating-point numbers (maximum width).
+#define PORT_CONVERT_TO_FLOAT_WIDEST_V16(value) PORT_CONVERT_TO_FLOAT64_V16(value) ///< Convert value to 16-vector of floating-point numbers (maximum width).
 
 ///////////////////////////////////////////////////////////////////////////////
 // Default types
