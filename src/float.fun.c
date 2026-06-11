@@ -370,6 +370,32 @@ port_float64_shewchuk16_sum(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Multiplication algorithms
+///////////////////////////////////////////////////////////////////////////////
+
+port_float32_v2_t
+port_float32_two_product(
+        port_float32_t a,
+        port_float32_t b)
+{
+    port_float32_v2_t product;
+    product.s0 = a * b;
+    product.s1 = fma(a, b, -product.s0);
+    return product;
+}
+
+port_float64_v2_t
+port_float64_two_product(
+        port_float64_t a,
+        port_float64_t b)
+{
+    port_float64_v2_t product;
+    product.s0 = a * b;
+    product.s1 = fma(a, b, -product.s0);
+    return product;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // float16 -> float32 conversions
 ///////////////////////////////////////////////////////////////////////////////
 

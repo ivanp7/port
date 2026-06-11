@@ -260,6 +260,44 @@ TEST(port_float64_shewchuk16_sum)
     }
 }
 
+TEST(port_float32_two_product)
+{
+    port_float32_v2_t product;
+
+    product = port_float32_two_product(PORT_FLOAT32(1.0), PORT_FLOAT32(0.0));
+    ASSERT_EQ(product.s0, PORT_FLOAT32(0.0), port_float32_t, "%g");
+    ASSERT_EQ(product.s1, PORT_FLOAT32(0.0), port_float32_t, "%g");
+
+    product = port_float32_two_product(PORT_FLOAT32(-2.0), PORT_FLOAT32(3.0));
+    ASSERT_EQ(product.s0, PORT_FLOAT32(-6.0), port_float32_t, "%g");
+    ASSERT_EQ(product.s1, PORT_FLOAT32(0.0), port_float32_t, "%g");
+
+    product = port_float32_two_product(PORT_FLOAT32(1e-30), PORT_FLOAT32(1e+30));
+    ASSERT_EQ(product.s0, PORT_FLOAT32(1.0), port_float32_t, "%g");
+    ASSERT_LT(fabs(product.s1 - PORT_FLOAT32(1e-7)), PORT_FLOAT32(1e-7), port_float32_t, "%g");
+
+    product = port_float32_two_product(PORT_FLOAT32(1.23456789), PORT_FLOAT32(987654321.5));
+    ASSERT_LT(fabs(product.s0 - PORT_FLOAT32(1.21933e+09)), PORT_FLOAT32(1e4), port_float32_t, "%g");
+    ASSERT_LT(fabs(product.s1 - PORT_FLOAT32(-15.609)), PORT_FLOAT32(1e-3), port_float32_t, "%g");
+}
+
+TEST(port_float64_two_product)
+{
+    port_float64_v2_t product;
+
+    product = port_float64_two_product(PORT_FLOAT64(1.0), PORT_FLOAT64(0.0));
+    ASSERT_EQ(product.s0, PORT_FLOAT64(0.0), port_float64_t, "%g");
+    ASSERT_EQ(product.s1, PORT_FLOAT64(0.0), port_float64_t, "%g");
+
+    product = port_float64_two_product(PORT_FLOAT64(-2.0), PORT_FLOAT64(3.0));
+    ASSERT_EQ(product.s0, PORT_FLOAT64(-6.0), port_float64_t, "%g");
+    ASSERT_EQ(product.s1, PORT_FLOAT64(0.0), port_float64_t, "%g");
+
+    product = port_float64_two_product(PORT_FLOAT64(1e-300), PORT_FLOAT64(1e+300));
+    ASSERT_EQ(product.s0, PORT_FLOAT64(1.0), port_float64_t, "%g");
+    ASSERT_LT(fabs(product.s1 - PORT_FLOAT64(1e-16)), PORT_FLOAT64(1e-16), port_float64_t, "%g");
+}
+
 TEST(port_convert_float16_to_float32)
 {
     ASSERT_EQ(port_convert_float16_to_float32(0x0000), 0.0f, port_float32_t, "%g");

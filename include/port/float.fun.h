@@ -246,6 +246,41 @@ port_float64_shewchuk16_sum(
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
+// Multiplication algorithms
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @brief Multiply two 32-bit floating-point numbers with a round-off error.
+ *
+ * @return Product and a round-off error.
+ */
+port_float32_v2_t
+port_float32_two_product(
+        port_float32_t a, ///< [in] First value.
+        port_float32_t b  ///< [in] Second value.
+);
+
+/**
+ * @brief Multiply two 64-bit floating-point numbers with a round-off error.
+ *
+ * @return Product and a round-off error.
+ */
+port_float64_v2_t
+port_float64_two_product(
+        port_float64_t a, ///< [in] First value.
+        port_float64_t b  ///< [in] Second value.
+);
+
+#define port_float_single_two_product port_float32_two_product
+#define port_float_double_two_product port_float64_two_product
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_float_two_product port_float32_two_product
+#else
+#  define port_float_two_product port_float64_two_product
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
 // float16 -> float32 conversions
 ///////////////////////////////////////////////////////////////////////////////
 
