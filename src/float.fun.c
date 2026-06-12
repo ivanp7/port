@@ -191,7 +191,7 @@ port_float64_two_sum(
     return (port_float64_v2_t)PORT_V2(hi, a2 - hi + b + (a - a2));
 }
 
-port_float32_t
+port_float32_v2_t
 port_float32_neumaier_sum(
         const port_float32_t values[],
         size_t num_values)
@@ -206,10 +206,10 @@ port_float32_neumaier_sum(
         comp += s.s1;
     }
 
-    return sum + comp;
+    return (port_float32_v2_t)PORT_V2(sum, comp);
 }
 
-port_float64_t
+port_float64_v2_t
 port_float64_neumaier_sum(
         const port_float64_t values[],
         size_t num_values)
@@ -224,7 +224,7 @@ port_float64_neumaier_sum(
         comp += s.s1;
     }
 
-    return sum + comp;
+    return (port_float64_v2_t)PORT_V2(sum, comp);
 }
 
 port_float32_t
@@ -392,6 +392,68 @@ port_float64_two_product(
     port_float64_v2_t product;
     product.s0 = a * b;
     product.s1 = fma(a, b, -product.s0);
+    return product;
+}
+
+port_float32_v2_t
+port_float32_multi_product(
+        const port_float32_t values[],
+        size_t num_values)
+{
+    port_float32_v2_t product = (port_float32_v2_t)PORT_V2(PORT_FLOAT32(1.0), PORT_FLOAT32(0.0));
+
+    for (size_t i = 0; i < num_values; i++)
+    {
+        port_float32_v2_t intermediate = port_float32_two_product(product.s0, values[i]);
+        port_float32_v2_t cross = port_float32_two_product(product.s1, values[i]);
+
+        product = intermediate;
+
+        port_float32_v2_t sum;
+        port_float32_t comp = PORT_FLOAT32(0.0);
+
+        sum = port_float32_two_sum(product.s1, cross.s0);
+        product.s1 = sum.s0;
+        comp += sum.s1;
+
+        sum = port_float32_two_sum(product.s1, cross.s1);
+        product.s1 = sum.s0;
+        comp += sum.s1;
+
+        product.s1 += comp;
+    }
+
+    return product;
+}
+
+port_float64_v2_t
+port_float64_multi_product(
+        const port_float64_t values[],
+        size_t num_values)
+{
+    port_float64_v2_t product = (port_float64_v2_t)PORT_V2(PORT_FLOAT64(1.0), PORT_FLOAT64(0.0));
+
+    for (size_t i = 0; i < num_values; i++)
+    {
+        port_float64_v2_t intermediate = port_float64_two_product(product.s0, values[i]);
+        port_float64_v2_t cross = port_float64_two_product(product.s1, values[i]);
+
+        product = intermediate;
+
+        port_float64_v2_t sum;
+        port_float64_t comp = PORT_FLOAT64(0.0);
+
+        sum = port_float64_two_sum(product.s1, cross.s0);
+        product.s1 = sum.s0;
+        comp += sum.s1;
+
+        sum = port_float64_two_sum(product.s1, cross.s1);
+        product.s1 = sum.s0;
+        comp += sum.s1;
+
+        product.s1 += comp;
+    }
+
     return product;
 }
 

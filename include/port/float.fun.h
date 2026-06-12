@@ -186,9 +186,9 @@ port_float64_two_sum(
 /**
  * @brief Sum 32-bit floating-point numbers using the Neumaier algorithm.
  *
- * @return Sum of input values.
+ * @return Sum and a compensation value.
  */
-port_float32_t
+port_float32_v2_t
 port_float32_neumaier_sum(
         const port_float32_t values[], ///< [in] Array of values to sum.
         size_t num_values ///< [in] Size of the array of values.
@@ -197,9 +197,9 @@ port_float32_neumaier_sum(
 /**
  * @brief Sum 64-bit floating-point numbers using the Neumaier algorithm.
  *
- * @return Sum of input values.
+ * @return Sum and a compensation value.
  */
-port_float64_t
+port_float64_v2_t
 port_float64_neumaier_sum(
         const port_float64_t values[], ///< [in] Array of values to sum.
         size_t num_values ///< [in] Size of the array of values.
@@ -278,6 +278,37 @@ port_float64_two_product(
 #  define port_float_two_product port_float32_two_product
 #else
 #  define port_float_two_product port_float64_two_product
+#endif
+
+/**
+ * @brief Multiply 32-bit floating-point numbers.
+ *
+ * @return Product and a round-off error.
+ */
+port_float32_v2_t
+port_float32_multi_product(
+        const port_float32_t values[], ///< [in] Array of values to multiply.
+        size_t num_values ///< [in] Size of the array of values.
+);
+
+/**
+ * @brief Multiply 64-bit floating-point numbers.
+ *
+ * @return Product and a round-off error.
+ */
+port_float64_v2_t
+port_float64_multi_product(
+        const port_float64_t values[], ///< [in] Array of values to multiply.
+        size_t num_values ///< [in] Size of the array of values.
+);
+
+#define port_float_single_multi_product port_float32_multi_product
+#define port_float_double_multi_product port_float64_multi_product
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_float_multi_product port_float32_multi_product
+#else
+#  define port_float_multi_product port_float64_multi_product
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

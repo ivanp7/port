@@ -199,14 +199,27 @@ TEST(port_float32_neumaier_sum)
     {
         port_float32_t values[] = {PORT_FLOAT32(1e30), PORT_FLOAT32(1e30), PORT_FLOAT32(1e-30), PORT_FLOAT32(-2e30)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
+        port_float32_v2_t sum;
 
-        ASSERT_EQ(port_float32_neumaier_sum(values, num_values), PORT_FLOAT32(1e-30), port_float32_t, "%g");
+        sum = port_float32_neumaier_sum(values, num_values);
+        ASSERT_EQ(sum.s0 + sum.s1, PORT_FLOAT32(1e-30), port_float32_t, "%g");
     }
     {
         port_float32_t values[] = {PORT_FLOAT32(1.0), PORT_FLOAT32(1e30), PORT_FLOAT32(1.0), PORT_FLOAT32(-1e30)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
+        port_float32_v2_t sum;
 
-        ASSERT_EQ(port_float32_neumaier_sum(values, num_values), PORT_FLOAT32(2.0), port_float32_t, "%g");
+        sum = port_float32_neumaier_sum(values, num_values);
+        ASSERT_EQ(sum.s0 + sum.s1, PORT_FLOAT32(2.0), port_float32_t, "%g");
+    }
+    {
+        port_float32_t values[] = {PORT_FLOAT32(1.0), PORT_FLOAT32(1e30), PORT_FLOAT32(1.0), PORT_FLOAT32(1e30)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
+        port_float32_v2_t sum;
+
+        sum = port_float32_neumaier_sum(values, num_values);
+        ASSERT_EQ(sum.s0, PORT_FLOAT32(2.0e30), port_float32_t, "%g");
+        ASSERT_EQ(sum.s1, PORT_FLOAT32(2.0), port_float32_t, "%g");
     }
 }
 
@@ -215,26 +228,41 @@ TEST(port_float64_neumaier_sum)
     {
         port_float64_t values[] = {PORT_FLOAT64(1e100), PORT_FLOAT64(1e100), PORT_FLOAT64(1e-100), PORT_FLOAT64(-2e100)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
+        port_float64_v2_t sum;
 
-        ASSERT_EQ(port_float64_neumaier_sum(values, num_values), PORT_FLOAT64(1e-100), port_float64_t, "%g");
+        sum = port_float64_neumaier_sum(values, num_values);
+        ASSERT_EQ(sum.s0 + sum.s1, PORT_FLOAT64(1e-100), port_float64_t, "%g");
     }
     {
         port_float64_t values[] = {PORT_FLOAT64(1.0), PORT_FLOAT64(1e100), PORT_FLOAT64(1.0), PORT_FLOAT64(-1e100)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
+        port_float64_v2_t sum;
 
-        ASSERT_EQ(port_float64_neumaier_sum(values, num_values), PORT_FLOAT64(2.0), port_float64_t, "%g");
+        sum = port_float64_neumaier_sum(values, num_values);
+        ASSERT_EQ(sum.s0 + sum.s1, PORT_FLOAT64(2.0), port_float64_t, "%g");
+    }
+    {
+        port_float64_t values[] = {PORT_FLOAT64(1.0), PORT_FLOAT64(1e300), PORT_FLOAT64(1.0), PORT_FLOAT64(1e300)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
+        port_float64_v2_t sum;
+
+        sum = port_float64_neumaier_sum(values, num_values);
+        ASSERT_EQ(sum.s0, PORT_FLOAT64(2.0e300), port_float64_t, "%g");
+        ASSERT_EQ(sum.s1, PORT_FLOAT64(2.0), port_float64_t, "%g");
     }
 }
 
 TEST(port_float32_shewchuk16_sum)
 {
-    port_float32_t values[] = {PORT_FLOAT32(1e-30), PORT_FLOAT32(2e30), PORT_FLOAT32(1e20), PORT_FLOAT32(1e20),
-        PORT_FLOAT32(1e10), PORT_FLOAT32(1e0), PORT_FLOAT32(1e-10), PORT_FLOAT32(1e-20), PORT_FLOAT32(1e-30),
-        PORT_FLOAT32(-1e-20), PORT_FLOAT32(-1e-10), PORT_FLOAT32(-1e0),
-        PORT_FLOAT32(-1e10), PORT_FLOAT32(-2e20), PORT_FLOAT32(-1e30), PORT_FLOAT32(-1e30)};
-    size_t num_values = sizeof(values) / sizeof(values[0]);
+    {
+        port_float32_t values[] = {PORT_FLOAT32(1e-30), PORT_FLOAT32(2e30), PORT_FLOAT32(1e20), PORT_FLOAT32(1e20),
+            PORT_FLOAT32(1e10), PORT_FLOAT32(1e0), PORT_FLOAT32(1e-10), PORT_FLOAT32(1e-20), PORT_FLOAT32(1e-30),
+            PORT_FLOAT32(-1e-20), PORT_FLOAT32(-1e-10), PORT_FLOAT32(-1e0),
+            PORT_FLOAT32(-1e10), PORT_FLOAT32(-2e20), PORT_FLOAT32(-1e30), PORT_FLOAT32(-1e30)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
 
-    ASSERT_EQ(port_float32_shewchuk16_sum(values, num_values), PORT_FLOAT32(2e-30), port_float32_t, "%g");
+        ASSERT_EQ(port_float32_shewchuk16_sum(values, num_values), PORT_FLOAT32(2e-30), port_float32_t, "%g");
+    }
 }
 
 TEST(port_float64_shewchuk16_sum)
@@ -279,6 +307,9 @@ TEST(port_float32_two_product)
     product = port_float32_two_product(PORT_FLOAT32(1.23456789), PORT_FLOAT32(987654321.5));
     ASSERT_LT(fabs(product.s0 - PORT_FLOAT32(1.21933e+09)), PORT_FLOAT32(1e4), port_float32_t, "%g");
     ASSERT_LT(fabs(product.s1 - PORT_FLOAT32(-15.609)), PORT_FLOAT32(1e-3), port_float32_t, "%g");
+    ASSERT_EQ((port_float64_t)product.s0 + (port_float64_t)product.s1,
+                (port_float64_t)PORT_FLOAT32(1.23456789) * (port_float64_t)PORT_FLOAT32(987654321.5),
+            port_float64_t, "%g");
 }
 
 TEST(port_float64_two_product)
@@ -296,6 +327,40 @@ TEST(port_float64_two_product)
     product = port_float64_two_product(PORT_FLOAT64(1e-300), PORT_FLOAT64(1e+300));
     ASSERT_EQ(product.s0, PORT_FLOAT64(1.0), port_float64_t, "%g");
     ASSERT_LT(fabs(product.s1 - PORT_FLOAT64(1e-16)), PORT_FLOAT64(1e-16), port_float64_t, "%g");
+}
+
+TEST(port_float32_multi_product)
+{
+    {
+        port_float32_t values[] = {PORT_FLOAT32(12.3456789e10), PORT_FLOAT32(987.654321e10),
+            PORT_FLOAT32(11244.3), PORT_FLOAT32(2.0)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
+        port_float64_t perfect_product = PORT_FLOAT64(1.0);
+        port_float32_v2_t product;
+
+        product = port_float32_multi_product(values, num_values);
+        for (size_t i = 0; i < num_values; i++) perfect_product *= values[i];
+        ASSERT_LT(fabs((port_float64_t)product.s0 + (port_float64_t)product.s1 - perfect_product) /
+                fabs(perfect_product),
+                PORT_FLOAT64(2e-15), port_float64_t, "%g");
+    }
+}
+
+TEST(port_float64_multi_product)
+{
+    {
+        port_float64_t values[] = {PORT_FLOAT64(12.3456789e100), PORT_FLOAT64(987.654321e100),
+            PORT_FLOAT64(11244.3e10), PORT_FLOAT64(2.0)};
+        size_t num_values = sizeof(values) / sizeof(values[0]);
+        long double perfect_product = 1.0;
+        port_float64_v2_t product;
+
+        product = port_float64_multi_product(values, num_values);
+        for (size_t i = 0; i < num_values; i++) perfect_product *= values[i];
+        ASSERT_LT(fabs((long double)product.s0 + (long double)product.s1 - perfect_product) /
+                fabs(perfect_product),
+                PORT_FLOAT64(1e-30), port_float64_t, "%g");
+    }
 }
 
 TEST(port_convert_float16_to_float32)
