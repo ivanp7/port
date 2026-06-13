@@ -176,9 +176,14 @@ port_float32_two_sum(
         port_float32_t a,
         port_float32_t b)
 {
-    port_float32_t hi = a + b;
-    port_float32_t a2 = hi - b;
-    return (port_float32_v2_t)PORT_V2(hi, a2 - hi + b + (a - a2));
+    port_float32_v2_t sum;
+    sum.s0 = a + b;
+    port_float32_t a_stroke = sum.s0 - b;
+    port_float32_t b_stroke = sum.s0 - a_stroke;
+    port_float32_t delta_a = a - a_stroke;
+    port_float32_t delta_b = b - b_stroke;
+    sum.s1 = delta_a + delta_b;
+    return sum;
 }
 
 port_float64_v2_t
@@ -186,9 +191,14 @@ port_float64_two_sum(
         port_float64_t a,
         port_float64_t b)
 {
-    port_float64_t hi = a + b;
-    port_float64_t a2 = hi - b;
-    return (port_float64_v2_t)PORT_V2(hi, a2 - hi + b + (a - a2));
+    port_float64_v2_t sum;
+    sum.s0 = a + b;
+    port_float64_t a_stroke = sum.s0 - b;
+    port_float64_t b_stroke = sum.s0 - a_stroke;
+    port_float64_t delta_a = a - a_stroke;
+    port_float64_t delta_b = b - b_stroke;
+    sum.s1 = delta_a + delta_b;
+    return sum;
 }
 
 port_float32_v2_t
