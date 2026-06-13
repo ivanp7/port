@@ -178,11 +178,16 @@ port_float32_two_sum(
 {
     port_float32_v2_t sum;
     sum.s0 = a + b;
-    port_float32_t a_stroke = sum.s0 - b;
-    port_float32_t b_stroke = sum.s0 - a_stroke;
-    port_float32_t delta_a = a - a_stroke;
-    port_float32_t delta_b = b - b_stroke;
-    sum.s1 = delta_a + delta_b;
+    if (isfinite(sum.s0))
+    {
+        port_float32_t a_stroke = sum.s0 - b;
+        port_float32_t b_stroke = sum.s0 - a_stroke;
+        port_float32_t delta_a = a - a_stroke;
+        port_float32_t delta_b = b - b_stroke;
+        sum.s1 = delta_a + delta_b;
+    }
+    else
+        sum.s1 = PORT_FLOAT32(0.0);
     return sum;
 }
 
@@ -193,11 +198,16 @@ port_float64_two_sum(
 {
     port_float64_v2_t sum;
     sum.s0 = a + b;
-    port_float64_t a_stroke = sum.s0 - b;
-    port_float64_t b_stroke = sum.s0 - a_stroke;
-    port_float64_t delta_a = a - a_stroke;
-    port_float64_t delta_b = b - b_stroke;
-    sum.s1 = delta_a + delta_b;
+    if (isfinite(sum.s0))
+    {
+        port_float64_t a_stroke = sum.s0 - b;
+        port_float64_t b_stroke = sum.s0 - a_stroke;
+        port_float64_t delta_a = a - a_stroke;
+        port_float64_t delta_b = b - b_stroke;
+        sum.s1 = delta_a + delta_b;
+    }
+    else
+        sum.s1 = PORT_FLOAT64(0.0);
     return sum;
 }
 
@@ -390,7 +400,10 @@ port_float32_two_product(
 {
     port_float32_v2_t product;
     product.s0 = a * b;
-    product.s1 = fma(a, b, -product.s0);
+    if (isfinite(product.s0))
+        product.s1 = fma(a, b, -product.s0);
+    else
+        product.s1 = PORT_FLOAT32(0.0);
     return product;
 }
 
@@ -401,7 +414,10 @@ port_float64_two_product(
 {
     port_float64_v2_t product;
     product.s0 = a * b;
-    product.s1 = fma(a, b, -product.s0);
+    if (isfinite(product.s0))
+        product.s1 = fma(a, b, -product.s0);
+    else
+        product.s1 = PORT_FLOAT64(0.0);
     return product;
 }
 
