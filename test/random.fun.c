@@ -88,8 +88,8 @@ TEST(port_random_float32)
     for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
     {
         port_float32_t value = port_random_float32(&rnd);
-        ASSERT_GE(value, 0.0f, port_float32_t, "%g");
-        ASSERT_LT(value, 1.0f, port_float32_t, "%g");
+        ASSERT_GE(value, PORT_FLOAT32(0.0), port_float32_t, "%g");
+        ASSERT_LT(value, PORT_FLOAT32(1.0), port_float32_t, "%g");
     }
 }
 
@@ -99,8 +99,28 @@ TEST(port_random_float64)
     for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
     {
         port_float64_t value = port_random_float64(&rnd);
-        ASSERT_GE(value, 0.0, port_float64_t, "%g");
-        ASSERT_LT(value, 1.0, port_float64_t, "%g");
+        ASSERT_GE(value, PORT_FLOAT64(0.0), port_float64_t, "%g");
+        ASSERT_LT(value, PORT_FLOAT64(1.0), port_float64_t, "%g");
+    }
+}
+
+TEST(port_random_float32_low_discr_seq)
+{
+    for (port_uint32_t i = 0; i < NUM_SAMPLES; i++)
+    {
+        port_float32_t value = port_random_float32_low_discr_seq(-i, PORT_FLOAT32(0.6180339887498949));
+        ASSERT_GE(value, PORT_FLOAT32(0.0), port_float32_t, "%g");
+        ASSERT_LT(value, PORT_FLOAT32(1.0), port_float32_t, "%g");
+    }
+}
+
+TEST(port_random_float64_low_discr_seq)
+{
+    for (port_uint64_t i = 0; i < NUM_SAMPLES; i++)
+    {
+        port_float64_t value = port_random_float64_low_discr_seq(-i, PORT_FLOAT64(0.6180339887498949));
+        ASSERT_GE(value, PORT_FLOAT64(0.0), port_float64_t, "%g");
+        ASSERT_LT(value, PORT_FLOAT64(1.0), port_float64_t, "%g");
     }
 }
 

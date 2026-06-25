@@ -26,6 +26,7 @@
 #include "port/bit.def.h"
 
 #ifndef __OPENCL_C_VERSION__
+#  include <tgmath.h>
 #  include <assert.h>
 #endif
 
@@ -109,6 +110,42 @@ port_random_float64(
             (port_random_t)0x3FF00000u, rnd_local2)};
 
     return u.as_float64 - 1.0;
+}
+
+port_float32_t
+port_random_float32_low_discr_seq(
+        port_uint32_t seq_index,
+        port_float32_t irrational)
+{
+#ifndef __OPENCL_C_VERSION__
+    assert((irrational > PORT_FLOAT32(0.0)) && (irrational < PORT_FLOAT32(1.0)));
+#endif
+
+    port_float32_t v = seq_index & PORT_ZMASK32(24); // all integers up to 2^24 are representable in float32
+
+    v = fma(v, irrational, -floor(v * irrational));
+    if (v < PORT_FLOAT32(0.0))
+        v += PORT_FLOAT32(1.0);
+
+    return v;
+}
+
+port_float64_t
+port_random_float64_low_discr_seq(
+        port_uint64_t seq_index,
+        port_float64_t irrational)
+{
+#ifndef __OPENCL_C_VERSION__
+    assert((irrational > PORT_FLOAT64(0.0)) && (irrational < PORT_FLOAT64(1.0)));
+#endif
+
+    port_float64_t v = seq_index & PORT_ZMASK64(53); // all integers up to 2^53 are representable in float64
+
+    v = fma(v, irrational, -floor(v * irrational));
+    if (v < PORT_FLOAT64(0.0))
+        v += PORT_FLOAT64(1.0);
+
+    return v;
 }
 
 port_uint_quarter_t

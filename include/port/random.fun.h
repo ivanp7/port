@@ -66,9 +66,9 @@ port_random_uint64(
 #endif
 
 /**
- * @brief Generate 32-bit floating-point number uniformly distributed over [0; 1).
+ * @brief Generate 32-bit floating-point, uniformly distributed number.
  *
- * @return 32-bit floating-point number.
+ * @return 32-bit floating-point number in [0; 1).
  */
 port_float32_t
 port_random_float32(
@@ -76,9 +76,9 @@ port_random_float32(
 );
 
 /**
- * @brief Generate 64-bit floating-point number uniformly distributed over [0; 1).
+ * @brief Generate 64-bit floating-point, uniformly distributed number.
  *
- * @return 64-bit floating-point number.
+ * @return 64-bit floating-point number in [0; 1).
  */
 port_float64_t
 port_random_float64(
@@ -89,6 +89,38 @@ port_random_float64(
 #  define port_random_float port_random_float32
 #else
 #  define port_random_float port_random_float64
+#endif
+
+/**
+ * @brief Compute an 32-bit floating-point element of a low-discrepancy sequence.
+ *
+ * The irrational number must be in (0; 1).
+ *
+ * @return 32-bit floating-point number in [0; 1).
+ */
+port_float32_t
+port_random_float32_low_discr_seq(
+        port_uint32_t seq_index, ///< [in] Index of a low-discrepancy sequence element.
+        port_float32_t irrational ///< [in] An irrational number defining the sequence.
+);
+
+/**
+ * @brief Compute an 64-bit floating-point element of a low-discrepancy sequence.
+ *
+ * The irrational number must be in (0; 1).
+ *
+ * @return 64-bit floating-point number in [0; 1).
+ */
+port_float64_t
+port_random_float64_low_discr_seq(
+        port_uint64_t seq_index, ///< [in] Index of a low-discrepancy sequence element.
+        port_float64_t irrational ///< [in] An irrational number defining the sequence.
+);
+
+#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
+#  define port_random_float_low_discr_seq port_random_float32_low_discr_seq
+#else
+#  define port_random_float_low_discr_seq port_random_float64_low_discr_seq
 #endif
 
 /**
