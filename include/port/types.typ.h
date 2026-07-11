@@ -192,171 +192,113 @@ typedef cl_double16  port_float64_v16_t; ///< 64-bit floating-point number (16-v
 ///////////////////////////////////////////////////////////////////////////////
 
 // Unsigned integers
-typedef port_uint8_t port_uint_quarter_t; ///< Unsigned integer (quarter width).
-typedef port_uint16_t port_uint_half_t;   ///< Unsigned integer (half width).
-typedef port_uint32_t port_uint_single_t; ///< Unsigned integer (single width).
-typedef port_uint64_t port_uint_double_t; ///< Unsigned integer (double width).
+typedef port_uint8_t port_uintq_t; ///< Unsigned integer (quarter width).
+typedef port_uint16_t port_uinth_t;   ///< Unsigned integer (half width).
+typedef port_uint32_t port_uints_t; ///< Unsigned integer (single width).
+typedef port_uint64_t port_uintd_t; ///< Unsigned integer (double width).
 
-typedef port_uint8_v2_t port_uint_quarter_v2_t; ///< 2-vector of unsigned integers (quarter width).
-typedef port_uint16_v2_t port_uint_half_v2_t;   ///< 2-vector of unsigned integers (half width).
-typedef port_uint32_v2_t port_uint_single_v2_t; ///< 2-vector of unsigned integers (single width).
-typedef port_uint64_v2_t port_uint_double_v2_t; ///< 2-vector of unsigned integers (double width).
+typedef port_uint8_v2_t port_uintq_v2_t; ///< 2-vector of unsigned integers (quarter width).
+typedef port_uint16_v2_t port_uinth_v2_t;   ///< 2-vector of unsigned integers (half width).
+typedef port_uint32_v2_t port_uints_v2_t; ///< 2-vector of unsigned integers (single width).
+typedef port_uint64_v2_t port_uintd_v2_t; ///< 2-vector of unsigned integers (double width).
 
-typedef port_uint8_v3_t port_uint_quarter_v3_t; ///< 3-vector of unsigned integers (quarter width).
-typedef port_uint16_v3_t port_uint_half_v3_t;   ///< 3-vector of unsigned integers (half width).
-typedef port_uint32_v3_t port_uint_single_v3_t; ///< 3-vector of unsigned integers (single width).
-typedef port_uint64_v3_t port_uint_double_v3_t; ///< 3-vector of unsigned integers (double width).
+typedef port_uint8_v3_t port_uintq_v3_t; ///< 3-vector of unsigned integers (quarter width).
+typedef port_uint16_v3_t port_uinth_v3_t;   ///< 3-vector of unsigned integers (half width).
+typedef port_uint32_v3_t port_uints_v3_t; ///< 3-vector of unsigned integers (single width).
+typedef port_uint64_v3_t port_uintd_v3_t; ///< 3-vector of unsigned integers (double width).
 
-typedef port_uint8_v4_t port_uint_quarter_v4_t; ///< 4-vector of unsigned integers (quarter width).
-typedef port_uint16_v4_t port_uint_half_v4_t;   ///< 4-vector of unsigned integers (half width).
-typedef port_uint32_v4_t port_uint_single_v4_t; ///< 4-vector of unsigned integers (single width).
-typedef port_uint64_v4_t port_uint_double_v4_t; ///< 4-vector of unsigned integers (double width).
+typedef port_uint8_v4_t port_uintq_v4_t; ///< 4-vector of unsigned integers (quarter width).
+typedef port_uint16_v4_t port_uinth_v4_t;   ///< 4-vector of unsigned integers (half width).
+typedef port_uint32_v4_t port_uints_v4_t; ///< 4-vector of unsigned integers (single width).
+typedef port_uint64_v4_t port_uintd_v4_t; ///< 4-vector of unsigned integers (double width).
 
-typedef port_uint8_v8_t port_uint_quarter_v8_t; ///< 8-vector of unsigned integers (quarter width).
-typedef port_uint16_v8_t port_uint_half_v8_t;   ///< 8-vector of unsigned integers (half width).
-typedef port_uint32_v8_t port_uint_single_v8_t; ///< 8-vector of unsigned integers (single width).
-typedef port_uint64_v8_t port_uint_double_v8_t; ///< 8-vector of unsigned integers (double width).
+typedef port_uint8_v8_t port_uintq_v8_t; ///< 8-vector of unsigned integers (quarter width).
+typedef port_uint16_v8_t port_uinth_v8_t;   ///< 8-vector of unsigned integers (half width).
+typedef port_uint32_v8_t port_uints_v8_t; ///< 8-vector of unsigned integers (single width).
+typedef port_uint64_v8_t port_uintd_v8_t; ///< 8-vector of unsigned integers (double width).
 
-typedef port_uint8_v16_t port_uint_quarter_v16_t; ///< 16-vector of unsigned integers (quarter width).
-typedef port_uint16_v16_t port_uint_half_v16_t;   ///< 16-vector of unsigned integers (half width).
-typedef port_uint32_v16_t port_uint_single_v16_t; ///< 16-vector of unsigned integers (single width).
-typedef port_uint64_v16_t port_uint_double_v16_t; ///< 16-vector of unsigned integers (double width).
+typedef port_uint8_v16_t port_uintq_v16_t; ///< 16-vector of unsigned integers (quarter width).
+typedef port_uint16_v16_t port_uinth_v16_t;   ///< 16-vector of unsigned integers (half width).
+typedef port_uint32_v16_t port_uints_v16_t; ///< 16-vector of unsigned integers (single width).
+typedef port_uint64_v16_t port_uintd_v16_t; ///< 16-vector of unsigned integers (double width).
 
 // Signed integers
-typedef port_sint8_t port_sint_quarter_t; ///< Signed integer (quarter width).
-typedef port_sint16_t port_sint_half_t;   ///< Signed integer (half width).
-typedef port_sint32_t port_sint_single_t; ///< Signed integer (single width).
-typedef port_sint64_t port_sint_double_t; ///< Signed integer (double width).
+typedef port_sint8_t port_sintq_t; ///< Signed integer (quarter width).
+typedef port_sint16_t port_sinth_t;   ///< Signed integer (half width).
+typedef port_sint32_t port_sints_t; ///< Signed integer (single width).
+typedef port_sint64_t port_sintd_t; ///< Signed integer (double width).
 
-typedef port_sint8_v2_t port_sint_quarter_v2_t; ///< 2-vector of signed integers (quarter width).
-typedef port_sint16_v2_t port_sint_half_v2_t;   ///< 2-vector of signed integers (half width).
-typedef port_sint32_v2_t port_sint_single_v2_t; ///< 2-vector of signed integers (single width).
-typedef port_sint64_v2_t port_sint_double_v2_t; ///< 2-vector of signed integers (double width).
+typedef port_sint8_v2_t port_sintq_v2_t; ///< 2-vector of signed integers (quarter width).
+typedef port_sint16_v2_t port_sinth_v2_t;   ///< 2-vector of signed integers (half width).
+typedef port_sint32_v2_t port_sints_v2_t; ///< 2-vector of signed integers (single width).
+typedef port_sint64_v2_t port_sintd_v2_t; ///< 2-vector of signed integers (double width).
 
-typedef port_sint8_v3_t port_sint_quarter_v3_t; ///< 3-vector of signed integers (quarter width).
-typedef port_sint16_v3_t port_sint_half_v3_t;   ///< 3-vector of signed integers (half width).
-typedef port_sint32_v3_t port_sint_single_v3_t; ///< 3-vector of signed integers (single width).
-typedef port_sint64_v3_t port_sint_double_v3_t; ///< 3-vector of signed integers (double width).
+typedef port_sint8_v3_t port_sintq_v3_t; ///< 3-vector of signed integers (quarter width).
+typedef port_sint16_v3_t port_sinth_v3_t;   ///< 3-vector of signed integers (half width).
+typedef port_sint32_v3_t port_sints_v3_t; ///< 3-vector of signed integers (single width).
+typedef port_sint64_v3_t port_sintd_v3_t; ///< 3-vector of signed integers (double width).
 
-typedef port_sint8_v4_t port_sint_quarter_v4_t; ///< 4-vector of signed integers (quarter width).
-typedef port_sint16_v4_t port_sint_half_v4_t;   ///< 4-vector of signed integers (half width).
-typedef port_sint32_v4_t port_sint_single_v4_t; ///< 4-vector of signed integers (single width).
-typedef port_sint64_v4_t port_sint_double_v4_t; ///< 4-vector of signed integers (double width).
+typedef port_sint8_v4_t port_sintq_v4_t; ///< 4-vector of signed integers (quarter width).
+typedef port_sint16_v4_t port_sinth_v4_t;   ///< 4-vector of signed integers (half width).
+typedef port_sint32_v4_t port_sints_v4_t; ///< 4-vector of signed integers (single width).
+typedef port_sint64_v4_t port_sintd_v4_t; ///< 4-vector of signed integers (double width).
 
-typedef port_sint8_v8_t port_sint_quarter_v8_t; ///< 8-vector of signed integers (quarter width).
-typedef port_sint16_v8_t port_sint_half_v8_t;   ///< 8-vector of signed integers (half width).
-typedef port_sint32_v8_t port_sint_single_v8_t; ///< 8-vector of signed integers (single width).
-typedef port_sint64_v8_t port_sint_double_v8_t; ///< 8-vector of signed integers (double width).
+typedef port_sint8_v8_t port_sintq_v8_t; ///< 8-vector of signed integers (quarter width).
+typedef port_sint16_v8_t port_sinth_v8_t;   ///< 8-vector of signed integers (half width).
+typedef port_sint32_v8_t port_sints_v8_t; ///< 8-vector of signed integers (single width).
+typedef port_sint64_v8_t port_sintd_v8_t; ///< 8-vector of signed integers (double width).
 
-typedef port_sint8_v16_t port_sint_quarter_v16_t; ///< 16-vector of signed integers (quarter width).
-typedef port_sint16_v16_t port_sint_half_v16_t;   ///< 16-vector of signed integers (half width).
-typedef port_sint32_v16_t port_sint_single_v16_t; ///< 16-vector of signed integers (single width).
-typedef port_sint64_v16_t port_sint_double_v16_t; ///< 16-vector of signed integers (double width).
+typedef port_sint8_v16_t port_sintq_v16_t; ///< 16-vector of signed integers (quarter width).
+typedef port_sint16_v16_t port_sinth_v16_t;   ///< 16-vector of signed integers (half width).
+typedef port_sint32_v16_t port_sints_v16_t; ///< 16-vector of signed integers (single width).
+typedef port_sint64_v16_t port_sintd_v16_t; ///< 16-vector of signed integers (double width).
 
 // Floating-point numbers
-typedef port_float32_t port_float_single_t; ///< Floating-point number (single width).
-typedef port_float64_t port_float_double_t; ///< Floating-point number (double width).
+typedef port_float32_t port_floats_t; ///< Floating-point number (single width).
+typedef port_float64_t port_floatd_t; ///< Floating-point number (double width).
 
-typedef port_float32_v2_t port_float_single_v2_t; ///< 2-vector of floating-point numbers (single width).
-typedef port_float64_v2_t port_float_double_v2_t; ///< 2-vector of floating-point numbers (double width).
+typedef port_float32_v2_t port_floats_v2_t; ///< 2-vector of floating-point numbers (single width).
+typedef port_float64_v2_t port_floatd_v2_t; ///< 2-vector of floating-point numbers (double width).
 
-typedef port_float32_v3_t port_float_single_v3_t; ///< 3-vector of floating-point numbers (single width).
-typedef port_float64_v3_t port_float_double_v3_t; ///< 3-vector of floating-point numbers (double width).
+typedef port_float32_v3_t port_floats_v3_t; ///< 3-vector of floating-point numbers (single width).
+typedef port_float64_v3_t port_floatd_v3_t; ///< 3-vector of floating-point numbers (double width).
 
-typedef port_float32_v4_t port_float_single_v4_t; ///< 4-vector of floating-point numbers (single width).
-typedef port_float64_v4_t port_float_double_v4_t; ///< 4-vector of floating-point numbers (double width).
+typedef port_float32_v4_t port_floats_v4_t; ///< 4-vector of floating-point numbers (single width).
+typedef port_float64_v4_t port_floatd_v4_t; ///< 4-vector of floating-point numbers (double width).
 
-typedef port_float32_v8_t port_float_single_v8_t; ///< 8-vector of floating-point numbers (single width).
-typedef port_float64_v8_t port_float_double_v8_t; ///< 8-vector of floating-point numbers (double width).
+typedef port_float32_v8_t port_floats_v8_t; ///< 8-vector of floating-point numbers (single width).
+typedef port_float64_v8_t port_floatd_v8_t; ///< 8-vector of floating-point numbers (double width).
 
-typedef port_float32_v16_t port_float_single_v16_t; ///< 16-vector of floating-point numbers (single width).
-typedef port_float64_v16_t port_float_double_v16_t; ///< 16-vector of floating-point numbers (double width).
+typedef port_float32_v16_t port_floats_v16_t; ///< 16-vector of floating-point numbers (single width).
+typedef port_float64_v16_t port_floatd_v16_t; ///< 16-vector of floating-point numbers (double width).
 
 ///////////////////////////////////////////////////////////////////////////////
 // Maximum-width types
 ///////////////////////////////////////////////////////////////////////////////
 
 // Unsigned integers
-typedef port_uint64_t port_uint_widest_t; ///< Maximum-width unsigned integer.
-typedef port_uint64_v2_t port_uint_widest_v2_t; ///< 2-vector of maximum-width unsigned integers.
-typedef port_uint64_v3_t port_uint_widest_v3_t; ///< 3-vector of maximum-width unsigned integers.
-typedef port_uint64_v4_t port_uint_widest_v4_t; ///< 4-vector of maximum-width unsigned integers.
-typedef port_uint64_v8_t port_uint_widest_v8_t; ///< 8-vector of maximum-width unsigned integers.
-typedef port_uint64_v16_t port_uint_widest_v16_t; ///< 16-vector of maximum-width unsigned integers.
+typedef port_uint64_t port_uintw_t; ///< Maximum-width unsigned integer.
+typedef port_uint64_v2_t port_uintw_v2_t; ///< 2-vector of maximum-width unsigned integers.
+typedef port_uint64_v3_t port_uintw_v3_t; ///< 3-vector of maximum-width unsigned integers.
+typedef port_uint64_v4_t port_uintw_v4_t; ///< 4-vector of maximum-width unsigned integers.
+typedef port_uint64_v8_t port_uintw_v8_t; ///< 8-vector of maximum-width unsigned integers.
+typedef port_uint64_v16_t port_uintw_v16_t; ///< 16-vector of maximum-width unsigned integers.
 
 // Signed integers
-typedef port_sint64_t port_sint_widest_t; ///< Maximum-width signed integer.
-typedef port_sint64_v2_t port_sint_widest_v2_t; ///< 2-vector of maximum-width signed integers.
-typedef port_sint64_v3_t port_sint_widest_v3_t; ///< 3-vector of maximum-width signed integers.
-typedef port_sint64_v4_t port_sint_widest_v4_t; ///< 4-vector of maximum-width signed integers.
-typedef port_sint64_v8_t port_sint_widest_v8_t; ///< 8-vector of maximum-width signed integers.
-typedef port_sint64_v16_t port_sint_widest_v16_t; ///< 16-vector of maximum-width signed integers.
+typedef port_sint64_t port_sintw_t; ///< Maximum-width signed integer.
+typedef port_sint64_v2_t port_sintw_v2_t; ///< 2-vector of maximum-width signed integers.
+typedef port_sint64_v3_t port_sintw_v3_t; ///< 3-vector of maximum-width signed integers.
+typedef port_sint64_v4_t port_sintw_v4_t; ///< 4-vector of maximum-width signed integers.
+typedef port_sint64_v8_t port_sintw_v8_t; ///< 8-vector of maximum-width signed integers.
+typedef port_sint64_v16_t port_sintw_v16_t; ///< 16-vector of maximum-width signed integers.
 
 // Floating-point numbers
-typedef port_float64_t port_float_widest_t; ///< Maximum-width floating-point number.
-typedef port_float64_v2_t port_float_widest_v2_t; ///< 2-vector of maximum-width floating-point numbers.
-typedef port_float64_v3_t port_float_widest_v3_t; ///< 3-vector of maximum-width floating-point numbers.
-typedef port_float64_v4_t port_float_widest_v4_t; ///< 4-vector of maximum-width floating-point numbers.
-typedef port_float64_v8_t port_float_widest_v8_t; ///< 8-vector of maximum-width floating-point numbers.
-typedef port_float64_v16_t port_float_widest_v16_t; ///< 16-vector of maximum-width floating-point numbers.
-
-///////////////////////////////////////////////////////////////////////////////
-// Default types
-///////////////////////////////////////////////////////////////////////////////
-
-#ifndef PORT_FEATURE_DEFAULT_INTEGER_64
-
-typedef port_uint32_t port_uint_t; ///< Default unsigned integer.
-typedef port_uint32_v2_t port_uint_v2_t; ///< 2-vector of default unsigned integers.
-typedef port_uint32_v3_t port_uint_v3_t; ///< 3-vector of default unsigned integers.
-typedef port_uint32_v4_t port_uint_v4_t; ///< 4-vector of default unsigned integers.
-typedef port_uint32_v8_t port_uint_v8_t; ///< 8-vector of default unsigned integers.
-typedef port_uint32_v16_t port_uint_v16_t; ///< 16-vector of default unsigned integers.
-
-typedef port_sint32_t port_sint_t; ///< Default signed integer.
-typedef port_sint32_v2_t port_sint_v2_t; ///< 2-vector of default signed integers.
-typedef port_sint32_v3_t port_sint_v3_t; ///< 3-vector of default signed integers.
-typedef port_sint32_v4_t port_sint_v4_t; ///< 4-vector of default signed integers.
-typedef port_sint32_v8_t port_sint_v8_t; ///< 8-vector of default signed integers.
-typedef port_sint32_v16_t port_sint_v16_t; ///< 16-vector of default signed integers.
-
-#else // PORT_FEATURE_DEFAULT_INTEGER_64
-
-typedef port_uint64_t port_uint_t; ///< Default unsigned integer.
-typedef port_uint64_v2_t port_uint_v2_t; ///< 2-vector of default unsigned integers.
-typedef port_uint64_v3_t port_uint_v3_t; ///< 3-vector of default unsigned integers.
-typedef port_uint64_v4_t port_uint_v4_t; ///< 4-vector of default unsigned integers.
-typedef port_uint64_v8_t port_uint_v8_t; ///< 8-vector of default unsigned integers.
-typedef port_uint64_v16_t port_uint_v16_t; ///< 16-vector of default unsigned integers.
-
-typedef port_sint64_t port_sint_t; ///< Default signed integer.
-typedef port_sint64_v2_t port_sint_v2_t; ///< 2-vector of default signed integers.
-typedef port_sint64_v3_t port_sint_v3_t; ///< 3-vector of default signed integers.
-typedef port_sint64_v4_t port_sint_v4_t; ///< 4-vector of default signed integers.
-typedef port_sint64_v8_t port_sint_v8_t; ///< 8-vector of default signed integers.
-typedef port_sint64_v16_t port_sint_v16_t; ///< 16-vector of default signed integers.
-
-#endif // PORT_FEATURE_DEFAULT_INTEGER_64
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-
-typedef port_float32_t port_float_t; ///< Default floating-point number.
-typedef port_float32_v2_t port_float_v2_t; ///< 2-vector of default floating-point numbers.
-typedef port_float32_v3_t port_float_v3_t; ///< 3-vector of default floating-point numbers.
-typedef port_float32_v4_t port_float_v4_t; ///< 4-vector of default floating-point numbers.
-typedef port_float32_v8_t port_float_v8_t; ///< 8-vector of default floating-point numbers.
-typedef port_float32_v16_t port_float_v16_t; ///< 16-vector of default floating-point numbers.
-
-#else // PORT_FEATURE_DEFAULT_FLOAT_64
-
-typedef port_float64_t port_float_t; ///< Default floating-point number.
-typedef port_float64_v2_t port_float_v2_t; ///< 2-vector of default floating-point numbers.
-typedef port_float64_v3_t port_float_v3_t; ///< 3-vector of default floating-point numbers.
-typedef port_float64_v4_t port_float_v4_t; ///< 4-vector of default floating-point numbers.
-typedef port_float64_v8_t port_float_v8_t; ///< 8-vector of default floating-point numbers.
-typedef port_float64_v16_t port_float_v16_t; ///< 16-vector of default floating-point numbers.
-
-#endif // PORT_FEATURE_DEFAULT_FLOAT_64
+typedef port_float64_t port_floatw_t; ///< Maximum-width floating-point number.
+typedef port_float64_v2_t port_floatw_v2_t; ///< 2-vector of maximum-width floating-point numbers.
+typedef port_float64_v3_t port_floatw_v3_t; ///< 3-vector of maximum-width floating-point numbers.
+typedef port_float64_v4_t port_floatw_v4_t; ///< 4-vector of maximum-width floating-point numbers.
+typedef port_float64_v8_t port_floatw_v8_t; ///< 8-vector of maximum-width floating-point numbers.
+typedef port_float64_v16_t port_floatw_v16_t; ///< 16-vector of maximum-width floating-point numbers.
 
 #endif // _PORT_TYPES_TYP_H_
 

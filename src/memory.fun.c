@@ -37,7 +37,7 @@
 #if !defined(__OPENCL_C_VERSION__) && !defined(NDEBUG)
 
 #  define ASSERTS \
-    assert(format.far.num_tidx_bits < PORT_NUM_BITS(port_memory_ref_t)); \
+    assert(format.far.num_tidx_bits < PORT_SIZEOF_BITS(port_memory_ref_t)); \
     if (PORT_MEMORY_REF_IS_FAR(ref)) { \
         size_t offset = PORT_MEMORY_REF_FAR__OFFSET(ref, format.far.num_tidx_bits); \
         assert(((offset << format.far.offset_lshift) >> format.far.offset_lshift) == offset); \

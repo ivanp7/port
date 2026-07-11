@@ -24,6 +24,7 @@
 
 #include "port/random.fun.h"
 #include "port/bit.def.h"
+#include "port/types.def.h"
 
 #ifndef __OPENCL_C_VERSION__
 #  include <tgmath.h>
@@ -31,13 +32,21 @@
 #endif
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Pseudorandom number generator
+///////////////////////////////////////////////////////////////////////////////
+
 port_random_t
 port_random_next(
         port_random_t prev)
 {
     // Constants are taken from "Numerical recipies in C. The art of scientific computing"
-    return (port_random_t)1664525u * prev + (port_random_t)1013904223u;
+    return (port_random_t)PORT_UINT32(1664525) * prev + (port_random_t)PORT_UINT32(1013904223);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// Pseudorandom numbers
+///////////////////////////////////////////////////////////////////////////////
 
 port_uint32_t
 port_random_uint32(
@@ -86,9 +95,10 @@ port_random_float32(
     union {
         port_random_t as_uint32;
         port_float32_t as_float32;
-    } u = {.as_uint32 = (rnd_local & (port_random_t)0x007FFFFFu) | (port_random_t)0x3F800000u};
+    } u = {.as_uint32 = (rnd_local & (port_random_t)PORT_UINT32(0x007FFFFF)) |
+        (port_random_t)PORT_UINT32(0x3F800000)};
 
-    return u.as_float32 - 1.0f;
+    return u.as_float32 - PORT_FLOAT32(1.0);
 }
 
 port_float64_t
@@ -106,11 +116,15 @@ port_random_float64(
     union {
         port_uint64_t as_uint64;
         port_float64_t as_float64;
-    } u = {.as_uint64 = PORT_UPSAMPLE32((rnd_local1 & (port_random_t)0x000FFFFFu) |
-            (port_random_t)0x3FF00000u, rnd_local2)};
+    } u = {.as_uint64 = PORT_UPSAMPLE32((rnd_local1 & (port_random_t)PORT_UINT32(0x000FFFFF)) |
+            (port_random_t)PORT_UINT32(0x3FF00000), rnd_local2)};
 
-    return u.as_float64 - 1.0;
+    return u.as_float64 - PORT_FLOAT64(1.0);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// Low-discrepancy sequences
+///////////////////////////////////////////////////////////////////////////////
 
 port_float32_t
 port_random_float32_low_discr_seq(
@@ -148,10 +162,14 @@ port_random_float64_low_discr_seq(
     return v;
 }
 
-port_uint_quarter_t
-port_random_custom_distrib_uint_quarter(
-        port_uint_quarter_t num_outcomes,
-        const port_uint_quarter_t cdf[],
+///////////////////////////////////////////////////////////////////////////////
+// Pseudorandom integers with custom distribution
+///////////////////////////////////////////////////////////////////////////////
+
+port_uint8_t
+port_random_custom_distrib_uint8(
+        port_uint8_t num_outcomes,
+        const port_uint8_t cdf[],
         port_random_t *rnd)
 {
 #ifndef __OPENCL_C_VERSION__
@@ -169,13 +187,13 @@ port_random_custom_distrib_uint_quarter(
         return rnd_local % num_outcomes;
 
     // Ensure the random number is in the CDF range
-    port_uint_quarter_t random_value = rnd_local;
+    port_uint8_t random_value = rnd_local;
 
     // Binary search
-    port_uint_quarter_t low = 0, high = num_outcomes - 2; // [0; num_outcomes-1) or [0; num_outcomes-2]
+    port_uint8_t low = 0, high = num_outcomes - 2; // [0; num_outcomes-1) or [0; num_outcomes-2]
     while (low < high)
     {
-        port_uint_quarter_t mid = low + (high - low) / 2;
+        port_uint8_t mid = low + (high - low) / 2;
 
         // We want the smallest index for which (cdf[index] > random_value)
         if (cdf[mid] > random_value) // mid + 1 > index
@@ -190,10 +208,10 @@ port_random_custom_distrib_uint_quarter(
         return low + 1;
 }
 
-port_uint_half_t
-port_random_custom_distrib_uint_half(
-        port_uint_half_t num_outcomes,
-        const port_uint_half_t cdf[],
+port_uint16_t
+port_random_custom_distrib_uint16(
+        port_uint16_t num_outcomes,
+        const port_uint16_t cdf[],
         port_random_t *rnd)
 {
 #ifndef __OPENCL_C_VERSION__
@@ -211,13 +229,13 @@ port_random_custom_distrib_uint_half(
         return rnd_local % num_outcomes;
 
     // Ensure the random number is in the CDF range
-    port_uint_half_t random_value = rnd_local;
+    port_uint16_t random_value = rnd_local;
 
     // Binary search
-    port_uint_half_t low = 0, high = num_outcomes - 2; // [0; num_outcomes-1) or [0; num_outcomes-2]
+    port_uint16_t low = 0, high = num_outcomes - 2; // [0; num_outcomes-1) or [0; num_outcomes-2]
     while (low < high)
     {
-        port_uint_half_t mid = low + (high - low) / 2;
+        port_uint16_t mid = low + (high - low) / 2;
 
         // We want the smallest index for which (cdf[index] > random_value)
         if (cdf[mid] > random_value) // mid + 1 > index
@@ -232,10 +250,10 @@ port_random_custom_distrib_uint_half(
         return low + 1;
 }
 
-port_uint_single_t
-port_random_custom_distrib_uint_single(
-        port_uint_single_t num_outcomes,
-        const port_uint_single_t cdf[],
+port_uint32_t
+port_random_custom_distrib_uint32(
+        port_uint32_t num_outcomes,
+        const port_uint32_t cdf[],
         port_random_t *rnd)
 {
 #ifndef __OPENCL_C_VERSION__
@@ -253,13 +271,13 @@ port_random_custom_distrib_uint_single(
         return rnd_local % num_outcomes;
 
     // Ensure the random number is in the CDF range
-    port_uint_single_t random_value = rnd_local;
+    port_uint32_t random_value = rnd_local;
 
     // Binary search
-    port_uint_single_t low = 0, high = num_outcomes - 2; // [0; num_outcomes-1) or [0; num_outcomes-2]
+    port_uint32_t low = 0, high = num_outcomes - 2; // [0; num_outcomes-1) or [0; num_outcomes-2]
     while (low < high)
     {
-        port_uint_single_t mid = low + (high - low) / 2;
+        port_uint32_t mid = low + (high - low) / 2;
 
         // We want the smallest index for which (cdf[index] > random_value)
         if (cdf[mid] > random_value) // mid + 1 > index

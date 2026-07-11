@@ -126,124 +126,75 @@ port_float64_v2_t, port_float64_v3_t, port_float64_v4_t, port_float64_v8_t, port
 ######################
 
 # Unsigned integers
-port_uint_quarter_t = port_uint8_t
-port_uint_quarter_v2_t = port_uint8_v2_t
-port_uint_quarter_v3_t = port_uint8_v3_t
-port_uint_quarter_v4_t = port_uint8_v4_t
-port_uint_quarter_v8_t = port_uint8_v8_t
-port_uint_quarter_v16_t = port_uint8_v16_t
+port_uintq_t = port_uint8_t
+port_uintq_v2_t = port_uint8_v2_t
+port_uintq_v3_t = port_uint8_v3_t
+port_uintq_v4_t = port_uint8_v4_t
+port_uintq_v8_t = port_uint8_v8_t
+port_uintq_v16_t = port_uint8_v16_t
 
-port_uint_half_t = port_uint16_t
-port_uint_half_v2_t = port_uint16_v2_t
-port_uint_half_v3_t = port_uint16_v3_t
-port_uint_half_v4_t = port_uint16_v4_t
-port_uint_half_v8_t = port_uint16_v8_t
-port_uint_half_v16_t = port_uint16_v16_t
+port_uinth_t = port_uint16_t
+port_uinth_v2_t = port_uint16_v2_t
+port_uinth_v3_t = port_uint16_v3_t
+port_uinth_v4_t = port_uint16_v4_t
+port_uinth_v8_t = port_uint16_v8_t
+port_uinth_v16_t = port_uint16_v16_t
 
-port_uint_single_t = port_uint32_t
-port_uint_single_v2_t = port_uint32_v2_t
-port_uint_single_v3_t = port_uint32_v3_t
-port_uint_single_v4_t = port_uint32_v4_t
-port_uint_single_v8_t = port_uint32_v8_t
-port_uint_single_v16_t = port_uint32_v16_t
+port_uints_t = port_uint32_t
+port_uints_v2_t = port_uint32_v2_t
+port_uints_v3_t = port_uint32_v3_t
+port_uints_v4_t = port_uint32_v4_t
+port_uints_v8_t = port_uint32_v8_t
+port_uints_v16_t = port_uint32_v16_t
 
-port_uint_double_t = port_uint64_t
-port_uint_double_v2_t = port_uint64_v2_t
-port_uint_double_v3_t = port_uint64_v3_t
-port_uint_double_v4_t = port_uint64_v4_t
-port_uint_double_v8_t = port_uint64_v8_t
-port_uint_double_v16_t = port_uint64_v16_t
+port_uintd_t = port_uint64_t
+port_uintd_v2_t = port_uint64_v2_t
+port_uintd_v3_t = port_uint64_v3_t
+port_uintd_v4_t = port_uint64_v4_t
+port_uintd_v8_t = port_uint64_v8_t
+port_uintd_v16_t = port_uint64_v16_t
 
 # Signed integers
-port_sint_quarter_t = port_sint8_t
-port_sint_quarter_v2_t = port_sint8_v2_t
-port_sint_quarter_v3_t = port_sint8_v3_t
-port_sint_quarter_v4_t = port_sint8_v4_t
-port_sint_quarter_v8_t = port_sint8_v8_t
-port_sint_quarter_v16_t = port_sint8_v16_t
+port_sintq_t = port_sint8_t
+port_sintq_v2_t = port_sint8_v2_t
+port_sintq_v3_t = port_sint8_v3_t
+port_sintq_v4_t = port_sint8_v4_t
+port_sintq_v8_t = port_sint8_v8_t
+port_sintq_v16_t = port_sint8_v16_t
 
-port_sint_half_t = port_sint16_t
-port_sint_half_v2_t = port_sint16_v2_t
-port_sint_half_v3_t = port_sint16_v3_t
-port_sint_half_v4_t = port_sint16_v4_t
-port_sint_half_v8_t = port_sint16_v8_t
-port_sint_half_v16_t = port_sint16_v16_t
+port_sinth_t = port_sint16_t
+port_sinth_v2_t = port_sint16_v2_t
+port_sinth_v3_t = port_sint16_v3_t
+port_sinth_v4_t = port_sint16_v4_t
+port_sinth_v8_t = port_sint16_v8_t
+port_sinth_v16_t = port_sint16_v16_t
 
-port_sint_single_t = port_sint32_t
-port_sint_single_v2_t = port_sint32_v2_t
-port_sint_single_v3_t = port_sint32_v3_t
-port_sint_single_v4_t = port_sint32_v4_t
-port_sint_single_v8_t = port_sint32_v8_t
-port_sint_single_v16_t = port_sint32_v16_t
+port_sints_t = port_sint32_t
+port_sints_v2_t = port_sint32_v2_t
+port_sints_v3_t = port_sint32_v3_t
+port_sints_v4_t = port_sint32_v4_t
+port_sints_v8_t = port_sint32_v8_t
+port_sints_v16_t = port_sint32_v16_t
 
-port_sint_double_t = port_sint64_t
-port_sint_double_v2_t = port_sint64_v2_t
-port_sint_double_v3_t = port_sint64_v3_t
-port_sint_double_v4_t = port_sint64_v4_t
-port_sint_double_v8_t = port_sint64_v8_t
-port_sint_double_v16_t = port_sint64_v16_t
+port_sintd_t = port_sint64_t
+port_sintd_v2_t = port_sint64_v2_t
+port_sintd_v3_t = port_sint64_v3_t
+port_sintd_v4_t = port_sint64_v4_t
+port_sintd_v8_t = port_sint64_v8_t
+port_sintd_v16_t = port_sint64_v16_t
 
 # Floating-point numbers
-port_float_single_t = port_float32_t
-port_float_single_v2_t = port_float32_v2_t
-port_float_single_v3_t = port_float32_v3_t
-port_float_single_v4_t = port_float32_v4_t
-port_float_single_v8_t = port_float32_v8_t
-port_float_single_v16_t = port_float32_v16_t
+port_floats_t = port_float32_t
+port_floats_v2_t = port_float32_v2_t
+port_floats_v3_t = port_float32_v3_t
+port_floats_v4_t = port_float32_v4_t
+port_floats_v8_t = port_float32_v8_t
+port_floats_v16_t = port_float32_v16_t
 
-port_float_double_t = port_float64_t
-port_float_double_v2_t = port_float64_v2_t
-port_float_double_v3_t = port_float64_v3_t
-port_float_double_v4_t = port_float64_v4_t
-port_float_double_v8_t = port_float64_v8_t
-port_float_double_v16_t = port_float64_v16_t
-
-#####################
-### Default types ###
-#####################
-
-if 'FEATURE_DEFAULT_INTEGER_64' not in os.environ:
-    port_uint_t = port_uint32_t
-    port_uint_v2_t = port_uint32_v2_t
-    port_uint_v3_t = port_uint32_v3_t
-    port_uint_v4_t = port_uint32_v4_t
-    port_uint_v8_t = port_uint32_v8_t
-    port_uint_v16_t = port_uint32_v16_t
-
-    port_sint_t = port_sint32_t
-    port_sint_v2_t = port_sint32_v2_t
-    port_sint_v3_t = port_sint32_v3_t
-    port_sint_v4_t = port_sint32_v4_t
-    port_sint_v8_t = port_sint32_v8_t
-    port_sint_v16_t = port_sint32_v16_t
-else:
-    port_uint_t = port_uint64_t
-    port_uint_v2_t = port_uint64_v2_t
-    port_uint_v3_t = port_uint64_v3_t
-    port_uint_v4_t = port_uint64_v4_t
-    port_uint_v8_t = port_uint64_v8_t
-    port_uint_v16_t = port_uint64_v16_t
-
-    port_sint_t = port_sint64_t
-    port_sint_v2_t = port_sint64_v2_t
-    port_sint_v3_t = port_sint64_v3_t
-    port_sint_v4_t = port_sint64_v4_t
-    port_sint_v8_t = port_sint64_v8_t
-    port_sint_v16_t = port_sint64_v16_t
-
-
-if 'FEATURE_DEFAULT_FLOAT_64' not in os.environ:
-    port_float_t = port_float32_t
-    port_float_v2_t = port_float32_v2_t
-    port_float_v3_t = port_float32_v3_t
-    port_float_v4_t = port_float32_v4_t
-    port_float_v8_t = port_float32_v8_t
-    port_float_v16_t = port_float32_v16_t
-else:
-    port_float_t = port_float64_t
-    port_float_v2_t = port_float64_v2_t
-    port_float_v3_t = port_float64_v3_t
-    port_float_v4_t = port_float64_v4_t
-    port_float_v8_t = port_float64_v8_t
-    port_float_v16_t = port_float64_v16_t
+port_floatd_t = port_float64_t
+port_floatd_v2_t = port_float64_v2_t
+port_floatd_v3_t = port_float64_v3_t
+port_floatd_v4_t = port_float64_v4_t
+port_floatd_v8_t = port_float64_v8_t
+port_floatd_v16_t = port_float64_v16_t
 

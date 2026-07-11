@@ -22,33 +22,33 @@ TEST(PORT_MEMORY_REF_IS_FAR)
 
 TEST(PORT_MEMORY_REF_FAR)
 {
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 0, 0, 1), 0x1, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 1, 0, 1), 0x2, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 1, 1, 1), 0x3, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 2, 0, 1), 0x4, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 2, 1, 1), 0x5, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 2, 2, 1), 0x6, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 2, 3, 1), 0x7, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 3, 0, 1), 0x8, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 3, 0, 2), 0x10, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 4, 0, 0xACAB), 0xACAB0, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 30, 0, 1), 0x40000000, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 30, 0xDEADBEE, 1), 0x4DEADBEE, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 13, 7331, 1337), 0xA73CA3, port_uint_single_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 0, 0, 1), 0x1, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 1, 0, 1), 0x2, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 1, 1, 1), 0x3, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 2, 0, 1), 0x4, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 2, 1, 1), 0x5, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 2, 2, 1), 0x6, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 2, 3, 1), 0x7, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 3, 0, 1), 0x8, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 3, 0, 2), 0x10, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 4, 0, 0xACAB), 0xACAB0, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 30, 0, 1), 0x40000000, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 30, 0xDEADBEE, 1), 0x4DEADBEE, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR(port_memory_ref_t, 13, 7331, 1337), 0xA73CA3, port_uints_t, "%X");
 }
 
 TEST(PORT_MEMORY_REF_FAR__TABLE_INDEX)
 {
-    ASSERT_EQ(PORT_MEMORY_REF_FAR__TABLE_INDEX(0xACAB5, 4), 5, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR__TABLE_INDEX(0x4DEADBEE, 30), 0xDEADBEE, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR__TABLE_INDEX(0xA73CA3, 13), 7331, port_uint_single_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__TABLE_INDEX(0xACAB5, 4), 5, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__TABLE_INDEX(0x4DEADBEE, 30), 0xDEADBEE, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__TABLE_INDEX(0xA73CA3, 13), 7331, port_uints_t, "%X");
 }
 
 TEST(PORT_MEMORY_REF_FAR__OFFSET)
 {
-    ASSERT_EQ(PORT_MEMORY_REF_FAR__OFFSET(0xACAB5, 4), 0xACAB, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR__OFFSET(0x4DEADBEE, 30), 1, port_uint_single_t, "%X");
-    ASSERT_EQ(PORT_MEMORY_REF_FAR__OFFSET(0xA73CA3, 13), 1337, port_uint_single_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__OFFSET(0xACAB5, 4), 0xACAB, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__OFFSET(0x4DEADBEE, 30), 1, port_uints_t, "%X");
+    ASSERT_EQ(PORT_MEMORY_REF_FAR__OFFSET(0xA73CA3, 13), 1337, port_uints_t, "%X");
 }
 
 TEST(port_memory_at)
@@ -92,12 +92,12 @@ TEST(port_memory_copy)
 
     port_memory_unit_t src[NUM_UNITS], dest[NUM_UNITS] = {0};
     for (port_uint32_t i = 0; i < NUM_UNITS; i++)
-        src[i].as_uint_single = i << (i % (32 - NUM_BITS + 1));
+        src[i].as_uints = i << (i % (32 - NUM_BITS + 1));
 
     port_memory_copy(dest, src, sizeof(port_memory_unit_t) * NUM_UNITS);
 
     for (port_uint32_t i = 0; i < NUM_UNITS; i++)
-        ASSERT_EQ(dest[i].as_uint_single, src[i].as_uint_single, port_uint_single_t, "%u");
+        ASSERT_EQ(dest[i].as_uints, src[i].as_uints, port_uints_t, "%u");
 
 #undef NUM_UNITS
 #undef NUM_BITS

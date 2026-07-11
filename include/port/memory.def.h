@@ -49,19 +49,19 @@
  *          <num_tidx_bits>
  */
 #define PORT_MEMORY_REF_FAR(ref_type, num_tidx_bits, table_index, offset) \
-    PORT_CONCAT_BITS(ref_type, (offset), (num_tidx_bits), (table_index))
+    PORT_BIT_CONCAT(ref_type, (offset), (num_tidx_bits), (table_index))
 
 /**
  * @brief Extract memory table index from a far reference.
  */
 #define PORT_MEMORY_REF_FAR__TABLE_INDEX(ref, num_tidx_bits) \
-    PORT_EXTRACT_LSBITS(port_uint_single_t, (ref), (num_tidx_bits))
+    PORT_BIT_EXTRACT_LS(port_uints_t, (ref), (num_tidx_bits))
 
 /**
  * @brief Extract offset from a far reference.
  */
 #define PORT_MEMORY_REF_FAR__OFFSET(ref, num_tidx_bits) \
-    PORT_EXTRACT_MSBITS(port_uint_single_t, (ref), (num_tidx_bits))
+    PORT_BIT_EXTRACT_MS(port_uints_t, (ref), (num_tidx_bits))
 
 /**
  * @brief Follow far memory reference.

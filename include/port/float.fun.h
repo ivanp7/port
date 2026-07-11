@@ -51,6 +51,13 @@ port_float32_clamp(
 );
 
 /**
+ * @brief Clamp single-width floating-point number between minimum and maximum.
+ *
+ * @return Clamped value.
+ */
+#define port_floats_clamp   port_float32_clamp
+
+/**
  * @brief Clamp 64-bit floating-point number between minimum and maximum.
  *
  * @return Clamped value.
@@ -63,14 +70,12 @@ port_float64_clamp(
         port_float64_t maxval  ///< [in] Maximum value.
 );
 
-#define port_float_single_clamp port_float32_clamp
-#define port_float_double_clamp port_float64_clamp
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_float_clamp port_float32_clamp
-#else
-#  define port_float_clamp port_float64_clamp
-#endif
+/**
+ * @brief Clamp double-width floating-point number between minimum and maximum.
+ *
+ * @return Clamped value.
+ */
+#define port_floatd_clamp   port_float64_clamp
 
 /**
  * @brief Calculate distance between 32-bit floating-point numbers in ULPs.
@@ -86,6 +91,15 @@ port_float32_ulp_distance(
 );
 
 /**
+ * @brief Calculate distance between single-width floating-point numbers in ULPs.
+ *
+ * If either of values is infinity or NaN, the maximum value is returned.
+ *
+ * @return ULP distance.
+ */
+#define port_floats_ulp_distance    port_float32_ulp_distance
+
+/**
  * @brief Calculate distance between 64-bit floating-point numbers in ULPs.
  *
  * If either of values is infinity or NaN, the maximum value is returned.
@@ -98,14 +112,14 @@ port_float64_ulp_distance(
         port_float64_t value2  ///< [in] Second number.
 );
 
-#define port_float_single_ulp_distance port_float32_ulp_distance
-#define port_float_double_ulp_distance port_float64_ulp_distance
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_float_ulp_distance port_float32_ulp_distance
-#else
-#  define port_float_ulp_distance port_float64_ulp_distance
-#endif
+/**
+ * @brief Calculate distance between double-width floating-point numbers in ULPs.
+ *
+ * If either of values is infinity or NaN, the maximum value is returned.
+ *
+ * @return ULP distance.
+ */
+#define port_floatd_ulp_distance    port_float64_ulp_distance
 
 /**
  * @brief Check if 32-bit floating-point numbers are (almost) equal.
@@ -124,6 +138,16 @@ port_float32_equal(
 );
 
 /**
+ * @brief Check if single-width floating-point numbers are (almost) equal.
+ *
+ * Values in [0; 1) are treated specially, as if ULPs are the same as in [1; 2).
+ * Zero tolerance forces exact equality.
+ *
+ * @return True if number are (almost) equal, otherwise false.
+ */
+#define port_floats_equal   port_float32_equal
+
+/**
  * @brief Check if 64-bit floating-point numbers are (almost) equal.
  *
  * Values in [0; 1) are treated specially, as if ULPs are the same as in [1; 2).
@@ -139,14 +163,15 @@ port_float64_equal(
         port_uint64_t tolerance ///< [in] Inexact equality tolerance.
 );
 
-#define port_float_single_equal port_float32_equal
-#define port_float_double_equal port_float64_equal
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_float_equal port_float32_equal
-#else
-#  define port_float_equal port_float64_equal
-#endif
+/**
+ * @brief Check if double-width floating-point numbers are (almost) equal.
+ *
+ * Values in [0; 1) are treated specially, as if ULPs are the same as in [1; 2).
+ * Zero tolerance forces exact equality.
+ *
+ * @return True if number are (almost) equal, otherwise false.
+ */
+#define port_floatd_equal   port_float64_equal
 
 ///////////////////////////////////////////////////////////////////////////////
 // Summation algorithms
@@ -164,6 +189,13 @@ port_float32_two_sum(
 );
 
 /**
+ * @brief Sum two single-width floating-point numbers with a round-off error.
+ *
+ * @return Sum and a round-off error.
+ */
+#define port_floats_two_sum port_float32_two_sum
+
+/**
  * @brief Sum two 64-bit floating-point numbers with a round-off error.
  *
  * @return Sum and a round-off error.
@@ -174,14 +206,12 @@ port_float64_two_sum(
         port_float64_t b  ///< [in] Second value.
 );
 
-#define port_float_single_two_sum port_float32_two_sum
-#define port_float_double_two_sum port_float64_two_sum
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_float_two_sum port_float32_two_sum
-#else
-#  define port_float_two_sum port_float64_two_sum
-#endif
+/**
+ * @brief Sum two double-width floating-point numbers with a round-off error.
+ *
+ * @return Sum and a round-off error.
+ */
+#define port_floatd_two_sum port_float64_two_sum
 
 /**
  * @brief Sum 32-bit floating-point numbers using the Neumaier algorithm.
@@ -195,6 +225,13 @@ port_float32_neumaier_sum(
 );
 
 /**
+ * @brief Sum single-width floating-point numbers using the Neumaier algorithm.
+ *
+ * @return Sum and a compensation value.
+ */
+#define port_floats_neumaier_sum    port_float32_neumaier_sum
+
+/**
  * @brief Sum 64-bit floating-point numbers using the Neumaier algorithm.
  *
  * @return Sum and a compensation value.
@@ -205,14 +242,12 @@ port_float64_neumaier_sum(
         size_t num_values ///< [in] Size of the array of values.
 );
 
-#define port_float_single_neumaier_sum port_float32_neumaier_sum
-#define port_float_double_neumaier_sum port_float64_neumaier_sum
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_float_neumaier_sum port_float32_neumaier_sum
-#else
-#  define port_float_neumaier_sum port_float64_neumaier_sum
-#endif
+/**
+ * @brief Sum double-width floating-point numbers using the Neumaier algorithm.
+ *
+ * @return Sum and a compensation value.
+ */
+#define port_floatd_neumaier_sum    port_float64_neumaier_sum
 
 /**
  * @brief Sum 32-bit floating-point numbers using the Shewchuk algorithm (with at most 16 partial sums).
@@ -226,6 +261,13 @@ port_float32_shewchuk16_sum(
 );
 
 /**
+ * @brief Sum single-width floating-point numbers using the Shewchuk algorithm (with at most 16 partial sums).
+ *
+ * @return Sum of input values.
+ */
+#define port_floats_shewchuk16_sum  port_float32_shewchuk16_sum
+
+/**
  * @brief Sum 64-bit floating-point numbers using the Shewchuk algorithm (with at most 16 partial sums).
  *
  * @return Sum of input values.
@@ -236,14 +278,12 @@ port_float64_shewchuk16_sum(
         size_t num_values ///< [in] Size of the array of values.
 );
 
-#define port_float_single_shewchuk16_sum port_float32_shewchuk16_sum
-#define port_float_double_shewchuk16_sum port_float64_shewchuk16_sum
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_float_shewchuk16_sum port_float32_shewchuk16_sum
-#else
-#  define port_float_shewchuk16_sum port_float64_shewchuk16_sum
-#endif
+/**
+ * @brief Sum double-width floating-point numbers using the Shewchuk algorithm (with at most 16 partial sums).
+ *
+ * @return Sum of input values.
+ */
+#define port_floatd_shewchuk16_sum  port_float64_shewchuk16_sum
 
 ///////////////////////////////////////////////////////////////////////////////
 // Multiplication algorithms
@@ -261,6 +301,13 @@ port_float32_two_product(
 );
 
 /**
+ * @brief Multiply two single-width floating-point numbers with a round-off error.
+ *
+ * @return Product and a round-off error.
+ */
+#define port_floats_two_product port_float32_two_product
+
+/**
  * @brief Multiply two 64-bit floating-point numbers with a round-off error.
  *
  * @return Product and a round-off error.
@@ -271,14 +318,12 @@ port_float64_two_product(
         port_float64_t b  ///< [in] Second value.
 );
 
-#define port_float_single_two_product port_float32_two_product
-#define port_float_double_two_product port_float64_two_product
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_float_two_product port_float32_two_product
-#else
-#  define port_float_two_product port_float64_two_product
-#endif
+/**
+ * @brief Multiply two double-width floating-point numbers with a round-off error.
+ *
+ * @return Product and a round-off error.
+ */
+#define port_floatd_two_product port_float64_two_product
 
 /**
  * @brief Multiply 32-bit floating-point numbers.
@@ -292,6 +337,13 @@ port_float32_multi_product(
 );
 
 /**
+ * @brief Multiply single-width floating-point numbers.
+ *
+ * @return Product and a round-off error.
+ */
+#define port_floats_multi_product   port_float32_multi_product
+
+/**
  * @brief Multiply 64-bit floating-point numbers.
  *
  * @return Product and a round-off error.
@@ -302,180 +354,272 @@ port_float64_multi_product(
         size_t num_values ///< [in] Size of the array of values.
 );
 
-#define port_float_single_multi_product port_float32_multi_product
-#define port_float_double_multi_product port_float64_multi_product
-
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_float_multi_product port_float32_multi_product
-#else
-#  define port_float_multi_product port_float64_multi_product
-#endif
+/**
+ * @brief Multiply double-width floating-point numbers.
+ *
+ * @return Product and a round-off error.
+ */
+#define port_floatd_multi_product   port_float64_multi_product
 
 ///////////////////////////////////////////////////////////////////////////////
 // float16 -> float32 conversions
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Convert half precision floating-point number to single precision.
+ * @brief Convert 16-bit floating-point number to 32-bit.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Single precision float.
+ * @return 32-bit float.
  */
 port_float32_t
 port_convert_float16_to_float32(
-        port_uint16_t value ///< [in] Half precision float value.
+        port_uint16_t value ///< [in] 16-bit float value.
 );
 
 /**
- * @brief Convert 2-vector of half precision floating-point numbers to single precision.
+ * @brief Convert half-width floating-point number to single-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Single precision float 2-vector.
+ * @return Single-width float.
+ */
+#define port_convert_floath_to_floats port_convert_float16_to_float32
+
+/**
+ * @brief Convert 2-vector of 16-bit floating-point numbers to 32-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 32-bit float 2-vector.
  */
 port_float32_v2_t
 port_convert_float16_to_float32_v2(
-        port_uint16_v2_t value ///< [in] Half precision float vector.
+        port_uint16_v2_t value ///< [in] 16-bit float vector.
 );
 
 /**
- * @brief Convert 3-vector of half precision floating-point numbers to single precision.
+ * @brief Convert 2-vector of half-width floating-point numbers to single-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Single precision float 3-vector.
+ * @return Single-width float 2-vector.
+ */
+#define port_convert_floath_to_floats_v2 port_convert_float16_to_float32_v2
+
+/**
+ * @brief Convert 3-vector of 16-bit floating-point numbers to 32-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 32-bit float 3-vector.
  */
 port_float32_v3_t
 port_convert_float16_to_float32_v3(
-        port_uint16_v3_t value ///< [in] Half precision float vector.
+        port_uint16_v3_t value ///< [in] 16-bit float vector.
 );
 
 /**
- * @brief Convert 4-vector of half precision floating-point numbers to single precision.
+ * @brief Convert 3-vector of half-width floating-point numbers to single-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Single precision float 4-vector.
+ * @return Single-width float 3-vector.
+ */
+#define port_convert_floath_to_floats_v3 port_convert_float16_to_float32_v3
+
+/**
+ * @brief Convert 4-vector of 16-bit floating-point numbers to 32-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 32-bit float 4-vector.
  */
 port_float32_v4_t
 port_convert_float16_to_float32_v4(
-        port_uint16_v4_t value ///< [in] Half precision float vector.
+        port_uint16_v4_t value ///< [in] 16-bit float vector.
 );
 
 /**
- * @brief Convert 8-vector of half precision floating-point numbers to single precision.
+ * @brief Convert 4-vector of half-width floating-point numbers to single-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Single precision float 8-vector.
+ * @return Single-width float 4-vector.
+ */
+#define port_convert_floath_to_floats_v4 port_convert_float16_to_float32_v4
+
+/**
+ * @brief Convert 8-vector of 16-bit floating-point numbers to 32-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 32-bit float 8-vector.
  */
 port_float32_v8_t
 port_convert_float16_to_float32_v8(
-        port_uint16_v8_t value ///< [in] Half precision float vector.
+        port_uint16_v8_t value ///< [in] 16-bit float vector.
 );
 
 /**
- * @brief Convert 16-vector of half precision floating-point numbers to single precision.
+ * @brief Convert 8-vector of half-width floating-point numbers to single-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Single precision float 16-vector.
+ * @return Single-width float 8-vector.
+ */
+#define port_convert_floath_to_floats_v8 port_convert_float16_to_float32_v8
+
+/**
+ * @brief Convert 16-vector of 16-bit floating-point numbers to 32-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 32-bit float 16-vector.
  */
 port_float32_v16_t
 port_convert_float16_to_float32_v16(
-        port_uint16_v16_t value ///< [in] Half precision float vector.
+        port_uint16_v16_t value ///< [in] 16-bit float vector.
 );
 
-#define port_convert_float_half_to_float_single port_convert_float16_to_float32
-#define port_convert_float_half_to_float_single_v2 port_convert_float16_to_float32_v2
-#define port_convert_float_half_to_float_single_v3 port_convert_float16_to_float32_v3
-#define port_convert_float_half_to_float_single_v4 port_convert_float16_to_float32_v4
-#define port_convert_float_half_to_float_single_v8 port_convert_float16_to_float32_v8
-#define port_convert_float_half_to_float_single_v16 port_convert_float16_to_float32_v16
+/**
+ * @brief Convert 16-vector of half-width floating-point numbers to single-width.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return Single-width float 16-vector.
+ */
+#define port_convert_floath_to_floats_v16 port_convert_float16_to_float32_v16
 
 ///////////////////////////////////////////////////////////////////////////////
 // float32 -> float16 conversions
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Convert single precision floating-point number to half precision.
+ * @brief Convert 32-bit floating-point number to 16-bit.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Half precision float.
+ * @return 16-bit float.
  */
 port_uint16_t
 port_convert_float32_to_float16(
-        port_float32_t value ///< [in] Single precision float value.
+        port_float32_t value ///< [in] 32-bit float value.
 );
 
 /**
- * @brief Convert 2-vector of single precision floating-point numbers to half precision.
+ * @brief Convert single-width floating-point number to half-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Half precision float 2-vector.
+ * @return Half-width float.
+ */
+#define port_convert_floats_to_floath port_convert_float32_to_float16
+
+/**
+ * @brief Convert 2-vector of 32-bit floating-point numbers to 16-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 16-bit float 2-vector.
  */
 port_uint16_v2_t
 port_convert_float32_to_float16_v2(
-        port_float32_v2_t value ///< [in] Single precision float vector.
+        port_float32_v2_t value ///< [in] 32-bit float vector.
 );
 
 /**
- * @brief Convert 3-vector of single precision floating-point numbers to half precision.
+ * @brief Convert 2-vector of single-width floating-point numbers to half-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Half precision float 3-vector.
+ * @return Half-width float 2-vector.
+ */
+#define port_convert_floats_to_floath_v2 port_convert_float32_to_float16_v2
+
+/**
+ * @brief Convert 3-vector of 32-bit floating-point numbers to 16-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 16-bit float 3-vector.
  */
 port_uint16_v3_t
 port_convert_float32_to_float16_v3(
-        port_float32_v3_t value ///< [in] Single precision float vector.
+        port_float32_v3_t value ///< [in] 32-bit float vector.
 );
 
 /**
- * @brief Convert 4-vector of single precision floating-point numbers to half precision.
+ * @brief Convert 3-vector of single-width floating-point numbers to half-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Half precision float 4-vector.
+ * @return Half-width float 3-vector.
+ */
+#define port_convert_floats_to_floath_v3 port_convert_float32_to_float16_v3
+
+/**
+ * @brief Convert 4-vector of 32-bit floating-point numbers to 16-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 16-bit float 4-vector.
  */
 port_uint16_v4_t
 port_convert_float32_to_float16_v4(
-        port_float32_v4_t value ///< [in] Single precision float vector.
+        port_float32_v4_t value ///< [in] 32-bit float vector.
 );
 
 /**
- * @brief Convert 8-vector of single precision floating-point numbers to half precision.
+ * @brief Convert 4-vector of single-width floating-point numbers to half-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Half precision float 8-vector.
+ * @return Half-width float 4-vector.
+ */
+#define port_convert_floats_to_floath_v4 port_convert_float32_to_float16_v4
+
+/**
+ * @brief Convert 8-vector of 32-bit floating-point numbers to 16-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 16-bit float 8-vector.
  */
 port_uint16_v8_t
 port_convert_float32_to_float16_v8(
-        port_float32_v8_t value ///< [in] Single precision float vector.
+        port_float32_v8_t value ///< [in] 32-bit float vector.
 );
 
 /**
- * @brief Convert 16-vector of single precision floating-point numbers to half precision.
+ * @brief Convert 8-vector of single-width floating-point numbers to half-width.
  *
  * Format of float16 is IEEE 754.
  *
- * @return Half precision float 16-vector.
+ * @return Half-width float 8-vector.
+ */
+#define port_convert_floats_to_floath_v8 port_convert_float32_to_float16_v8
+
+/**
+ * @brief Convert 16-vector of 32-bit floating-point numbers to 16-bit.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return 16-bit float 16-vector.
  */
 port_uint16_v16_t
 port_convert_float32_to_float16_v16(
-        port_float32_v16_t value ///< [in] Single precision float vector.
+        port_float32_v16_t value ///< [in] 32-bit float vector.
 );
 
-#define port_convert_float_single_to_float_half port_convert_float32_to_float16
-#define port_convert_float_single_to_float_half_v2 port_convert_float32_to_float16_v2
-#define port_convert_float_single_to_float_half_v3 port_convert_float32_to_float16_v3
-#define port_convert_float_single_to_float_half_v4 port_convert_float32_to_float16_v4
-#define port_convert_float_single_to_float_half_v8 port_convert_float32_to_float16_v8
-#define port_convert_float_single_to_float_half_v16 port_convert_float32_to_float16_v16
+/**
+ * @brief Convert 16-vector of single-width floating-point numbers to half-width.
+ *
+ * Format of float16 is IEEE 754.
+ *
+ * @return Half-width float 16-vector.
+ */
+#define port_convert_floats_to_floath_v16 port_convert_float32_to_float16_v16
 
 #endif // _PORT_FLOAT_FUN_H_
 

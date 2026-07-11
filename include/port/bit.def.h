@@ -34,33 +34,67 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Number of bits in byte.
+ * @brief Number of bits in a byte.
  */
 #ifdef __OPENCL_C_VERSION__
-#  define PORT_CHAR_BIT CHAR_BIT // 8
+#  define PORT_CHAR_BIT CHAR_BIT
 #else
 #  define PORT_CHAR_BIT CL_CHAR_BIT
 #endif
 
 /**
- * @brief Total number of bits in a type.
+ * @brief Total number of bits used by a type.
  */
-#define PORT_NUM_BITS(type) (sizeof(type) * PORT_CHAR_BIT)
+#define PORT_SIZEOF_BITS(type)  (sizeof(type) * PORT_CHAR_BIT)
+
+/**
+ * @brief Binary logarithm of size of a quarter-width type.
+ */
+#define PORT_SIZEOF_LOG2__Q  0
+/**
+ * @brief Binary logarithm of size of a half-width type.
+ */
+#define PORT_SIZEOF_LOG2__H  1
+/**
+ * @brief Binary logarithm of size of a single-width type.
+ */
+#define PORT_SIZEOF_LOG2__S  2
+/**
+ * @brief Binary logarithm of size of a double-width type.
+ */
+#define PORT_SIZEOF_LOG2__D  3
+
+/**
+ * @brief Binary logarithm of size of a maximum-width type.
+ */
+#define PORT_SIZEOF_LOG2__W  PORT_SIZEOF_LOG2__D
+
+/**
+ * @brief Minimum number of bits required to store log2(sizeof(type)).
+ */
+#define PORT_SIZEOF_LOG2_NUM_BITS  2
+
+/**
+ * @brief Calculate size of a type from log2(size).
+ */
+#define PORT_SIZEOF_EXP2(sizeof_log2)   ((size_t)1 << (sizeof_log2))
 
 ///////////////////////////////////////////////////////////////////////////////
 // Operations on integers
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Round an integer up to the nearest number divisible by (1 << unit_bits).
+ * @brief Round an unsigned integer up to the smallest number divisible by (1 << unit_bits).
  */
-#define PORT_INT_ROUND(type, value, unit_bits) \
+#define PORT_UINT_ROUND_UP(type, value, unit_bits) \
     (((type)(value) + ((type)1 << (unit_bits)) - 1) & ~(((type)1 << (unit_bits)) - 1))
 
 /**
- * @brief Calculate PORT_INT_ROUND(value, unit_bits) / (1 << unit_bits).
+ * @brief Calculate minimum number of units greater than or equal to a value.
+ *
+ * This expression is equal to `PORT_UINT_ROUND_UP(value, unit_bits) / (1 << unit_bits)`.
  */
-#define PORT_INT_UNITS(type, value, unit_bits) \
+#define PORT_UINT_NUM_UNITS(type, value, unit_bits) \
     (((type)(value) + ((type)1 << (unit_bits)) - 1) >> (unit_bits))
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,7 +106,7 @@
 #define PORT_BIT32(n) ((port_uint32_t)1 << (n)) ///< 32-bit mask with nth bit set.
 #define PORT_BIT64(n) ((port_uint64_t)1 << (n)) ///< 64-bit mask with nth bit set.
 
-#define PORT_ZMASK8(n)  (PORT_BIT8(n) - 1)   ///< 8-bit mask with 0<=n<8 lower bits set.
+#define PORT_ZMASK8(n)  (PORT_BIT8(n) - 1)  ///< 8-bit mask with 0<=n<8 lower bits set.
 #define PORT_ZMASK16(n) (PORT_BIT16(n) - 1) ///< 16-bit mask with 0<=n<16 lower bits set.
 #define PORT_ZMASK32(n) (PORT_BIT32(n) - 1) ///< 32-bit mask with 0<=n<32 lower bits set.
 #define PORT_ZMASK64(n) (PORT_BIT64(n) - 1) ///< 64-bit mask with 0<=n<64 lower bits set.
@@ -82,43 +116,29 @@
 #define PORT_NZMASK32(n) ((port_uint32_t)-1 >> (32 - (n))) ///< 32-bit mask with 0<n<=32 lower bits set.
 #define PORT_NZMASK64(n) ((port_uint64_t)-1 >> (64 - (n))) ///< 64-bit mask with 0<n<=64 lower bits set.
 
-#define PORT_QUARTER_BIT(n) PORT_BIT8(n) ///< Quarter size mask with nth bit set.
-#define PORT_HALF_BIT(n) PORT_BIT16(n)   ///< Half size mask with nth bit set.
-#define PORT_SINGLE_BIT(n) PORT_BIT32(n) ///< Single size mask with nth bit set.
-#define PORT_DOUBLE_BIT(n) PORT_BIT64(n) ///< Double size mask with nth bit set.
+#define PORT_BITQ(n) PORT_BIT8(n)  ///< Quarter-width mask with nth bit set.
+#define PORT_BITH(n) PORT_BIT16(n) ///< Half-width mask with nth bit set.
+#define PORT_BITS(n) PORT_BIT32(n) ///< Single-width mask with nth bit set.
+#define PORT_BITD(n) PORT_BIT64(n) ///< Double-width mask with nth bit set.
 
-#define PORT_QUARTER_ZMASK(n) PORT_ZMASK8(n) ///< Quarter size mask with 0<=n<8 lower bits set.
-#define PORT_HALF_ZMASK(n) PORT_ZMASK16(n)   ///< Half size mask with 0<=n<16 lower bits set.
-#define PORT_SINGLE_ZMASK(n) PORT_ZMASK32(n) ///< Single size mask with 0<=n<32 lower bits set.
-#define PORT_DOUBLE_ZMASK(n) PORT_ZMASK64(n) ///< Double size mask with 0<=n<64 lower bits set.
+#define PORT_ZMASKQ(n) PORT_ZMASK8(n)  ///< Quarter-width mask with 0<=n<8 lower bits set.
+#define PORT_ZMASKH(n) PORT_ZMASK16(n) ///< Half-width mask with 0<=n<16 lower bits set.
+#define PORT_ZMASKS(n) PORT_ZMASK32(n) ///< Single-width mask with 0<=n<32 lower bits set.
+#define PORT_ZMASKD(n) PORT_ZMASK64(n) ///< Double-width mask with 0<=n<64 lower bits set.
 
-#define PORT_QUARTER_NZMASK(n) PORT_NZMASK8(n) ///< Quarter size mask with 0<n<=8 lower bits set.
-#define PORT_HALF_NZMASK(n) PORT_NZMASK16(n)   ///< Half size mask with 0<n<=16 lower bits set.
-#define PORT_SINGLE_NZMASK(n) PORT_NZMASK32(n) ///< Single size mask with 0<n<=32 lower bits set.
-#define PORT_DOUBLE_NZMASK(n) PORT_NZMASK64(n) ///< Double size mask with 0<n<=64 lower bits set.
-
-#ifndef PORT_FEATURE_DEFAULT_INTEGER_64
-
-#define PORT_INT_BIT(n) PORT_BIT32(n)       ///< Default size mask with nth bit set.
-#define PORT_INT_ZMASK(n) PORT_ZMASK32(n)   ///< Default size mask with 0<=n<32 lower bits set.
-#define PORT_INT_NZMASK(n) PORT_NZMASK32(n) ///< Default size mask with 0<n<=32 lower bits set.
-
-#else
-
-#define PORT_INT_BIT(n) PORT_BIT64(n)       ///< Default size mask with nth bit set.
-#define PORT_INT_ZMASK(n) PORT_ZMASK64(n)   ///< Default size mask with 0<=n<64 lower bits set.
-#define PORT_INT_NZMASK(n) PORT_NZMASK64(n) ///< Default size mask with 0<n<=64 lower bits set.
-
-#endif
+#define PORT_NZMASKQ(n) PORT_NZMASK8(n)  ///< Quarter-width mask with 0<n<=8 lower bits set.
+#define PORT_NZMASKH(n) PORT_NZMASK16(n) ///< Half-width mask with 0<n<=16 lower bits set.
+#define PORT_NZMASKS(n) PORT_NZMASK32(n) ///< Single-width mask with 0<n<=32 lower bits set.
+#define PORT_NZMASKD(n) PORT_NZMASK64(n) ///< Double-width mask with 0<n<=64 lower bits set.
 
 ///////////////////////////////////////////////////////////////////////////////
 // Operations on bits
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Construct a byte from separate bits.
+ * @brief Construct an octet from separate bits.
  */
-#define PORT_BYTE(msb, b6, b5, b4, b3, b2, b1, lsb) \
+#define PORT_OCTET(msb, b6, b5, b4, b3, b2, b1, lsb) \
     (((port_uint8_t)!!(lsb)) |      \
      ((port_uint8_t)!!(b1) << 1) |  \
      ((port_uint8_t)!!(b2) << 2) |  \
@@ -133,24 +153,24 @@
  *
  * lsval must be no longer than 'shift' bits.
  */
-#define PORT_CONCAT_BITS(type, msval, shift, lsval) \
+#define PORT_BIT_CONCAT(type, msval, shift, lsval) \
     (((type)(msval) << (shift)) | (type)(lsval))
 
 /**
  * @brief Extract most significant bits.
  */
-#define PORT_EXTRACT_MSBITS(type, value, shift) \
+#define PORT_BIT_EXTRACT_MS(type, value, shift) \
     ((type)((value) >> (shift)))
 /**
  * @brief Extract least significant bits.
  */
-#define PORT_EXTRACT_LSBITS(type, value, length) \
+#define PORT_BIT_EXTRACT_LS(type, value, length) \
     ((type)(value) & (((type)1 << (length)) - 1))
 /**
  * @brief Extract bits.
  */
-#define PORT_EXTRACT_BITS(type, value, shift, length) \
-    PORT_EXTRACT_LSBITS(type, PORT_EXTRACT_MSBITS(type, (value), (shift)), (length))
+#define PORT_BIT_EXTRACT(type, value, shift, length) \
+    PORT_BIT_EXTRACT_LS(type, PORT_BIT_EXTRACT_MS(type, (value), (shift)), (length))
 
 ///////////////////////////////////////////////////////////////////////////////
 // upsample()
@@ -166,6 +186,11 @@
 #endif
 
 /**
+ * @brief Make half-width unsigned integer from two quarter-width unsigned integers.
+ */
+#define PORT_UPSAMPLEQ(hi, lo)  PORT_UPSAMPLE8((hi), (lo))
+
+/**
  * @brief Make 32-bit unsigned integer from two 16-bit unsigned integers.
  */
 #if defined(__OPENCL_C_VERSION__)
@@ -173,6 +198,11 @@
 #else
 #  define PORT_UPSAMPLE16(hi, lo) (((port_uint32_t)(hi) << 16) | (port_uint32_t)(lo))
 #endif
+
+/**
+ * @brief Make single-width unsigned integer from two half-width unsigned integers.
+ */
+#define PORT_UPSAMPLEH(hi, lo)  PORT_UPSAMPLE16((hi), (lo))
 
 /**
  * @brief Make 64-bit unsigned integer from two 32-bit unsigned integers.
@@ -183,12 +213,17 @@
 #  define PORT_UPSAMPLE32(hi, lo) (((port_uint64_t)(hi) << 32) | (port_uint64_t)(lo))
 #endif
 
+/**
+ * @brief Make double-width unsigned integer from two single-width unsigned integers.
+ */
+#define PORT_UPSAMPLES(hi, lo)  PORT_UPSAMPLE32((hi), (lo))
+
 ///////////////////////////////////////////////////////////////////////////////
 // popcount()
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Number of 1-bits in 8-bit unsigned integer.
+ * @brief Number of set bits in 8-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_POPCOUNT8(n) popcount((port_uint8_t)(n))
@@ -222,7 +257,12 @@ PORT_POPCOUNT8(
 #endif
 
 /**
- * @brief Number of 1-bits in 16-bit unsigned integer.
+ * @brief Number of set bits in quarter-width unsigned integer.
+ */
+#define PORT_POPCOUNTQ(n)   PORT_POPCOUNT8((n))
+
+/**
+ * @brief Number of set bits in 16-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_POPCOUNT16(n) popcount((port_uint16_t)(n))
@@ -234,7 +274,12 @@ PORT_POPCOUNT8(
 #endif
 
 /**
- * @brief Number of 1-bits in 32-bit unsigned integer.
+ * @brief Number of set bits in half-width unsigned integer.
+ */
+#define PORT_POPCOUNTH(n)   PORT_POPCOUNT16((n))
+
+/**
+ * @brief Number of set bits in 32-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_POPCOUNT32(n) popcount((port_uint32_t)(n))
@@ -246,7 +291,12 @@ PORT_POPCOUNT8(
 #endif
 
 /**
- * @brief Number of 1-bits in 64-bit unsigned integer.
+ * @brief Number of set bits in single-width unsigned integer.
+ */
+#define PORT_POPCOUNTS(n)   PORT_POPCOUNT32((n))
+
+/**
+ * @brief Number of set bits in 64-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_POPCOUNT64(n) popcount((port_uint64_t)(n))
@@ -258,10 +308,15 @@ PORT_POPCOUNT8(
 #endif
 
 /**
- * @brief Number of 1-bits in unsigned integer.
+ * @brief Number of set bits in double-width unsigned integer.
+ */
+#define PORT_POPCOUNTD(n)   PORT_POPCOUNT64((n))
+
+/**
+ * @brief Number of set bits in unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
-#  define PORT_POPCOUNT(n) popcount(n)
+#  define PORT_POPCOUNT(n) popcount((n))
 #else
 #  define PORT_POPCOUNT(n) _Generic((n), port_uint8_t: PORT_POPCOUNT8(n),  \
                                         port_uint16_t: PORT_POPCOUNT16(n), \
@@ -274,7 +329,7 @@ PORT_POPCOUNT8(
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Number of leading 0-bits in 8-bit unsigned integer.
+ * @brief Number of leading zeros in 8-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_CLZ8(n) clz((port_uint8_t)(n))
@@ -295,7 +350,12 @@ PORT_CLZ8(
 #endif
 
 /**
- * @brief Number of leading 0-bits in 16-bit unsigned integer.
+ * @brief Number of leading zeros in quarter-width unsigned integer.
+ */
+#define PORT_CLZQ(n)    PORT_CLZ8((n))
+
+/**
+ * @brief Number of leading zeros in 16-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_CLZ16(n) clz((port_uint16_t)(n))
@@ -317,7 +377,12 @@ PORT_CLZ16(
 #endif
 
 /**
- * @brief Number of leading 0-bits in 32-bit unsigned integer.
+ * @brief Number of leading zeros in half-width unsigned integer.
+ */
+#define PORT_CLZH(n)    PORT_CLZ16((n))
+
+/**
+ * @brief Number of leading zeros in 32-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_CLZ32(n) clz((port_uint32_t)(n))
@@ -340,7 +405,12 @@ PORT_CLZ32(
 #endif
 
 /**
- * @brief Number of leading 0-bits in 64-bit unsigned integer.
+ * @brief Number of leading zeros in single-width unsigned integer.
+ */
+#define PORT_CLZS(n)    PORT_CLZ32((n))
+
+/**
+ * @brief Number of leading zeros in 64-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_CLZ64(n) clz((port_uint64_t)(n))
@@ -364,10 +434,15 @@ PORT_CLZ64(
 #endif
 
 /**
- * @brief Number of leading 0-bits in unsigned integer.
+ * @brief Number of leading zeros in double-width unsigned integer.
+ */
+#define PORT_CLZD(n)    PORT_CLZ64((n))
+
+/**
+ * @brief Number of leading zeros in unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
-#  define PORT_CLZ(n) clz(n)
+#  define PORT_CLZ(n) clz((n))
 #else
 #  define PORT_CLZ(n) _Generic((n), port_uint8_t: PORT_CLZ8(n),  \
                                    port_uint16_t: PORT_CLZ16(n), \
@@ -380,7 +455,7 @@ PORT_CLZ64(
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Number of trailing 0-bits in 8-bit unsigned integer.
+ * @brief Number of trailing zeros in 8-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_CTZ8(n) ctz((port_uint8_t)(n))
@@ -397,7 +472,12 @@ PORT_CTZ8(
 #endif
 
 /**
- * @brief Number of trailing 0-bits in 16-bit unsigned integer.
+ * @brief Number of trailing zeros in quarter-width unsigned integer.
+ */
+#define PORT_CTZQ(n)    PORT_CTZ8((n))
+
+/**
+ * @brief Number of trailing zeros in 16-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_CTZ16(n) ctz((port_uint16_t)(n))
@@ -414,7 +494,12 @@ PORT_CTZ16(
 #endif
 
 /**
- * @brief Number of trailing 0-bits in 32-bit unsigned integer.
+ * @brief Number of trailing zeros in half-width unsigned integer.
+ */
+#define PORT_CTZH(n)    PORT_CTZ16((n))
+
+/**
+ * @brief Number of trailing zeros in 32-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_CTZ32(n) ctz((port_uint32_t)(n))
@@ -431,7 +516,12 @@ PORT_CTZ32(
 #endif
 
 /**
- * @brief Number of trailing 0-bits in 64-bit unsigned integer.
+ * @brief Number of trailing zeros in single-width unsigned integer.
+ */
+#define PORT_CTZS(n)    PORT_CTZ32((n))
+
+/**
+ * @brief Number of trailing zeros in 64-bit unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
 #  define PORT_CTZ64(n) ctz((port_uint64_t)(n))
@@ -448,10 +538,15 @@ PORT_CTZ64(
 #endif
 
 /**
- * @brief Number of trailing 0-bits in unsigned integer.
+ * @brief Number of trailing zeros in double-width unsigned integer.
+ */
+#define PORT_CTZD(n)    PORT_CTZ64((n))
+
+/**
+ * @brief Number of trailing zeros in unsigned integer.
  */
 #if defined(__OPENCL_C_VERSION__)
-#  define PORT_CTZ(n) ctz(n)
+#  define PORT_CTZ(n) ctz((n))
 #else
 #  define PORT_CTZ(n) _Generic((n), port_uint8_t: PORT_CTZ8(n),  \
                                    port_uint16_t: PORT_CTZ16(n), \

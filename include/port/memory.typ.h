@@ -32,15 +32,15 @@
 /**
  * @brief Memory reference.
  */
-typedef port_sint_single_t port_memory_ref_t;
+typedef port_sints_t port_memory_ref_t;
 /**
  * @brief Memory reference (half size).
  */
-typedef port_sint_half_t port_memory_ref_half_t;
+typedef port_sinth_t port_memory_refh_t;
 /**
  * @brief Memory reference (quarter size).
  */
-typedef port_sint_quarter_t port_memory_ref_quarter_t;
+typedef port_sintq_t port_memory_refq_t;
 
 /**
  * @brief Memory reference format.

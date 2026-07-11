@@ -12,7 +12,7 @@
 #define NUM_SAMPLES (1 << 20)
 
 static
-port_float_v2_t random_uint32_fluctuation(port_uint32_t *initial)
+port_float32_v2_t random_uint32_fluctuation(port_uint32_t *initial)
 {
     port_uint32_t bins[NUM_BINS] = {0};
     port_uint32_t bins2[NUM_BINS][NUM_BINS] = {0};
@@ -27,24 +27,24 @@ port_float_v2_t random_uint32_fluctuation(port_uint32_t *initial)
     }
     *initial = curr;
 
-    port_float_t max_fluctuation = PORT_FLOAT(0.0);
+    port_float32_t max_fluctuation = PORT_FLOAT32(0.0);
     for (port_uint32_t i = 0; i < NUM_BINS; i++)
     {
-        port_float_t fluctuation = fabs(bins[i] / ((port_float_t)NUM_SAMPLES/NUM_BINS) - PORT_FLOAT(1.0));
+        port_float32_t fluctuation = fabs(bins[i] / ((port_float32_t)NUM_SAMPLES/NUM_BINS) - PORT_FLOAT32(1.0));
         if (fluctuation > max_fluctuation)
             max_fluctuation = fluctuation;
     }
 
-    port_float_t max_fluctuation2 = PORT_FLOAT(0.0);
+    port_float32_t max_fluctuation2 = PORT_FLOAT32(0.0);
     for (port_uint32_t i = 0; i < NUM_BINS; i++)
         for (port_uint32_t j = 0; j < NUM_BINS; j++)
         {
-            port_float_t fluctuation = fabs(bins2[i][j] / ((port_float_t)NUM_SAMPLES/NUM_BINS/NUM_BINS) - PORT_FLOAT(1.0));
+            port_float32_t fluctuation = fabs(bins2[i][j] / ((port_float32_t)NUM_SAMPLES/NUM_BINS/NUM_BINS) - PORT_FLOAT32(1.0));
             if (fluctuation > max_fluctuation2)
                 max_fluctuation2 = fluctuation;
         }
 
-    return (port_float_v2_t)PORT_V2(max_fluctuation, max_fluctuation2);
+    return (port_float32_v2_t)PORT_V2(max_fluctuation, max_fluctuation2);
 }
 
 TEST(port_random_next)
@@ -76,9 +76,9 @@ TEST(port_random_next)
 
     for (port_uint32_t i = 0; i < 100; i++)
     {
-        port_float_v2_t fluctuation = random_uint32_fluctuation(&rnd);
-        ASSERT_LT(fluctuation.s0, PORT_FLOAT(0.02), port_float_t, "%g");
-        ASSERT_LT(fluctuation.s1, PORT_FLOAT(0.15), port_float_t, "%g");
+        port_float32_v2_t fluctuation = random_uint32_fluctuation(&rnd);
+        ASSERT_LT(fluctuation.s0, PORT_FLOAT32(0.02), port_float32_t, "%g");
+        ASSERT_LT(fluctuation.s1, PORT_FLOAT32(0.15), port_float32_t, "%g");
     }
 }
 
@@ -124,129 +124,129 @@ TEST(port_random_float64_low_discr_seq)
     }
 }
 
-TEST(port_random_custom_distrib_uint_quarter)
+TEST(port_random_custom_distrib_uint8)
 {
     port_uint32_t rnd = 0;
-    port_uint_quarter_t cdf[] = {0, 1, 2, 3, 4, 5};
-    port_uint_quarter_t num_outcomes = (sizeof(cdf) / sizeof(cdf[0])) + 1;
+    port_uint8_t cdf[] = {0, 1, 2, 3, 4, 5};
+    port_uint8_t num_outcomes = (sizeof(cdf) / sizeof(cdf[0])) + 1;
 
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(1, NULL, &rnd), 0, port_uint_quarter_t, "%hhu");
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(1, cdf, &rnd), 0, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(1, NULL, &rnd), 0, port_uint8_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(1, cdf, &rnd), 0, port_uint8_t, "%hhu");
 
     rnd = 0;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 1, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 1, port_uint8_t, "%hhu");
 
     rnd = 1;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 2, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 2, port_uint8_t, "%hhu");
 
     rnd = 2;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 3, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 3, port_uint8_t, "%hhu");
 
     rnd = 3;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 4, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 4, port_uint8_t, "%hhu");
 
     rnd = 4;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 5, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 5, port_uint8_t, "%hhu");
 
     rnd = 5;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 6, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 6, port_uint8_t, "%hhu");
 
     rnd = 6;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 6, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 6, port_uint8_t, "%hhu");
 
     rnd = 7;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 6, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 6, port_uint8_t, "%hhu");
 
     cdf[3] = 2;
 
     rnd = 1;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 2, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 2, port_uint8_t, "%hhu");
 
     rnd = 2;
-    ASSERT_EQ(port_random_custom_distrib_uint_quarter(num_outcomes, cdf, &rnd), 4, port_uint_quarter_t, "%hhu");
+    ASSERT_EQ(port_random_custom_distrib_uint8(num_outcomes, cdf, &rnd), 4, port_uint8_t, "%hhu");
 }
 
-TEST(port_random_custom_distrib_uint_half)
+TEST(port_random_custom_distrib_uint16)
 {
     port_uint32_t rnd = 0;
-    port_uint_half_t cdf[] = {0, 1, 2, 3, 4, 5};
-    port_uint_half_t num_outcomes = (sizeof(cdf) / sizeof(cdf[0])) + 1;
+    port_uint16_t cdf[] = {0, 1, 2, 3, 4, 5};
+    port_uint16_t num_outcomes = (sizeof(cdf) / sizeof(cdf[0])) + 1;
 
-    ASSERT_EQ(port_random_custom_distrib_uint_half(1, NULL, &rnd), 0, port_uint_half_t, "%hu");
-    ASSERT_EQ(port_random_custom_distrib_uint_half(1, cdf, &rnd), 0, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(1, NULL, &rnd), 0, port_uint16_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(1, cdf, &rnd), 0, port_uint16_t, "%hu");
 
     rnd = 0;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 1, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 1, port_uint16_t, "%hu");
 
     rnd = 1;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 2, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 2, port_uint16_t, "%hu");
 
     rnd = 2;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 3, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 3, port_uint16_t, "%hu");
 
     rnd = 3;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 4, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 4, port_uint16_t, "%hu");
 
     rnd = 4;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 5, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 5, port_uint16_t, "%hu");
 
     rnd = 5;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 6, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 6, port_uint16_t, "%hu");
 
     rnd = 6;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 6, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 6, port_uint16_t, "%hu");
 
     rnd = 7;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 6, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 6, port_uint16_t, "%hu");
 
     cdf[3] = 2;
 
     rnd = 1;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 2, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 2, port_uint16_t, "%hu");
 
     rnd = 2;
-    ASSERT_EQ(port_random_custom_distrib_uint_half(num_outcomes, cdf, &rnd), 4, port_uint_half_t, "%hu");
+    ASSERT_EQ(port_random_custom_distrib_uint16(num_outcomes, cdf, &rnd), 4, port_uint16_t, "%hu");
 }
 
-TEST(port_random_custom_distrib_uint_single)
+TEST(port_random_custom_distrib_uint32)
 {
     port_uint32_t rnd = 0;
-    port_uint_single_t cdf[] = {0, 1, 2, 3, 4, 5};
-    port_uint_single_t num_outcomes = (sizeof(cdf) / sizeof(cdf[0])) + 1;
+    port_uint32_t cdf[] = {0, 1, 2, 3, 4, 5};
+    port_uint32_t num_outcomes = (sizeof(cdf) / sizeof(cdf[0])) + 1;
 
-    ASSERT_EQ(port_random_custom_distrib_uint_single(1, NULL, &rnd), 0, port_uint_single_t, "%u");
-    ASSERT_EQ(port_random_custom_distrib_uint_single(1, cdf, &rnd), 0, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(1, NULL, &rnd), 0, port_uint32_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(1, cdf, &rnd), 0, port_uint32_t, "%u");
 
     rnd = 0;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 1, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 1, port_uint32_t, "%u");
 
     rnd = 1;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 2, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 2, port_uint32_t, "%u");
 
     rnd = 2;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 3, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 3, port_uint32_t, "%u");
 
     rnd = 3;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 4, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 4, port_uint32_t, "%u");
 
     rnd = 4;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 5, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 5, port_uint32_t, "%u");
 
     rnd = 5;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 6, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 6, port_uint32_t, "%u");
 
     rnd = 6;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 6, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 6, port_uint32_t, "%u");
 
     rnd = 7;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 6, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 6, port_uint32_t, "%u");
 
     cdf[3] = 2;
 
     rnd = 1;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 2, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 2, port_uint32_t, "%u");
 
     rnd = 2;
-    ASSERT_EQ(port_random_custom_distrib_uint_single(num_outcomes, cdf, &rnd), 4, port_uint_single_t, "%u");
+    ASSERT_EQ(port_random_custom_distrib_uint32(num_outcomes, cdf, &rnd), 4, port_uint32_t, "%u");
 }
 

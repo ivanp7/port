@@ -30,9 +30,9 @@ import port.types as p
 ### Memory reference ###
 ########################
 
-port_memory_ref_t = p.port_sint_single_t
-port_memory_ref_half_t = p.port_sint_half_t
-port_memory_ref_quarter_t = p.port_sint_quarter_t
+port_memory_refq_t = p.port_sintq_t
+port_memory_refh_t = p.port_sinth_t
+port_memory_ref_t = p.port_sints_t
 
 def reference(offset, table_index=None, num_tidx_bits=None, /):
     """Construct a memory reference value.
@@ -63,25 +63,25 @@ def reference(offset, table_index=None, num_tidx_bits=None, /):
 class port_memory_unit_t(c.Union):
     """Standard memory unit.
     """
-    _fields_ = [('as_uint_single', p.port_uint_single_t),
-                ('as_uint_half', p.port_uint_half_t * 2),
-                ('as_uint_half_v2', p.port_uint_half_v2_t),
-                ('as_uint_quarter', p.port_uint_quarter_t * 4),
-                ('as_uint_quarter_v2', p.port_uint_quarter_v2_t * 2),
-                ('as_uint_quarter_v4', p.port_uint_quarter_v4_t),
-                ('as_sint_single', p.port_sint_single_t),
-                ('as_sint_half', p.port_sint_half_t * 2),
-                ('as_sint_half_v2', p.port_sint_half_v2_t),
-                ('as_sint_quarter', p.port_sint_quarter_t * 4),
-                ('as_sint_quarter_v2', p.port_sint_quarter_v2_t * 2),
-                ('as_sint_quarter_v4', p.port_sint_quarter_v4_t),
-                ('as_float_single', p.port_float_single_t)]
+    _fields_ = [('as_uints', p.port_uints_t),
+                ('as_uinth', p.port_uinth_t * 2),
+                ('as_uinth_v2', p.port_uinth_v2_t),
+                ('as_uintq', p.port_uintq_t * 4),
+                ('as_uintq_v2', p.port_uintq_v2_t * 2),
+                ('as_uintq_v4', p.port_uintq_v4_t),
+                ('as_sints', p.port_sints_t),
+                ('as_sinth', p.port_sinth_t * 2),
+                ('as_sinth_v2', p.port_sinth_v2_t),
+                ('as_sintq', p.port_sintq_t * 4),
+                ('as_sintq_v2', p.port_sintq_v2_t * 2),
+                ('as_sintq_v4', p.port_sintq_v4_t),
+                ('as_floats', p.port_floats_t)]
 
-class port_memory_unit_double_t(c.Union):
+class port_memory_unitd_t(c.Union):
     """Type punning union for double size types.
     """
     _fields_ = [('as_unit', port_memory_unit_t * 2),
-                ('as_uint_double', p.port_uint_double_t),
-                ('as_sint_double', p.port_sint_double_t),
-                ('as_float_double', p.port_float_double_t)]
+                ('as_uintd', p.port_uintd_t),
+                ('as_sintd', p.port_sintd_t),
+                ('as_floatd', p.port_floatd_t)]
 

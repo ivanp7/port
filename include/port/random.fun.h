@@ -29,6 +29,10 @@
 #include "port/random.typ.h"
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Pseudorandom number generator
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * @brief Generate next pseudorandom 32-bit unsigned integer.
  *
@@ -38,6 +42,10 @@ port_random_t
 port_random_next(
         port_random_t prev ///< [in] Previous pseudorandom unsigned integer.
 );
+
+///////////////////////////////////////////////////////////////////////////////
+// Pseudorandom numbers
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * @brief Generate pseudorandom 32-bit unsigned integer.
@@ -50,6 +58,13 @@ port_random_uint32(
 );
 
 /**
+ * @brief Generate pseudorandom single-width unsigned integer.
+ *
+ * @return Single-width unsigned integer.
+ */
+#define port_random_uints   port_random_uint32
+
+/**
  * @brief Generate pseudorandom 64-bit unsigned integer.
  *
  * @return 64-bit unsigned integer.
@@ -59,14 +74,15 @@ port_random_uint64(
         port_random_t *rnd ///< [in,out] Pseudorandom number generator state.
 );
 
-#ifndef PORT_FEATURE_DEFAULT_INTEGER_64
-#  define port_random_uint port_random_uint32
-#else
-#  define port_random_uint port_random_uint64
-#endif
+/**
+ * @brief Generate pseudorandom double-width unsigned integer.
+ *
+ * @return Double-width unsigned integer.
+ */
+#define port_random_uintd   port_random_uint64
 
 /**
- * @brief Generate 32-bit floating-point, uniformly distributed number.
+ * @brief Generate pseudorandom 32-bit floating-point number.
  *
  * @return 32-bit floating-point number in [0; 1).
  */
@@ -76,7 +92,14 @@ port_random_float32(
 );
 
 /**
- * @brief Generate 64-bit floating-point, uniformly distributed number.
+ * @brief Generate pseudorandom single-width floating-point number.
+ *
+ * @return Single-width floating-point number in [0; 1).
+ */
+#define port_random_floats  port_random_float32
+
+/**
+ * @brief Generate pseudorandom 64-bit floating-point number.
  *
  * @return 64-bit floating-point number in [0; 1).
  */
@@ -85,14 +108,19 @@ port_random_float64(
         port_random_t *rnd ///< [in,out] Pseudorandom number generator state.
 );
 
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_random_float port_random_float32
-#else
-#  define port_random_float port_random_float64
-#endif
+/**
+ * @brief Generate pseudorandom double-width floating-point number.
+ *
+ * @return Double-width floating-point number in [0; 1).
+ */
+#define port_random_floatd  port_random_float64
+
+///////////////////////////////////////////////////////////////////////////////
+// Low-discrepancy sequences
+///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Compute an 32-bit floating-point element of a low-discrepancy sequence.
+ * @brief Compute a 32-bit floating-point element of a low-discrepancy sequence.
  *
  * The irrational number must be in (0; 1).
  *
@@ -105,7 +133,16 @@ port_random_float32_low_discr_seq(
 );
 
 /**
- * @brief Compute an 64-bit floating-point element of a low-discrepancy sequence.
+ * @brief Compute a single-width floating-point element of a low-discrepancy sequence.
+ *
+ * The irrational number must be in (0; 1).
+ *
+ * @return Single-width floating-point number in [0; 1).
+ */
+#define port_random_floats_low_discr_seq    port_random_float32_low_discr_seq
+
+/**
+ * @brief Compute a 64-bit floating-point element of a low-discrepancy sequence.
  *
  * The irrational number must be in (0; 1).
  *
@@ -117,67 +154,95 @@ port_random_float64_low_discr_seq(
         port_float64_t irrational ///< [in] An irrational number defining the sequence.
 );
 
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-#  define port_random_float_low_discr_seq port_random_float32_low_discr_seq
-#else
-#  define port_random_float_low_discr_seq port_random_float64_low_discr_seq
-#endif
+/**
+ * @brief Compute a double-width floating-point element of a low-discrepancy sequence.
+ *
+ * The irrational number must be in (0; 1).
+ *
+ * @return Double-width floating-point number in [0; 1).
+ */
+#define port_random_floatd_low_discr_seq    port_random_float64_low_discr_seq
+
+///////////////////////////////////////////////////////////////////////////////
+// Pseudorandom integers with custom distribution
+///////////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Pick an outcome randomly with custom distribution (quarter-unit CDF values).
- *
- * Each CDF value occupies a unit quarter (8 bits), so there are 4 values per unit.
+ * @brief Pick an outcome with custom distribution (8-bit CDF values).
  *
  * Number of CDF values must be less than number of outcomes by 1.
  * Pointer to CDF array may be set to NULL, which enables the uniform distribution.
  *
- * CDF must be a monotonic non-decreasing function.
+ * CDF must be a monotonic (non-decreasing) sequence.
  * The chosen index is the first one which satisfies the following condition:
  * cdf[index] > random_number, where 0 <= index < num_outcomes - 1.
  * If cdf[index] <= random_number for all such index values, then num_outcomes - 1 is returned.
  *
  * @warning num_outcomes cannot be 0.
  *
- * @return Index of a randomly chosen outcome.
+ * @return Index of a chosen outcome.
  */
-port_uint_quarter_t
-port_random_custom_distrib_uint_quarter(
-        port_uint_quarter_t num_outcomes, ///< [in] Number of outcomes.
-        const port_uint_quarter_t cdf[],  ///< [in] Cumulative distribution function.
+port_uint8_t
+port_random_custom_distrib_uint8(
+        port_uint8_t num_outcomes, ///< [in] Number of outcomes.
+        const port_uint8_t cdf[],  ///< [in] Cumulative distribution function.
         port_random_t *rnd ///< [in,out] Pseudorandom integer.
 );
 
 /**
- * @brief Pick an outcome randomly with custom distribution (half-unit CDF values).
+ * @brief Pick an outcome with custom distribution (quarter-width CDF values).
  *
- * Each CDF value occupies a unit half (16 bits), so there are 2 values per unit.
+ * @see port_random_custom_distrib_uint8()
  *
- * @see port_random_custom_distrib_uint_quarter()
- *
- * @return Index of a randomly chosen outcome.
+ * @return Index of a chosen outcome.
  */
-port_uint_half_t
-port_random_custom_distrib_uint_half(
-        port_uint_half_t num_outcomes, ///< [in] Number of outcomes.
-        const port_uint_half_t cdf[],  ///< [in] Cumulative distribution function.
+#define port_random_custom_distrib_uintq    port_random_custom_distrib_uint8
+
+/**
+ * @brief Pick an outcome with custom distribution (16-bit CDF values).
+ *
+ * @see port_random_custom_distrib_uint8()
+ *
+ * @return Index of a chosen outcome.
+ */
+port_uint16_t
+port_random_custom_distrib_uint16(
+        port_uint16_t num_outcomes, ///< [in] Number of outcomes.
+        const port_uint16_t cdf[],  ///< [in] Cumulative distribution function.
         port_random_t *rnd ///< [in,out] Pseudorandom integer.
 );
 
 /**
- * @brief Pick an outcome randomly with custom distribution (single-unit CDF values).
+ * @brief Pick an outcome with custom distribution (half-width CDF values).
  *
- * Each CDF value occupies a whole unit (32 bits), so there is 1 value per unit.
+ * @see port_random_custom_distrib_uint8()
  *
- * @see port_random_custom_distrib_uint_quarter()
- *
- * @return Index of a randomly chosen outcome.
+ * @return Index of a chosen outcome.
  */
-port_uint_single_t
-port_random_custom_distrib_uint_single(
-        port_uint_single_t num_outcomes, ///< [in] Number of outcomes.
-        const port_uint_single_t cdf[],  ///< [in] Cumulative distribution function.
+#define port_random_custom_distrib_uinth    port_random_custom_distrib_uint16
+
+/**
+ * @brief Pick an outcome with custom distribution (32-bit CDF values).
+ *
+ * @see port_random_custom_distrib_uint8()
+ *
+ * @return Index of a chosen outcome.
+ */
+port_uint32_t
+port_random_custom_distrib_uint32(
+        port_uint32_t num_outcomes, ///< [in] Number of outcomes.
+        const port_uint32_t cdf[],  ///< [in] Cumulative distribution function.
         port_random_t *rnd ///< [in,out] Pseudorandom integer.
 );
+
+/**
+ * @brief Pick an outcome with custom distribution (single-width CDF values).
+ *
+ * @see port_random_custom_distrib_uint8()
+ *
+ * @return Index of a chosen outcome.
+ */
+#define port_random_custom_distrib_uints    port_random_custom_distrib_uint32
 
 #endif // _PORT_RANDOM_FUN_H_
 

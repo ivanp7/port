@@ -121,39 +121,5 @@
 
 #endif
 
-#ifndef PORT_FEATURE_DEFAULT_FLOAT_64
-
-#define PORT_M_E PORT_M1_E ///< e (2.71828), default precision
-#define PORT_M_LOG2E PORT_M1_LOG2E ///< log2(e) (1.4427), default precision
-#define PORT_M_LOG10E PORT_M1_LOG10E ///< log10(e) (0.4343), default precision
-#define PORT_M_LN2 PORT_M1_LN2 ///< ln(2) (0.6931), default precision
-#define PORT_M_LN10 PORT_M1_LN10 ///< ln(10) (2.3026), default precision
-#define PORT_M_PI PORT_M1_PI ///< pi (3.1416), default precision
-#define PORT_M_PI_2 PORT_M1_PI_2 ///< pi/2 (1.5708), default precision
-#define PORT_M_PI_4 PORT_M1_PI_4 ///< pi/4 (0.7854), default precision
-#define PORT_M_1_PI PORT_M1_1_PI ///< 1/pi (0.31831), default precision
-#define PORT_M_2_PI PORT_M1_2_PI ///< 2/pi (0.63662), default precision
-#define PORT_M_2_SQRTPI PORT_M1_2_SQRTPI ///< 2/sqrt(pi) (1.12838), default precision
-#define PORT_M_SQRT2 PORT_M1_SQRT2 ///< sqrt(2) (1.4142), default precision
-#define PORT_M_SQRT1_2 PORT_M1_SQRT1_2 ///< sqrt(1/2) (0.7071), default precision
-
-#else // PORT_FEATURE_DEFAULT_FLOAT_64
-
-#define PORT_M_E PORT_M2_E ///< e (2.71828), default precision
-#define PORT_M_LOG2E PORT_M2_LOG2E ///< log2(e) (1.4427), default precision
-#define PORT_M_LOG10E PORT_M2_LOG10E ///< log10(e) (0.4343), default precision
-#define PORT_M_LN2 PORT_M2_LN2 ///< ln(2) (0.6931), default precision
-#define PORT_M_LN10 PORT_M2_LN10 ///< ln(10) (2.3026), default precision
-#define PORT_M_PI PORT_M2_PI ///< pi (3.1416), default precision
-#define PORT_M_PI_2 PORT_M2_PI_2 ///< pi/2 (1.5708), default precision
-#define PORT_M_PI_4 PORT_M2_PI_4 ///< pi/4 (0.7854), default precision
-#define PORT_M_1_PI PORT_M2_1_PI ///< 1/pi (0.31831), default precision
-#define PORT_M_2_PI PORT_M2_2_PI ///< 2/pi (0.63662), default precision
-#define PORT_M_2_SQRTPI PORT_M2_2_SQRTPI ///< 2/sqrt(pi) (1.12838), default precision
-#define PORT_M_SQRT2 PORT_M2_SQRT2 ///< sqrt(2) (1.4142), default precision
-#define PORT_M_SQRT1_2 PORT_M2_SQRT1_2 ///< sqrt(1/2) (0.7071), default precision
-
-#endif // PORT_FEATURE_DEFAULT_FLOAT_64
-
 #endif // _PORT_CONSTANTS_DEF_H_
 
