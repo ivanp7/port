@@ -180,10 +180,13 @@ port_float64_equal(
 /**
  * @brief Sum two 32-bit floating-point numbers with a round-off error.
  *
- * @return Sum and a round-off error.
+ * If the sum value is not finite, the round-off error is set to NaN.
+ *
+ * @return Sum of input values.
  */
-port_float32_v2_t
+port_float32_t
 port_float32_two_sum(
+        port_float32_t *out_error, ///< [out] Round-off error.
         port_float32_t a, ///< [in] First value.
         port_float32_t b  ///< [in] Second value.
 );
@@ -191,17 +194,22 @@ port_float32_two_sum(
 /**
  * @brief Sum two single-width floating-point numbers with a round-off error.
  *
- * @return Sum and a round-off error.
+ * If the sum value is not finite, the round-off error is set to NaN.
+ *
+ * @return Sum of input values.
  */
 #define port_floats_two_sum port_float32_two_sum
 
 /**
  * @brief Sum two 64-bit floating-point numbers with a round-off error.
  *
- * @return Sum and a round-off error.
+ * If the sum value is not finite, the round-off error is set to NaN.
+ *
+ * @return Sum of input values.
  */
-port_float64_v2_t
+port_float64_t
 port_float64_two_sum(
+        port_float64_t *out_error, ///< [out] Round-off error.
         port_float64_t a, ///< [in] First value.
         port_float64_t b  ///< [in] Second value.
 );
@@ -209,43 +217,55 @@ port_float64_two_sum(
 /**
  * @brief Sum two double-width floating-point numbers with a round-off error.
  *
- * @return Sum and a round-off error.
+ * If the sum value is not finite, the round-off error is set to NaN.
+ *
+ * @return Sum of input values.
  */
 #define port_floatd_two_sum port_float64_two_sum
 
 /**
  * @brief Sum 32-bit floating-point numbers using the Neumaier algorithm.
  *
- * @return Sum and a compensation value.
+ * If the sum value is not finite, the round-off error is set to NaN.
+ *
+ * @return Sum of input values.
  */
-port_float32_v2_t
+port_float32_t
 port_float32_neumaier_sum(
-        const port_float32_t values[], ///< [in] Array of values to sum.
+        port_float32_t *restrict out_error, ///< [out] Round-off error.
+        const port_float32_t values[restrict], ///< [in] Array of values to sum.
         size_t num_values ///< [in] Size of the array of values.
 );
 
 /**
  * @brief Sum single-width floating-point numbers using the Neumaier algorithm.
  *
- * @return Sum and a compensation value.
+ * If the sum value is not finite, the round-off error is set to NaN.
+ *
+ * @return Sum of input values.
  */
 #define port_floats_neumaier_sum    port_float32_neumaier_sum
 
 /**
  * @brief Sum 64-bit floating-point numbers using the Neumaier algorithm.
  *
- * @return Sum and a compensation value.
+ * If the sum value is not finite, the round-off error is set to NaN.
+ *
+ * @return Sum of input values.
  */
-port_float64_v2_t
+port_float64_t
 port_float64_neumaier_sum(
-        const port_float64_t values[], ///< [in] Array of values to sum.
+        port_float64_t *restrict out_error, ///< [out] Round-off error.
+        const port_float64_t values[restrict], ///< [in] Array of values to sum.
         size_t num_values ///< [in] Size of the array of values.
 );
 
 /**
  * @brief Sum double-width floating-point numbers using the Neumaier algorithm.
  *
- * @return Sum and a compensation value.
+ * If the sum value is not finite, the round-off error is set to NaN.
+ *
+ * @return Sum of input values.
  */
 #define port_floatd_neumaier_sum    port_float64_neumaier_sum
 
@@ -292,10 +312,13 @@ port_float64_shewchuk16_sum(
 /**
  * @brief Multiply two 32-bit floating-point numbers with a round-off error.
  *
- * @return Product and a round-off error.
+ * If the product value is not finite, the round-off error is set to NaN.
+ *
+ * @return Product of input values.
  */
-port_float32_v2_t
+port_float32_t
 port_float32_two_product(
+        port_float32_t *out_error, ///< [out] Round-off error.
         port_float32_t a, ///< [in] First value.
         port_float32_t b  ///< [in] Second value.
 );
@@ -303,17 +326,22 @@ port_float32_two_product(
 /**
  * @brief Multiply two single-width floating-point numbers with a round-off error.
  *
- * @return Product and a round-off error.
+ * If the product value is not finite, the round-off error is set to NaN.
+ *
+ * @return Product of input values.
  */
 #define port_floats_two_product port_float32_two_product
 
 /**
  * @brief Multiply two 64-bit floating-point numbers with a round-off error.
  *
- * @return Product and a round-off error.
+ * If the product value is not finite, the round-off error is set to NaN.
+ *
+ * @return Product of input values.
  */
-port_float64_v2_t
+port_float64_t
 port_float64_two_product(
+        port_float64_t *out_error, ///< [out] Round-off error.
         port_float64_t a, ///< [in] First value.
         port_float64_t b  ///< [in] Second value.
 );
@@ -321,43 +349,55 @@ port_float64_two_product(
 /**
  * @brief Multiply two double-width floating-point numbers with a round-off error.
  *
- * @return Product and a round-off error.
+ * If the product value is not finite, the round-off error is set to NaN.
+ *
+ * @return Product of input values.
  */
 #define port_floatd_two_product port_float64_two_product
 
 /**
  * @brief Multiply 32-bit floating-point numbers.
  *
- * @return Product and a round-off error.
+ * If the product value is not finite, the round-off error is set to NaN.
+ *
+ * @return Product of input values.
  */
-port_float32_v2_t
+port_float32_t
 port_float32_multi_product(
-        const port_float32_t values[], ///< [in] Array of values to multiply.
+        port_float32_t *restrict out_error, ///< [out] Round-off error.
+        const port_float32_t values[restrict], ///< [in] Array of values to multiply.
         size_t num_values ///< [in] Size of the array of values.
 );
 
 /**
  * @brief Multiply single-width floating-point numbers.
  *
- * @return Product and a round-off error.
+ * If the product value is not finite, the round-off error is set to NaN.
+ *
+ * @return Product of input values.
  */
 #define port_floats_multi_product   port_float32_multi_product
 
 /**
  * @brief Multiply 64-bit floating-point numbers.
  *
- * @return Product and a round-off error.
+ * If the product value is not finite, the round-off error is set to NaN.
+ *
+ * @return Product of input values.
  */
-port_float64_v2_t
+port_float64_t
 port_float64_multi_product(
-        const port_float64_t values[], ///< [in] Array of values to multiply.
+        port_float64_t *restrict out_error, ///< [out] Round-off error.
+        const port_float64_t values[restrict], ///< [in] Array of values to multiply.
         size_t num_values ///< [in] Size of the array of values.
 );
 
 /**
  * @brief Multiply double-width floating-point numbers.
  *
- * @return Product and a round-off error.
+ * If the product value is not finite, the round-off error is set to NaN.
+ *
+ * @return Product of input values.
  */
 #define port_floatd_multi_product   port_float64_multi_product
 

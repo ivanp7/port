@@ -162,36 +162,36 @@ TEST(port_float64_equal)
 
 TEST(port_float32_two_sum)
 {
-    port_float32_v2_t sum;
+    port_float32_t sum, comp;
 
-    sum = port_float32_two_sum(PORT_FLOAT32(1e10), PORT_FLOAT32(1e-10));
-    ASSERT_EQ(sum.s0, PORT_FLOAT32(1e10), port_float32_t, "%g");
-    ASSERT_EQ(sum.s1, PORT_FLOAT32(1e-10), port_float32_t, "%g");
+    sum = port_float32_two_sum(&comp, PORT_FLOAT32(1e10), PORT_FLOAT32(1e-10));
+    ASSERT_EQ(sum, PORT_FLOAT32(1e10), port_float32_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT32(1e-10), port_float32_t, "%g");
 
-    sum = port_float32_two_sum(PORT_FLOAT32(1e-20), PORT_FLOAT32(1e20));
-    ASSERT_EQ(sum.s0, PORT_FLOAT32(1e20), port_float32_t, "%g");
-    ASSERT_EQ(sum.s1, PORT_FLOAT32(1e-20), port_float32_t, "%g");
+    sum = port_float32_two_sum(&comp, PORT_FLOAT32(1e-20), PORT_FLOAT32(1e20));
+    ASSERT_EQ(sum, PORT_FLOAT32(1e20), port_float32_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT32(1e-20), port_float32_t, "%g");
 
-    sum = port_float32_two_sum(PORT_FLOAT32(1e30), PORT_FLOAT32(-1e30));
-    ASSERT_EQ(sum.s0, PORT_FLOAT32(0.0), port_float32_t, "%g");
-    ASSERT_EQ(sum.s1, PORT_FLOAT32(0.0), port_float32_t, "%g");
+    sum = port_float32_two_sum(&comp, PORT_FLOAT32(1e30), PORT_FLOAT32(-1e30));
+    ASSERT_EQ(sum, PORT_FLOAT32(0.0), port_float32_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT32(0.0), port_float32_t, "%g");
 }
 
 TEST(port_float64_two_sum)
 {
-    port_float64_v2_t sum;
+    port_float64_t sum, comp;
 
-    sum = port_float64_two_sum(PORT_FLOAT64(1e100), PORT_FLOAT64(1e-100));
-    ASSERT_EQ(sum.s0, PORT_FLOAT64(1e100), port_float64_t, "%g");
-    ASSERT_EQ(sum.s1, PORT_FLOAT64(1e-100), port_float64_t, "%g");
+    sum = port_float64_two_sum(&comp, PORT_FLOAT64(1e100), PORT_FLOAT64(1e-100));
+    ASSERT_EQ(sum, PORT_FLOAT64(1e100), port_float64_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT64(1e-100), port_float64_t, "%g");
 
-    sum = port_float64_two_sum(PORT_FLOAT64(1e-200), PORT_FLOAT64(1e200));
-    ASSERT_EQ(sum.s0, PORT_FLOAT64(1e200), port_float64_t, "%g");
-    ASSERT_EQ(sum.s1, PORT_FLOAT64(1e-200), port_float64_t, "%g");
+    sum = port_float64_two_sum(&comp, PORT_FLOAT64(1e-200), PORT_FLOAT64(1e200));
+    ASSERT_EQ(sum, PORT_FLOAT64(1e200), port_float64_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT64(1e-200), port_float64_t, "%g");
 
-    sum = port_float64_two_sum(PORT_FLOAT64(1e300), PORT_FLOAT64(-1e300));
-    ASSERT_EQ(sum.s0, PORT_FLOAT64(0.0), port_float64_t, "%g");
-    ASSERT_EQ(sum.s1, PORT_FLOAT64(0.0), port_float64_t, "%g");
+    sum = port_float64_two_sum(&comp, PORT_FLOAT64(1e300), PORT_FLOAT64(-1e300));
+    ASSERT_EQ(sum, PORT_FLOAT64(0.0), port_float64_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT64(0.0), port_float64_t, "%g");
 }
 
 TEST(port_float32_neumaier_sum)
@@ -199,27 +199,27 @@ TEST(port_float32_neumaier_sum)
     {
         port_float32_t values[] = {PORT_FLOAT32(1e30), PORT_FLOAT32(1e30), PORT_FLOAT32(1e-30), PORT_FLOAT32(-2e30)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
-        port_float32_v2_t sum;
+        port_float32_t sum, comp;
 
-        sum = port_float32_neumaier_sum(values, num_values);
-        ASSERT_EQ(sum.s0 + sum.s1, PORT_FLOAT32(1e-30), port_float32_t, "%g");
+        sum = port_float32_neumaier_sum(&comp, values, num_values);
+        ASSERT_EQ(sum + comp, PORT_FLOAT32(1e-30), port_float32_t, "%g");
     }
     {
         port_float32_t values[] = {PORT_FLOAT32(1.0), PORT_FLOAT32(1e30), PORT_FLOAT32(1.0), PORT_FLOAT32(-1e30)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
-        port_float32_v2_t sum;
+        port_float32_t sum, comp;
 
-        sum = port_float32_neumaier_sum(values, num_values);
-        ASSERT_EQ(sum.s0 + sum.s1, PORT_FLOAT32(2.0), port_float32_t, "%g");
+        sum = port_float32_neumaier_sum(&comp, values, num_values);
+        ASSERT_EQ(sum + comp, PORT_FLOAT32(2.0), port_float32_t, "%g");
     }
     {
         port_float32_t values[] = {PORT_FLOAT32(1.0), PORT_FLOAT32(1e30), PORT_FLOAT32(1.0), PORT_FLOAT32(1e30)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
-        port_float32_v2_t sum;
+        port_float32_t sum, comp;
 
-        sum = port_float32_neumaier_sum(values, num_values);
-        ASSERT_EQ(sum.s0, PORT_FLOAT32(2.0e30), port_float32_t, "%g");
-        ASSERT_EQ(sum.s1, PORT_FLOAT32(2.0), port_float32_t, "%g");
+        sum = port_float32_neumaier_sum(&comp, values, num_values);
+        ASSERT_EQ(sum, PORT_FLOAT32(2.0e30), port_float32_t, "%g");
+        ASSERT_EQ(comp, PORT_FLOAT32(2.0), port_float32_t, "%g");
     }
 }
 
@@ -228,27 +228,27 @@ TEST(port_float64_neumaier_sum)
     {
         port_float64_t values[] = {PORT_FLOAT64(1e100), PORT_FLOAT64(1e100), PORT_FLOAT64(1e-100), PORT_FLOAT64(-2e100)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
-        port_float64_v2_t sum;
+        port_float64_t sum, comp;
 
-        sum = port_float64_neumaier_sum(values, num_values);
-        ASSERT_EQ(sum.s0 + sum.s1, PORT_FLOAT64(1e-100), port_float64_t, "%g");
+        sum = port_float64_neumaier_sum(&comp, values, num_values);
+        ASSERT_EQ(sum + comp, PORT_FLOAT64(1e-100), port_float64_t, "%g");
     }
     {
         port_float64_t values[] = {PORT_FLOAT64(1.0), PORT_FLOAT64(1e100), PORT_FLOAT64(1.0), PORT_FLOAT64(-1e100)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
-        port_float64_v2_t sum;
+        port_float64_t sum, comp;
 
-        sum = port_float64_neumaier_sum(values, num_values);
-        ASSERT_EQ(sum.s0 + sum.s1, PORT_FLOAT64(2.0), port_float64_t, "%g");
+        sum = port_float64_neumaier_sum(&comp, values, num_values);
+        ASSERT_EQ(sum + comp, PORT_FLOAT64(2.0), port_float64_t, "%g");
     }
     {
         port_float64_t values[] = {PORT_FLOAT64(1.0), PORT_FLOAT64(1e300), PORT_FLOAT64(1.0), PORT_FLOAT64(1e300)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
-        port_float64_v2_t sum;
+        port_float64_t sum, comp;
 
-        sum = port_float64_neumaier_sum(values, num_values);
-        ASSERT_EQ(sum.s0, PORT_FLOAT64(2.0e300), port_float64_t, "%g");
-        ASSERT_EQ(sum.s1, PORT_FLOAT64(2.0), port_float64_t, "%g");
+        sum = port_float64_neumaier_sum(&comp, values, num_values);
+        ASSERT_EQ(sum, PORT_FLOAT64(2.0e300), port_float64_t, "%g");
+        ASSERT_EQ(comp, PORT_FLOAT64(2.0), port_float64_t, "%g");
     }
 }
 
@@ -290,43 +290,43 @@ TEST(port_float64_shewchuk16_sum)
 
 TEST(port_float32_two_product)
 {
-    port_float32_v2_t product;
+    port_float32_t product, comp;
 
-    product = port_float32_two_product(PORT_FLOAT32(1.0), PORT_FLOAT32(0.0));
-    ASSERT_EQ(product.s0, PORT_FLOAT32(0.0), port_float32_t, "%g");
-    ASSERT_EQ(product.s1, PORT_FLOAT32(0.0), port_float32_t, "%g");
+    product = port_float32_two_product(&comp, PORT_FLOAT32(1.0), PORT_FLOAT32(0.0));
+    ASSERT_EQ(product, PORT_FLOAT32(0.0), port_float32_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT32(0.0), port_float32_t, "%g");
 
-    product = port_float32_two_product(PORT_FLOAT32(-2.0), PORT_FLOAT32(3.0));
-    ASSERT_EQ(product.s0, PORT_FLOAT32(-6.0), port_float32_t, "%g");
-    ASSERT_EQ(product.s1, PORT_FLOAT32(0.0), port_float32_t, "%g");
+    product = port_float32_two_product(&comp, PORT_FLOAT32(-2.0), PORT_FLOAT32(3.0));
+    ASSERT_EQ(product, PORT_FLOAT32(-6.0), port_float32_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT32(0.0), port_float32_t, "%g");
 
-    product = port_float32_two_product(PORT_FLOAT32(1e-30), PORT_FLOAT32(1e+30));
-    ASSERT_EQ(product.s0, PORT_FLOAT32(1.0), port_float32_t, "%g");
-    ASSERT_LT(fabs(product.s1 - PORT_FLOAT32(1e-7)), PORT_FLOAT32(1e-7), port_float32_t, "%g");
+    product = port_float32_two_product(&comp, PORT_FLOAT32(1e-30), PORT_FLOAT32(1e+30));
+    ASSERT_EQ(product, PORT_FLOAT32(1.0), port_float32_t, "%g");
+    ASSERT_LT(fabs(comp - PORT_FLOAT32(1e-7)), PORT_FLOAT32(1e-7), port_float32_t, "%g");
 
-    product = port_float32_two_product(PORT_FLOAT32(1.23456789), PORT_FLOAT32(987654321.5));
-    ASSERT_LT(fabs(product.s0 - PORT_FLOAT32(1.21933e+09)), PORT_FLOAT32(1e4), port_float32_t, "%g");
-    ASSERT_LT(fabs(product.s1 - PORT_FLOAT32(-15.609)), PORT_FLOAT32(1e-3), port_float32_t, "%g");
-    ASSERT_EQ((port_float64_t)product.s0 + (port_float64_t)product.s1,
+    product = port_float32_two_product(&comp, PORT_FLOAT32(1.23456789), PORT_FLOAT32(987654321.5));
+    ASSERT_LT(fabs(product - PORT_FLOAT32(1.21933e+09)), PORT_FLOAT32(1e4), port_float32_t, "%g");
+    ASSERT_LT(fabs(comp - PORT_FLOAT32(-15.609)), PORT_FLOAT32(1e-3), port_float32_t, "%g");
+    ASSERT_EQ((port_float64_t)product + (port_float64_t)comp,
                 (port_float64_t)PORT_FLOAT32(1.23456789) * (port_float64_t)PORT_FLOAT32(987654321.5),
             port_float64_t, "%g");
 }
 
 TEST(port_float64_two_product)
 {
-    port_float64_v2_t product;
+    port_float64_t product, comp;
 
-    product = port_float64_two_product(PORT_FLOAT64(1.0), PORT_FLOAT64(0.0));
-    ASSERT_EQ(product.s0, PORT_FLOAT64(0.0), port_float64_t, "%g");
-    ASSERT_EQ(product.s1, PORT_FLOAT64(0.0), port_float64_t, "%g");
+    product = port_float64_two_product(&comp, PORT_FLOAT64(1.0), PORT_FLOAT64(0.0));
+    ASSERT_EQ(product, PORT_FLOAT64(0.0), port_float64_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT64(0.0), port_float64_t, "%g");
 
-    product = port_float64_two_product(PORT_FLOAT64(-2.0), PORT_FLOAT64(3.0));
-    ASSERT_EQ(product.s0, PORT_FLOAT64(-6.0), port_float64_t, "%g");
-    ASSERT_EQ(product.s1, PORT_FLOAT64(0.0), port_float64_t, "%g");
+    product = port_float64_two_product(&comp, PORT_FLOAT64(-2.0), PORT_FLOAT64(3.0));
+    ASSERT_EQ(product, PORT_FLOAT64(-6.0), port_float64_t, "%g");
+    ASSERT_EQ(comp, PORT_FLOAT64(0.0), port_float64_t, "%g");
 
-    product = port_float64_two_product(PORT_FLOAT64(1e-300), PORT_FLOAT64(1e+300));
-    ASSERT_EQ(product.s0, PORT_FLOAT64(1.0), port_float64_t, "%g");
-    ASSERT_LT(fabs(product.s1 - PORT_FLOAT64(1e-16)), PORT_FLOAT64(1e-16), port_float64_t, "%g");
+    product = port_float64_two_product(&comp, PORT_FLOAT64(1e-300), PORT_FLOAT64(1e+300));
+    ASSERT_EQ(product, PORT_FLOAT64(1.0), port_float64_t, "%g");
+    ASSERT_LT(fabs(comp - PORT_FLOAT64(1e-16)), PORT_FLOAT64(1e-16), port_float64_t, "%g");
 }
 
 TEST(port_float32_multi_product)
@@ -336,11 +336,11 @@ TEST(port_float32_multi_product)
             PORT_FLOAT32(11244.3), PORT_FLOAT32(2.0)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
         port_float64_t perfect_product = PORT_FLOAT64(1.0);
-        port_float32_v2_t product;
+        port_float32_t product, comp;
 
-        product = port_float32_multi_product(values, num_values);
+        product = port_float32_multi_product(&comp, values, num_values);
         for (size_t i = 0; i < num_values; i++) perfect_product *= values[i];
-        ASSERT_LT(fabs((port_float64_t)product.s0 + (port_float64_t)product.s1 - perfect_product) /
+        ASSERT_LT(fabs((port_float64_t)product + (port_float64_t)comp - perfect_product) /
                 fabs(perfect_product),
                 PORT_FLOAT64(2e-15), port_float64_t, "%g");
     }
@@ -353,11 +353,11 @@ TEST(port_float64_multi_product)
             PORT_FLOAT64(11244.3e10), PORT_FLOAT64(2.0)};
         size_t num_values = sizeof(values) / sizeof(values[0]);
         long double perfect_product = 1.0;
-        port_float64_v2_t product;
+        port_float64_t product, comp;
 
-        product = port_float64_multi_product(values, num_values);
+        product = port_float64_multi_product(&comp, values, num_values);
         for (size_t i = 0; i < num_values; i++) perfect_product *= values[i];
-        ASSERT_LT(fabs((long double)product.s0 + (long double)product.s1 - perfect_product) /
+        ASSERT_LT(fabs((long double)product + (long double)comp - perfect_product) /
                 fabs(perfect_product),
                 PORT_FLOAT64(1e-30), port_float64_t, "%g");
     }

@@ -24,6 +24,7 @@
 
 #include "port/float.fun.h"
 #include "port/bit.def.h"
+#include "port/constants.def.h"
 #include "port/util.def.h"
 #include "port/types.def.h"
 #include "port/vector.def.h"
@@ -171,49 +172,62 @@ port_float64_equal(
 // Summation algorithms
 ///////////////////////////////////////////////////////////////////////////////
 
-port_float32_v2_t
+port_float32_t
 port_float32_two_sum(
+        port_float32_t *out_error,
         port_float32_t a,
         port_float32_t b)
 {
-    port_float32_v2_t sum;
-    sum.s0 = a + b;
-    if (isfinite(sum.s0))
+    port_float32_t sum;
+    sum = a + b;
+
+    if (out_error != NULL)
     {
-        port_float32_t a_stroke = sum.s0 - b;
-        port_float32_t b_stroke = sum.s0 - a_stroke;
-        port_float32_t delta_a = a - a_stroke;
-        port_float32_t delta_b = b - b_stroke;
-        sum.s1 = delta_a + delta_b;
+        if (isfinite(sum))
+        {
+            port_float32_t a_stroke = sum - b;
+            port_float32_t b_stroke = sum - a_stroke;
+            port_float32_t delta_a = a - a_stroke;
+            port_float32_t delta_b = b - b_stroke;
+            *out_error = delta_a + delta_b;
+        }
+        else
+            *out_error = PORT_M_NAN;
     }
-    else
-        sum.s1 = PORT_FLOAT32(0.0);
+
     return sum;
 }
 
-port_float64_v2_t
+port_float64_t
 port_float64_two_sum(
+        port_float64_t *out_error,
         port_float64_t a,
         port_float64_t b)
 {
-    port_float64_v2_t sum;
-    sum.s0 = a + b;
-    if (isfinite(sum.s0))
+    port_float64_t sum;
+    sum = a + b;
+
+    if (out_error != NULL)
     {
-        port_float64_t a_stroke = sum.s0 - b;
-        port_float64_t b_stroke = sum.s0 - a_stroke;
-        port_float64_t delta_a = a - a_stroke;
-        port_float64_t delta_b = b - b_stroke;
-        sum.s1 = delta_a + delta_b;
+        if (isfinite(sum))
+        {
+            port_float64_t a_stroke = sum - b;
+            port_float64_t b_stroke = sum - a_stroke;
+            port_float64_t delta_a = a - a_stroke;
+            port_float64_t delta_b = b - b_stroke;
+            *out_error = delta_a + delta_b;
+        }
+        else
+            *out_error = PORT_M_NAN;
     }
-    else
-        sum.s1 = PORT_FLOAT64(0.0);
+
     return sum;
 }
 
-port_float32_v2_t
+port_float32_t
 port_float32_neumaier_sum(
-        const port_float32_t values[],
+        port_float32_t *restrict out_error,
+        const port_float32_t values[restrict],
         size_t num_values)
 {
     port_float32_t sum = PORT_FLOAT32(0.0);
@@ -221,17 +235,20 @@ port_float32_neumaier_sum(
 
     for (size_t i = 0; i < num_values; i++)
     {
-        port_float32_v2_t s = port_float32_two_sum(sum, values[i]);
-        sum = s.s0;
-        comp += s.s1;
+        port_float32_t c;
+        sum = port_float32_two_sum(&c, sum, values[i]);
+        comp += c;
     }
 
-    return (port_float32_v2_t)PORT_V2(sum, comp);
+    if (out_error != NULL)
+        *out_error = comp;
+    return sum;
 }
 
-port_float64_v2_t
+port_float64_t
 port_float64_neumaier_sum(
-        const port_float64_t values[],
+        port_float64_t *restrict out_error,
+        const port_float64_t values[restrict],
         size_t num_values)
 {
     port_float64_t sum = PORT_FLOAT64(0.0);
@@ -239,12 +256,14 @@ port_float64_neumaier_sum(
 
     for (size_t i = 0; i < num_values; i++)
     {
-        port_float64_v2_t s = port_float64_two_sum(sum, values[i]);
-        sum = s.s0;
-        comp += s.s1;
+        port_float64_t c;
+        sum = port_float64_two_sum(&c, sum, values[i]);
+        comp += c;
     }
 
-    return (port_float64_v2_t)PORT_V2(sum, comp);
+    if (out_error != NULL)
+        *out_error = comp;
+    return sum;
 }
 
 port_float32_t
@@ -260,28 +279,19 @@ port_float32_shewchuk16_sum(
 
     for (size_t i = 0; i < num_values; i++)
     {
-        port_float32_t intermediate;
-        {
-            port_float32_v2_t sum = port_float32_two_sum(values[i], lo);
-            intermediate = sum.s0;
-            lo = sum.s1;
-        }
+        port_float32_t intermediate = port_float32_two_sum(&lo, values[i], lo);
 
         int num_partials_new = 0;
         for (int j = 0; j < num_partials; j++)
         {
-            port_float32_v2_t sum = port_float32_two_sum(intermediate, partial[j]);
-            intermediate = sum.s0;
+            port_float32_t comp;
+            intermediate = port_float32_two_sum(&comp, intermediate, partial[j]);
 
-            if (sum.s1 != PORT_FLOAT32(0.0))
-                partial[num_partials_new++] = sum.s1;
+            if (comp != PORT_FLOAT32(0.0))
+                partial[num_partials_new++] = comp;
         }
 
-        {
-            port_float32_v2_t sum = port_float32_two_sum(hi, intermediate);
-            hi = sum.s0;
-            intermediate = sum.s1;
-        }
+        hi = port_float32_two_sum(&intermediate, hi, intermediate);
 
         if (intermediate != PORT_FLOAT32(0.0))
         {
@@ -331,28 +341,19 @@ port_float64_shewchuk16_sum(
 
     for (size_t i = 0; i < num_values; i++)
     {
-        port_float64_t intermediate;
-        {
-            port_float64_v2_t sum = port_float64_two_sum(values[i], lo);
-            intermediate = sum.s0;
-            lo = sum.s1;
-        }
+        port_float64_t intermediate = port_float64_two_sum(&lo, values[i], lo);
 
         int num_partials_new = 0;
         for (int j = 0; j < num_partials; j++)
         {
-            port_float64_v2_t sum = port_float64_two_sum(intermediate, partial[j]);
-            intermediate = sum.s0;
+            port_float64_t comp;
+            intermediate = port_float64_two_sum(&comp, intermediate, partial[j]);
 
-            if (sum.s1 != PORT_FLOAT64(0.0))
-                partial[num_partials_new++] = sum.s1;
+            if (comp != PORT_FLOAT64(0.0))
+                partial[num_partials_new++] = comp;
         }
 
-        {
-            port_float64_v2_t sum = port_float64_two_sum(hi, intermediate);
-            hi = sum.s0;
-            intermediate = sum.s1;
-        }
+        hi = port_float64_two_sum(&intermediate, hi, intermediate);
 
         if (intermediate != PORT_FLOAT64(0.0))
         {
@@ -393,93 +394,111 @@ port_float64_shewchuk16_sum(
 // Multiplication algorithms
 ///////////////////////////////////////////////////////////////////////////////
 
-port_float32_v2_t
+port_float32_t
 port_float32_two_product(
+        port_float32_t *out_error,
         port_float32_t a,
         port_float32_t b)
 {
-    port_float32_v2_t product;
-    product.s0 = a * b;
-    if (isfinite(product.s0))
-        product.s1 = fma(a, b, -product.s0);
-    else
-        product.s1 = PORT_FLOAT32(0.0);
+    port_float32_t product;
+    product = a * b;
+
+    if (out_error != NULL)
+    {
+        if (isfinite(product))
+            *out_error = fma(a, b, -product);
+        else
+            *out_error = PORT_M_NAN;
+    }
+
     return product;
 }
 
-port_float64_v2_t
+port_float64_t
 port_float64_two_product(
+        port_float64_t *out_error,
         port_float64_t a,
         port_float64_t b)
 {
-    port_float64_v2_t product;
-    product.s0 = a * b;
-    if (isfinite(product.s0))
-        product.s1 = fma(a, b, -product.s0);
-    else
-        product.s1 = PORT_FLOAT64(0.0);
+    port_float64_t product;
+    product = a * b;
+
+    if (out_error != NULL)
+    {
+        if (isfinite(product))
+            *out_error = fma(a, b, -product);
+        else
+            *out_error = PORT_M_NAN;
+    }
+
     return product;
 }
 
-port_float32_v2_t
+port_float32_t
 port_float32_multi_product(
-        const port_float32_t values[],
+        port_float32_t *restrict out_error,
+        const port_float32_t values[restrict],
         size_t num_values)
 {
-    port_float32_v2_t product = (port_float32_v2_t)PORT_V2(PORT_FLOAT32(1.0), PORT_FLOAT32(0.0));
+    port_float32_t product = PORT_FLOAT32(1.0);
+    port_float32_t comp = PORT_FLOAT32(0.0);
 
     for (size_t i = 0; i < num_values; i++)
     {
-        port_float32_v2_t intermediate = port_float32_two_product(product.s0, values[i]);
-        port_float32_v2_t cross = port_float32_two_product(product.s1, values[i]);
+        port_float32_t cross, cross_comp;
+        {
+            port_float32_t intermediate_comp;
 
-        product = intermediate;
+            product = port_float32_two_product(&intermediate_comp, product, values[i]);
+            cross = port_float32_two_product(&cross_comp, comp, values[i]);
 
-        port_float32_v2_t sum;
-        port_float32_t comp = PORT_FLOAT32(0.0);
+            comp = intermediate_comp;
+        }
 
-        sum = port_float32_two_sum(product.s1, cross.s0);
-        product.s1 = sum.s0;
-        comp += sum.s1;
+        port_float32_t c0, c1;
 
-        sum = port_float32_two_sum(product.s1, cross.s1);
-        product.s1 = sum.s0;
-        comp += sum.s1;
+        comp = port_float32_two_sum(&c0, comp, cross);
+        comp = port_float32_two_sum(&c1, comp, cross_comp);
 
-        product.s1 += comp;
+        comp += c0 + c1;
     }
 
+    if (out_error != NULL)
+        *out_error = comp;
     return product;
 }
 
-port_float64_v2_t
+port_float64_t
 port_float64_multi_product(
-        const port_float64_t values[],
+        port_float64_t *restrict out_error,
+        const port_float64_t values[restrict],
         size_t num_values)
 {
-    port_float64_v2_t product = (port_float64_v2_t)PORT_V2(PORT_FLOAT64(1.0), PORT_FLOAT64(0.0));
+    port_float64_t product = PORT_FLOAT64(1.0);
+    port_float64_t comp = PORT_FLOAT64(0.0);
 
     for (size_t i = 0; i < num_values; i++)
     {
-        port_float64_v2_t intermediate = port_float64_two_product(product.s0, values[i]);
-        port_float64_v2_t cross = port_float64_two_product(product.s1, values[i]);
+        port_float64_t cross, cross_comp;
+        {
+            port_float64_t intermediate_comp;
 
-        product = intermediate;
+            product = port_float64_two_product(&intermediate_comp, product, values[i]);
+            cross = port_float64_two_product(&cross_comp, comp, values[i]);
 
-        port_float64_v2_t sum;
-        port_float64_t comp = PORT_FLOAT64(0.0);
+            comp = intermediate_comp;
+        }
 
-        sum = port_float64_two_sum(product.s1, cross.s0);
-        product.s1 = sum.s0;
-        comp += sum.s1;
+        port_float64_t c0, c1;
 
-        sum = port_float64_two_sum(product.s1, cross.s1);
-        product.s1 = sum.s0;
-        comp += sum.s1;
+        comp = port_float64_two_sum(&c0, comp, cross);
+        comp = port_float64_two_sum(&c1, comp, cross_comp);
 
-        product.s1 += comp;
+        comp += c0 + c1;
     }
 
+    if (out_error != NULL)
+        *out_error = comp;
     return product;
 }
 
