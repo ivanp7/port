@@ -17,5 +17,5 @@ trap 'rm -f "$ARCHI_FILE"' EXIT
 
 ./program-builder.sh --plugin-opencl "libarchi_opencl.so" \
     --platform "$PLATFORM_IDX" --devices "$DEVICE_IDX" --out "$OUT_DIR/$OUT_FILE" > "$ARCHI_FILE"
-archi -L -vmax "$ARCHI_FILE"
+archi -vmax "$@" "$ARCHI_FILE"
 
