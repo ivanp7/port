@@ -15,7 +15,16 @@ export LFLAGS="-create-library ${LFLAGS:-}"
 ARCHI_FILE="$(mktemp "build.${OUT_FILE}.archi.XXXX")"
 trap 'rm -f "$ARCHI_FILE"' EXIT
 
+echo '  ----------------------------------------' >&2
+echo '  *** Generating temporary .archi file ***' >&2
+echo '  ----------------------------------------' >&2
+echo >&2
 ./program-builder.sh --plugin-opencl "libarchi_opencl.so" \
     --platform "$PLATFORM_IDX" --devices "$DEVICE_IDX" --out "$OUT_DIR/$OUT_FILE" > "$ARCHI_FILE"
+
+echo '  ---------------------------' >&2
+echo '  *** Running Archipelago ***' >&2
+echo '  ---------------------------' >&2
+echo >&2
 archi -vmax "$@" "$ARCHI_FILE"
 
